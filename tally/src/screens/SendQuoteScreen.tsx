@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { DEFAULT_QUOTE_LINES } from '../lib/priceData'
+import { tallyToQuoteLines } from '../lib/quoteFromTally'
 import { dateLong, fmt, money2 } from '../lib/formatters'
 import { useLoads } from '../context/LoadsContext'
 import { useToast } from '../context/ToastContext'
@@ -47,7 +48,10 @@ export function SendQuoteScreen() {
   const [showUnit, setShowUnit] = useState(true)
   const [delivery, setDelivery] = useState<'email' | 'link' | 'pdf'>('email')
 
-  const lines = DEFAULT_QUOTE_LINES
+  const lines = useMemo(
+    () => (load?.tally ? tallyToQuoteLines(load.tally, load.species) : DEFAULT_QUOTE_LINES),
+    [load],
+  )
   const quote = useMemo(() => computeQuote(lines, showUnit), [lines, showUnit])
 
   const customer = load?.name ?? 'Cascade Millworks'

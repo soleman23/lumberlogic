@@ -7,6 +7,7 @@ const PRICES_KEY = 'lumber-logic-prices'
 export interface LoadRepository {
   list(): SavedLoad[]
   save(load: SavedLoad): void
+  saveAll(loads: SavedLoad[]): void
   delete(id: string): void
   get(id: string): SavedLoad | undefined
 }
@@ -44,6 +45,9 @@ export const loadRepository: LoadRepository = {
     if (i >= 0) list[i] = load
     else list.unshift(load)
     writeJson(LOADS_KEY, list)
+  },
+  saveAll(loads) {
+    writeJson(LOADS_KEY, loads)
   },
   delete(id) {
     writeJson(LOADS_KEY, loadRepository.list().filter((l) => l.id !== id))

@@ -8,9 +8,11 @@ import {
   type ReactNode,
 } from 'react'
 import { SEED_LOADS } from '../lib/priceData'
+import { createInitialTallyState } from '../lib/constants'
 import { loadRepository } from '../repositories/localStorage'
 import type { SavedLoad, TallyState } from '../types'
 import { useTally } from './TallyContext'
+import { useToast } from './ToastContext'
 
 type LoadsContextValue = {
   loads: SavedLoad[]
@@ -23,21 +25,29 @@ type LoadsContextValue = {
 
 const LoadsContext = createContext<LoadsContextValue | null>(null)
 
+function withTallyFallback(load: SavedLoad): SavedLoad {
+  return load.tally ? load : { ...load, tally: createInitialTallyState() }
+}
+
 function seedIfEmpty(): SavedLoad[] {
   const existing = loadRepository.list()
-  if (existing.length) return existing
-  return SEED_LOADS.map((l, i) => ({
-    id: String(i + 1),
-    ...l,
-  }))
+  const result = existing.length
+    ? existing.map(withTallyFallback)
+    : SEED_LOADS.map((l, i) => ({
+        id: String(i + 1),
+        ...l,
+        tally: createInitialTallyState(),
+      }))
+  return result
 }
 
 export function LoadsProvider({ children }: { children: ReactNode }) {
   const [loads, setLoads] = useState<SavedLoad[]>(() => seedIfEmpty())
   const { state, totals, replaceState } = useTally()
+  const { showToast } = useToast()
 
   useEffect(() => {
-    loads.forEach((l) => loadRepository.save(l))
+    loadRepository.saveAll(loads)
   }, [loads])
 
   const persist = useCallback((next: SavedLoad[]) => setLoads(next), [])
@@ -95,9 +105,17 @@ export function LoadsProvider({ children }: { children: ReactNode }) {
   const openLoad = useCallback(
     (id: string) => {
       const load = loads.find((l) => l.id === id)
-      if (load?.tally) replaceState(load.tally as TallyState)
+      if (!load) {
+        showToast('Load not found')
+        return
+      }
+      if (!load.tally) {
+        showToast('No worksheet saved for this load')
+        return
+      }
+      replaceState(load.tally as TallyState)
     },
-    [loads, replaceState],
+    [loads, replaceState, showToast],
   )
 
   const value = useMemo(
