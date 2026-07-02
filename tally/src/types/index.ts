@@ -14,6 +14,8 @@ export type TruckGroup = {
   name: string
   target: number
   members: DimId[]
+  /** Units allocated to this truck per dimension (defaults to full worksheet units). */
+  memberQty: Partial<Record<DimId, number>>
 }
 
 export type TallyState = {

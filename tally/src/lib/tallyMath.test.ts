@@ -60,12 +60,26 @@ describe('tallyMath', () => {
     const state: TallyState = {
       ...createInitialTallyState(),
       units: Object.fromEntries(LENGTHS.map((L) => [cellKey('2x4', L), 50])),
-      trucks: [{ id: 1, name: 'Test', target: 1000, members: ['2x4'] }],
+      trucks: [{ id: 1, name: 'Test', target: 1000, members: ['2x4'], memberQty: {} }],
       nextTruckId: 2,
     }
     const p = truckProgress(state.trucks[0], state)
     expect(p.over).toBe(true)
     expect(p.barColor).toBe('#B5482F')
+  })
+
+  it('truck progress scales by member quantity', () => {
+    const state = createInitialTallyState()
+    const full = truckProgress(
+      { id: 1, name: 'T', target: 999999, members: ['2x4'], memberQty: {} },
+      state,
+    )
+    const totalUnits = LENGTHS.reduce((s, L) => s + (state.units[cellKey('2x4', L)] || 0), 0)
+    const half = truckProgress(
+      { id: 1, name: 'T', target: 999999, members: ['2x4'], memberQty: { '2x4': totalUnits / 2 } },
+      state,
+    )
+    expect(half.bf).toBeCloseTo(full.bf / 2, 0)
   })
 
   it('matches industry BF formula: 2×4×8 single piece', () => {

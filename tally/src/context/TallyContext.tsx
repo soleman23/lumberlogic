@@ -13,6 +13,7 @@ import {
   clearTally,
   grandTotals,
   removeTruck,
+  setTruckMemberQty,
   toggleTruckMember,
   updateTruck,
 } from '../lib/tallyMath'
@@ -31,13 +32,21 @@ type TallyContextValue = {
   removeTruckGroup: (id: number) => void
   patchTruck: (id: number, patch: Partial<TallyState['trucks'][0]>) => void
   toggleMember: (truckId: number, dimId: DimId) => void
+  setMemberQty: (truckId: number, dimId: DimId, qty: number) => void
   replaceState: (state: TallyState) => void
 }
 
 const TallyContext = createContext<TallyContextValue | null>(null)
 
 export function TallyProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<TallyState>(() => tallyRepository.load() ?? createInitialTallyState())
+  const [state, setState] = useState<TallyState>(() => {
+    const loaded = tallyRepository.load()
+    if (!loaded) return createInitialTallyState()
+    return {
+      ...loaded,
+      trucks: loaded.trucks.map((t) => ({ ...t, memberQty: t.memberQty ?? {} })),
+    }
+  })
 
   useEffect(() => {
     tallyRepository.save(state)
@@ -70,6 +79,9 @@ export function TallyProvider({ children }: { children: ReactNode }) {
   const toggleMember = useCallback((truckId: number, dimId: DimId) => {
     setState((s) => toggleTruckMember(s, truckId, dimId))
   }, [])
+  const setMemberQty = useCallback((truckId: number, dimId: DimId, qty: number) => {
+    setState((s) => setTruckMemberQty(s, truckId, dimId, qty))
+  }, [])
   const replaceState = useCallback((next: TallyState) => setState(next), [])
 
   const value = useMemo(
@@ -85,6 +97,7 @@ export function TallyProvider({ children }: { children: ReactNode }) {
       removeTruckGroup,
       patchTruck,
       toggleMember,
+      setMemberQty,
       replaceState,
     }),
     [
@@ -99,6 +112,7 @@ export function TallyProvider({ children }: { children: ReactNode }) {
       removeTruckGroup,
       patchTruck,
       toggleMember,
+      setMemberQty,
       replaceState,
     ],
   )

@@ -1,5 +1,5 @@
 import { useBreakpoints } from '../hooks/useMediaQuery'
-import { cellBF, dimTotals, effectivePrice, truckProgress } from '../lib/tallyMath'
+import { cellBF, dimTotals, effectivePrice, truckProgress, dimTotalUnits, dimAllocationTotals } from '../lib/tallyMath'
 import { DIMENSION_DEFS, LENGTHS, cellKey } from '../lib/constants'
 import { fmt, money, parseNum } from '../lib/formatters'
 import { useTally } from '../context/TallyContext'
@@ -180,12 +180,15 @@ function DimensionBlock({ dim, showPriceRow }: { dim: DimensionDef; showPriceRow
 }
 
 function TruckBuilder() {
-  const { state, addTruckGroup, removeTruckGroup, patchTruck, toggleMember } = useTally()
+  const { state, addTruckGroup, removeTruckGroup, patchTruck, toggleMember, setMemberQty } = useTally()
 
   return (
     <section className="trucks">
       <div className="trucks__head">
-        <h2 className="trucks__title">Mixed-truck builder</h2>
+        <div>
+          <h2 className="trucks__title">Mixed-truck builder</h2>
+          <p className="trucks__desc">Group widths into a truck and set units per dimension toward your target capacity.</p>
+        </div>
         <Button variant="primary" onClick={addTruckGroup}>
           + Add truck
         </Button>
@@ -217,6 +220,35 @@ function TruckBuilder() {
                   </Chip>
                 ))}
               </div>
+              {truck.members.length > 0 && (
+                <div className="truck-card__qty-list">
+                  {truck.members.map((dimId) => {
+                    const d = DIMENSION_DEFS.find((x) => x.name === dimId)!
+                    const worksheetUnits = dimTotalUnits(state, dimId)
+                    const qty = truck.memberQty?.[dimId] ?? worksheetUnits
+                    const alloc = dimAllocationTotals(d, state, qty)
+                    return (
+                      <div key={dimId} className="truck-card__qty-row">
+                        <span className="truck-card__qty-label">{d.label}</span>
+                        <label className="truck-card__qty-field">
+                          <span>Units</span>
+                          <input
+                            type="number"
+                            min={0}
+                            step={1}
+                            inputMode="numeric"
+                            value={qty === 0 ? '' : qty}
+                            placeholder="0"
+                            aria-label={`Units of ${d.label} on this truck`}
+                            onChange={(e) => setMemberQty(truck.id, dimId, parseNum(e.target.value))}
+                          />
+                        </label>
+                        <span className="truck-card__qty-bf">{fmt(alloc.bf, 0)} bf</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
               <div className="truck-card__stats">
                 <div>
                   <strong>{fmt(p.bf, 0)} bf</strong>

@@ -26,7 +26,14 @@ type LoadsContextValue = {
 const LoadsContext = createContext<LoadsContextValue | null>(null)
 
 function withTallyFallback(load: SavedLoad): SavedLoad {
-  return load.tally ? load : { ...load, tally: createInitialTallyState() }
+  if (!load.tally) return { ...load, tally: createInitialTallyState() }
+  return {
+    ...load,
+    tally: {
+      ...load.tally,
+      trucks: load.tally.trucks.map((t) => ({ ...t, memberQty: t.memberQty ?? {} })),
+    },
+  }
 }
 
 function seedIfEmpty(): SavedLoad[] {

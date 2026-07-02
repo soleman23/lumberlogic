@@ -9,6 +9,42 @@ import type {
 } from '../types'
 import { DIMENSION_DEFS, LENGTHS, cellKey } from './constants'
 
+export function dimTotalUnits(
+  state: Pick<TallyState, 'units'>,
+  dimId: DimId,
+): number {
+  return LENGTHS.reduce((sum, L) => sum + (state.units[cellKey(dimId, L)] || 0), 0)
+}
+
+export function dimAllocationTotals(
+  d: DimensionDef,
+  state: Pick<TallyState, 'pieces' | 'base' | 'units' | 'override'>,
+  qty: number,
+): Pick<DimTotals, 'bf' | 'lf' | 'pcs'> {
+  const totalUnits = dimTotalUnits(state, d.name)
+  const clampedQty = Math.max(0, qty)
+
+  if (totalUnits > 0) {
+    const tot = dimTotals(d, state)
+    const scale = Math.min(clampedQty, totalUnits) / totalUnits
+    return {
+      bf: tot.bf * scale,
+      lf: tot.lf * scale,
+      pcs: tot.pcs * scale,
+    }
+  }
+
+  if (clampedQty <= 0) return { bf: 0, lf: 0, pcs: 0 }
+
+  const piecesPerUnit = state.pieces[d.name] || 0
+  const defaultLength = 12
+  return {
+    bf: cellBF(d, defaultLength, clampedQty, piecesPerUnit),
+    lf: clampedQty * defaultLength,
+    pcs: clampedQty * piecesPerUnit,
+  }
+}
+
 export function bfPerFt(d: Pick<DimensionDef, 't' | 'w'>): number {
   return (d.t * d.w) / 12
 }
@@ -85,10 +121,12 @@ export function truckProgress(
   truck.members.forEach((name) => {
     const d = DIMENSION_DEFS.find((x) => x.name === name)
     if (!d) return
-    const t = dimTotals(d, state)
-    bf += t.bf
-    lf += t.lf
-    pcs += t.pcs
+    const totalUnits = dimTotalUnits(state, name)
+    const qty = truck.memberQty?.[name] ?? totalUnits
+    const alloc = dimAllocationTotals(d, state, qty)
+    bf += alloc.bf
+    lf += alloc.lf
+    pcs += alloc.pcs
   })
 
   const target = truck.target || 0
@@ -118,7 +156,7 @@ export function addTruck(state: TallyState, name = 'New truck', target = 12000):
   return {
     ...state,
     nextTruckId: id + 1,
-    trucks: [...state.trucks, { id, name, target, members: [] }],
+    trucks: [...state.trucks, { id, name, target, members: [], memberQty: {} }],
   }
 }
 
@@ -139,9 +177,38 @@ export function toggleTruckMember(state: TallyState, truckId: number, dimId: Dim
     trucks: state.trucks.map((t) => {
       if (t.id !== truckId) return t
       const has = t.members.includes(dimId)
+      if (has) {
+        const memberQty = { ...t.memberQty }
+        delete memberQty[dimId]
+        return {
+          ...t,
+          members: t.members.filter((m) => m !== dimId),
+          memberQty,
+        }
+      }
+      const defaultQty = dimTotalUnits(state, dimId) || 1
       return {
         ...t,
-        members: has ? t.members.filter((m) => m !== dimId) : [...t.members, dimId],
+        members: [...t.members, dimId],
+        memberQty: { ...t.memberQty, [dimId]: t.memberQty?.[dimId] ?? defaultQty },
+      }
+    }),
+  }
+}
+
+export function setTruckMemberQty(
+  state: TallyState,
+  truckId: number,
+  dimId: DimId,
+  qty: number,
+): TallyState {
+  return {
+    ...state,
+    trucks: state.trucks.map((t) => {
+      if (t.id !== truckId) return t
+      return {
+        ...t,
+        memberQty: { ...t.memberQty, [dimId]: Math.max(0, qty) },
       }
     }),
   }

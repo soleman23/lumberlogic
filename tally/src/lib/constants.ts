@@ -54,9 +54,9 @@ export function createInitialTallyState(): import('../types').TallyState {
     override,
     nextTruckId: 4,
     trucks: [
-      { id: 1, name: '4" & 6"', target: 8000, members: ['2x4', '2x6'] },
-      { id: 2, name: '4" – 10"', target: 12000, members: ['2x4', '2x6', '2x8', '2x10'] },
-      { id: 3, name: '8" – 12"', target: 8000, members: ['2x8', '2x10', '2x12'] },
+      { id: 1, name: '4" & 6"', target: 8000, members: ['2x4', '2x6'], memberQty: {} },
+      { id: 2, name: '4" – 10"', target: 12000, members: ['2x4', '2x6', '2x8', '2x10'], memberQty: {} },
+      { id: 3, name: '8" – 12"', target: 8000, members: ['2x8', '2x10', '2x12'], memberQty: {} },
     ],
   }
 }
