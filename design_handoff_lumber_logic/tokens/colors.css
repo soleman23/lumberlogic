@@ -1,0 +1,50 @@
+:root {
+  /* ── Timber — primary brand & actions ── */
+  --timber-50:  #FBF4EA;
+  --timber-100: #F4E4CC;
+  --timber-200: #E9C99B;
+  --timber-300: #DDAC6A;
+  --timber-400: #CE8E3F;
+  --timber-500: #BC7A2C; /* brand */
+  --timber-600: #A0641F; /* press */
+  --timber-700: #7E4E18;
+  --timber-800: #5C3914;
+  --timber-900: #3D260F;
+
+  /* ── Oak — warm neutrals ── */
+  --oak-page:    #EFE7D8; /* app backdrop */
+  --oak-surface: #FFFFFF;
+  --oak-paper:   #FAF6EF;
+  --oak-100:     #F3ECE0;
+  --oak-200:     #E6DCCC;
+  --oak-300:     #D6C8B2;
+  --oak-500:     #8C7E6B;
+  --oak-700:     #4A3F33;
+  --oak-ink:     #221A12;
+
+  /* ── Walnut — dark surfaces (result panels, night theme) ── */
+  --walnut-bg:        #17120D;
+  --walnut-surface:   #211A13;
+  --walnut-surface-2: #2B221A;
+  --walnut-line:      #3A2F23;
+  --walnut-text:      #F3ECE0;
+  --walnut-text-dim:  #C9BCA6;
+  --walnut-text-mute: #A89A85;
+
+  /* ── Semantic ── */
+  --forest: #3F7D54; /* yield / savings / quoted */
+  --clay:   #C0492F; /* waste / overage / overrides */
+  --amber:  #D69A2E; /* review / hold / draft */
+
+  /* ── Aliases ── */
+  --brand:         var(--timber-500);
+  --brand-press:   var(--timber-600);
+  --brand-ink:     var(--timber-700);
+  --text-strong:   var(--oak-ink);
+  --text-body:     var(--oak-700);
+  --text-muted:    var(--oak-500);
+  --surface-card:  var(--oak-surface);
+  --surface-paper: var(--oak-paper);
+  --border:        var(--oak-200);
+  --border-strong: var(--oak-300);
+}

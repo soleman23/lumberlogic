@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; }
+  input::placeholder{ color:#A99B86; }
+  select{ -webkit-appearance:none; appearance:none; }
+</style>
+</helmet>
+
+<div data-screen-label="Saved loads" style="background:#EFE7D8; min-height:100vh; font-family:'IBM Plex Sans',sans-serif; color:#221A12; -webkit-font-smoothing:antialiased; line-height:1.5;">
+
+  <!-- TOP BAR -->
+  <header style="background:#FAF6EF; border-bottom:1px solid #E6DCCC; z-index:20; {{ headerStick }}">
+    <div style="max-width:1240px; margin:0 auto; padding:12px clamp(14px,3.5vw,28px); display:flex; align-items:center; gap:12px;">
+      <div style="display:flex; align-items:center; gap:11px;">
+        <svg width="30" height="30" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="60" height="60" rx="15" fill="#BC7A2C"/><rect x="13" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="26" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="39" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="19.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="32.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="26" y="12" width="12" height="12" rx="2.5" fill="#17120D"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:-.01em;"><span style="color:#221A12;">Lumber</span> <span style="color:#A0641F;">Logic</span></span>
+      </div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex; gap:4px; margin-left:18px;">
+        <a href="Tally Home.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Calculator</a>
+        <a href="#" style="font-size:14px; font-weight:600; color:#221A12; text-decoration:none; padding:7px 13px; border-radius:8px; background:#F3ECE0;">Saved loads</a>
+        <a href="Tally Prices.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Prices</a>
+      </nav>
+      </sc-if>
+      <div style="flex:1;"></div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><a href="Tally Home.dc.html" style="text-decoration:none; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#fff; background:#BC7A2C; border:none; border-radius:9px; padding:9px 15px; cursor:pointer; display:flex; align-items:center; gap:7px;" style-hover="background:#A0641F;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>New load</a></sc-if>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><a href="Tally Home.dc.html" title="New load" style="text-decoration:none; width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#BC7A2C; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg></a></sc-if>
+      <div style="width:34px; height:34px; border-radius:50%; background:#7E4E18; color:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px;">CB</div>
+    </div>
+  </header>
+
+  <main style="max-width:1240px; margin:0 auto; padding:clamp(20px,5vw,32px) clamp(14px,3.5vw,28px) 72px;">
+
+    <!-- title + controls -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:18px; margin-bottom:22px;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F; margin-bottom:6px;">Saved loads</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(26px,7vw,32px); letter-spacing:-.02em; margin:0;">Your tally book</h1>
+        <p style="font-size:14px; color:#6B5E4D; margin:6px 0 0; max-width:520px;">Every load you've priced. Reopen to edit, duplicate to reuse, or send a draft to the customer.</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:0 12px; height:40px; flex:1 1 180px; min-width:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8C7E6B" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8C7E6B" stroke-width="2" stroke-linecap="round"/></svg>
+          <input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search customer or species" style="border:none; outline:none; background:transparent; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:#221A12; width:196px; min-width:0; flex:1;">
+        </div>
+        <div style="display:flex; gap:4px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:4px;">
+          <button onClick="{{ onAll }}" style="{{ allStyle }}">All</button>
+          <button onClick="{{ onQuoted }}" style="{{ quotedStyle }}">Quoted</button>
+          <button onClick="{{ onDraft }}" style="{{ draftStyle }}">Draft</button>
+        </div>
+        <div style="display:flex; align-items:center; background:#fff; border:1px solid #E6DCCC; border-radius:10px; height:40px; padding:0 6px 0 12px;">
+          <span style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#8C7E6B; margin-right:8px;">Sort</span>
+          <select value="{{ sortKey }}" onChange="{{ onSortKey }}" style="border:none; outline:none; background:transparent; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; color:#221A12; cursor:pointer; padding-right:4px;">
+            <option value="date">Date saved</option>
+            <option value="value">Load value</option>
+            <option value="bf">Board ft</option>
+            <option value="pieces">Pieces</option>
+            <option value="name">Customer</option>
+          </select>
+          <button onClick="{{ onDir }}" title="Toggle direction" style="width:30px; height:30px; border-radius:8px; background:#FAF6EF; border:1px solid #E6DCCC; cursor:pointer; display:flex; align-items:center; justify-content:center;"><span style="{{ dirStyle }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M6 13l6 6 6-6" stroke="#7E4E18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- cards -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; align-items:start;">
+      <sc-for list="{{ list }}" as="ld" hint-placeholder-count="9">
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:18px 18px 16px; box-shadow:0 3px 14px rgba(60,40,15,.05); display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; align-items:flex-start; gap:11px;">
+            <div style="width:40px; height:40px; flex-shrink:0; border-radius:10px; background:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; color:#7E4E18;">{{ ld.initials }}</div>
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:15px; font-weight:600; color:#221A12; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ld.name }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F;">{{ ld.sub }} · {{ ld.species }}</div>
+            </div>
+            <span style="{{ ld.statusStyle }}">{{ ld.status }}</span>
+          </div>
+
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:10px; padding:2px 2px 0;">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Board feet</div>
+              <div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:29px; color:#221A12; line-height:1.04;">{{ ld.bf }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A0641F;">bf</span></div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Value</div>
+              <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; color:#2F6342; line-height:1.1;">{{ ld.value }}</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; background:#FAF6EF; border:1px solid #F0E8DB; border-radius:11px; padding:11px 13px;">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Pieces</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">{{ ld.pieces }}</div>
+            </div>
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">$/MBF</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">{{ ld.avg }}</div>
+            </div>
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Saved</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">{{ ld.date }}</div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button onClick="{{ ld.onOpen }}" style="flex:1; height:38px; border-radius:10px; background:#fff; border:1px solid #D6C8B2; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#7E4E18; display:flex; align-items:center; justify-content:center; gap:7px;" style-hover="border-color:#BC7A2C;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-9 9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Open</button>
+            <button onClick="{{ ld.onSend }}" style="flex:1; height:38px; border-radius:10px; background:#BC7A2C; border:none; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#fff; display:flex; align-items:center; justify-content:center; gap:7px;" style-hover="background:#A0641F;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 3L10.5 13.5M21 3l-6.6 18-3.9-8.1L2.4 9 21 3z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Send</button>
+            <button onClick="{{ ld.onDup }}" title="Duplicate" style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="background:#F3ECE0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2.5" stroke="#7E4E18" stroke-width="1.8"/><path d="M5 15V6a2 2 0 0 1 2-2h9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+            <button onClick="{{ ld.onDel }}" title="Delete" style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="background:#F4E5E0; border-color:#E5C9BE;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" stroke="#9c4a36" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- empty -->
+    <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:64px 22px; text-align:center; color:#8C7E6B; font-size:14px; background:#fff; border:1px solid #E6DCCC; border-radius:16px;">No loads match your search.</div>
+    </sc-if>
+
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="height:{{ spacerH }};"></div></sc-if>
+  </main>
+
+  <!-- toast -->
+  <sc-if value="{{ toastShown }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; bottom:{{ toastBottom }}; left:50%; transform:translateX(-50%); background:#17120D; color:#F3ECE0; font-family:'IBM Plex Sans',sans-serif; font-size:14px; font-weight:500; padding:13px 20px; border-radius:12px; box-shadow:0 12px 30px rgba(60,40,15,.3); display:flex; align-items:center; gap:10px; z-index:100;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#9FCBAE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ toast }}
+    </div>
+  </sc-if>
+
+  <!-- MOBILE TAB BAR -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <nav style="position:fixed; left:0; right:0; bottom:0; z-index:40; background:#FAF6EF; border-top:1px solid #E6DCCC; display:grid; grid-template-columns:1fr 1fr 1fr; padding:{{ tabBarPad }};">
+      <a href="Tally Home.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2.5" stroke="#8C7E6B" stroke-width="1.8"/><path d="M8 7.5h8M8 11.5h4M8 15.5h5" stroke="#8C7E6B" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Calculator</span>
+      </a>
+      <a href="#" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#A0641F;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" stroke="#A0641F" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 8l8 4 8-4M12 12v8" stroke="#A0641F" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px; font-weight:600; {{ tabLabelHide }}">Loads</span>
+      </a>
+      <a href="Tally Prices.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M7 7.5h7a2.5 2.5 0 010 5H9a2.5 2.5 0 000 5h8" stroke="#8C7E6B" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Prices</span>
+      </a>
+    </nav>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:1000}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const seed = [
+      { name: 'Hardwood Co.',        sub: 'Lot 84',  species: 'White Oak',      status: 'Quoted', bf: 1284,  value: 2616, pieces: 642,  date: '2026-06-24' },
+      { name: 'Cascade Millworks',   sub: 'PO 2231', species: 'Doug Fir #1',    status: 'Draft',  bf: 8420,  value: 4092, pieces: 388,  date: '2026-06-28' },
+      { name: 'Riverside Pallet',    sub: 'Truck A', species: 'SPF #2',         status: 'Quoted', bf: 12680, value: 5704, pieces: 1040, date: '2026-06-22' },
+      { name: 'Tahoe Custom Homes',  sub: 'Job 31',  species: 'W. Red Cedar',   status: 'Draft',  bf: 3260,  value: 5870, pieces: 210,  date: '2026-06-27' },
+      { name: 'Apex Framing LLC',    sub: 'Job 19',  species: 'SPF #2',         status: 'Quoted', bf: 9840,  value: 4625, pieces: 812,  date: '2026-06-19' },
+      { name: 'Northgate Lumber',    sub: 'Restock', species: 'Hem-Fir',        status: 'Quoted', bf: 15240, value: 6553, pieces: 1188, date: '2026-06-15' },
+      { name: 'Meadow Fence Supply', sub: 'Std run', species: 'PT Pine',        status: 'Draft',  bf: 2180,  value: 1635, pieces: 540,  date: '2026-06-29' },
+      { name: 'Sierra Pacific',      sub: 'Lot 12',  species: 'Ponderosa Pine', status: 'Quoted', bf: 6720,  value: 3091, pieces: 446,  date: '2026-06-11' },
+      { name: 'Bayview Decking',     sub: 'PO 88',   species: 'Ipe',            status: 'Draft',  bf: 980,   value: 4312, pieces: 84,   date: '2026-06-30' },
+      { name: 'Granite Builders',    sub: 'PO 4407', species: 'Doug Fir #2',    status: 'Quoted', bf: 11050, value: 5083, pieces: 690,  date: '2026-06-17' },
+    ];
+    this.uid = 100;
+    this.state = {
+      mobile: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 760px)').matches,
+      shortH: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-height: 480px)').matches,
+      loads: seed.map((l, i) => ({ id: i + 1, ...l })),
+      query: '', status: 'all', sortKey: 'date', sortDir: 'desc', toast: null,
+    };
+    this._toastT = null;
+  }
+
+  componentDidMount() {
+    const defs = [['mobile', '(max-width: 760px)'], ['shortH', '(max-height: 480px)']];
+    this._mqs = defs.map(d => [d[0], window.matchMedia(d[1])]);
+    this._onMq = () => { const p = {}; this._mqs.forEach(m => p[m[0]] = m[1].matches); this.setState(p); };
+    this._mqs.forEach(m => { if (m[1].addEventListener) m[1].addEventListener('change', this._onMq); else m[1].addListener(this._onMq); });
+  }
+  componentWillUnmount() {
+    if (!this._mqs) return;
+    this._mqs.forEach(m => { if (m[1].removeEventListener) m[1].removeEventListener('change', this._onMq); else m[1].removeListener(this._onMq); });
+  }
+
+  fmt(n) { return Number(n || 0).toLocaleString('en-US'); }
+  money(n) { return '$' + this.fmt(Math.round(n)); }
+  initials(name) {
+    const w = name.replace(/[^A-Za-z ]/g, '').trim().split(/\s+/);
+    return (((w[0] || '')[0] || '') + ((w[1] || '')[0] || (w[0] || '')[1] || '')).toUpperCase();
+  }
+  dateLabel(iso) {
+    const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const d = new Date(iso + 'T00:00:00Z');
+    return M[d.getUTCMonth()] + ' ' + d.getUTCDate();
+  }
+  avgMBF(l) { return l.bf > 0 ? (l.value / l.bf) * 1000 : 0; }
+
+  showToast(msg) {
+    this.setState({ toast: msg });
+    if (this._toastT) clearTimeout(this._toastT);
+    this._toastT = setTimeout(() => this.setState({ toast: null }), 2600);
+  }
+
+  open(l) { this.showToast('Opening ' + l.name + ' in the calculator'); window.location.href = 'Tally Home.dc.html'; }
+  send(l) {
+    this.showToast('Opening send screen for ' + l.name);
+    window.location.href = 'Tally Send.dc.html';
+  }
+  dup(l) {
+    const copy = { ...l, id: ++this.uid, sub: 'Copy', status: 'Draft', date: '2026-06-30' };
+    this.setState(s => {
+      const i = s.loads.findIndex(x => x.id === l.id);
+      const next = s.loads.slice();
+      next.splice(i + 1, 0, copy);
+      return { loads: next };
+    });
+    this.showToast('Duplicated ' + l.name);
+  }
+  del(l) {
+    this.setState(s => ({ loads: s.loads.filter(x => x.id !== l.id) }));
+    this.showToast('Deleted ' + l.name);
+  }
+
+  build() {
+    const q = (this.state.query || '').trim().toLowerCase();
+    const status = this.state.status;
+    const key = this.state.sortKey;
+    const dir = this.state.sortDir;
+    let list = this.state.loads.filter(l => {
+      if (status !== 'all' && l.status !== status) return false;
+      if (q && !(l.name.toLowerCase().includes(q) || l.species.toLowerCase().includes(q) || l.sub.toLowerCase().includes(q))) return false;
+      return true;
+    });
+    const cmp = (a, b) => {
+      let r;
+      if (key === 'name') r = a.name.localeCompare(b.name);
+      else if (key === 'date') r = (a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+      else r = (a[key] || 0) - (b[key] || 0);
+      return dir === 'asc' ? r : -r;
+    };
+    return list.slice().sort(cmp);
+  }
+
+  statusStyle(status) {
+    const q = status === 'Quoted';
+    return 'display:inline-flex; align-items:center; gap:5px; font-family:\'IBM Plex Mono\',monospace; font-size:11px; font-weight:500; letter-spacing:.02em; padding:3px 9px 3px 8px; border-radius:999px; color:' +
+      (q ? '#2F6342' : '#9A6A12') + '; background:' + (q ? '#E4EFE6' : '#F8ECCF') + '; border:1px solid ' + (q ? '#CADDCD' : '#EAD7A6') + ';';
+  }
+  filterStyle(active) {
+    return 'font-family:\'IBM Plex Sans\',sans-serif; font-weight:600; font-size:13px; cursor:pointer; border:none; border-radius:7px; padding:6px 12px; background:' +
+      (active ? '#7E4E18' : 'transparent') + '; color:' + (active ? '#F4E4CC' : '#8C7E6B') + ';';
+  }
+
+  vm(l) {
+    return {
+      initials: this.initials(l.name), name: l.name, sub: l.sub, species: l.species, status: l.status,
+      bf: this.fmt(l.bf), value: this.money(l.value), pieces: this.fmt(l.pieces),
+      avg: '$' + this.fmt(Math.round(this.avgMBF(l))), date: this.dateLabel(l.date),
+      statusStyle: this.statusStyle(l.status),
+      onOpen: () => this.open(l), onSend: () => this.send(l), onDup: () => this.dup(l), onDel: () => this.del(l),
+    };
+  }
+
+  renderVals() {
+    const raw = this.build();
+    const list = raw.map(l => this.vm(l));
+    return {
+      list, empty: list.length === 0,
+      isMobile: this.state.mobile,
+      isDesktop: !this.state.mobile,
+      headerStick: this.state.shortH ? '' : 'position:sticky; top:0;',
+      tabBarPad: this.state.shortH ? '6px 0 calc(6px + env(safe-area-inset-bottom))' : '7px 0 calc(9px + env(safe-area-inset-bottom))',
+      tabLabelHide: this.state.shortH ? 'display:none;' : '',
+      spacerH: this.state.shortH ? '48px' : '70px',
+      toastBottom: this.state.mobile ? (this.state.shortH ? 'calc(48px + env(safe-area-inset-bottom))' : 'calc(76px + env(safe-area-inset-bottom))') : '28px',
+      query: this.state.query, sortKey: this.state.sortKey,
+      toast: this.state.toast, toastShown: !!this.state.toast,
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      onAll: () => this.setState({ status: 'all' }),
+      onQuoted: () => this.setState({ status: 'Quoted' }),
+      onDraft: () => this.setState({ status: 'Draft' }),
+      allStyle: this.filterStyle(this.state.status === 'all'),
+      quotedStyle: this.filterStyle(this.state.status === 'Quoted'),
+      draftStyle: this.filterStyle(this.state.status === 'Draft'),
+      onSortKey: (e) => this.setState({ sortKey: e.target.value }),
+      onDir: () => this.setState(s => ({ sortDir: s.sortDir === 'asc' ? 'desc' : 'asc' })),
+      dirStyle: 'display:inline-flex; transition:transform .15s; transform:rotate(' + (this.state.sortDir === 'asc' ? '180' : '0') + 'deg);',
+    };
+  }
+}
+</script>
+</body>
+</html>

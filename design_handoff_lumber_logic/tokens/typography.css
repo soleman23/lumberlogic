@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ── Families ── */
+  --font-display: 'Space Grotesk', sans-serif; /* headlines & the big figures */
+  --font-sans:    'IBM Plex Sans', sans-serif; /* interface, labels, body */
+  --font-mono:    'IBM Plex Mono', monospace;  /* tally rows, SKUs, units, tabular data */
+
+  /* ── Type scale ── */
+  --fs-display: 64px; --lh-display: 1.0;  --ls-display: -0.025em;
+  --fs-h1:      34px; --lh-h1:      1.05; --ls-h1:      -0.02em;
+  --fs-h2:      22px; --lh-h2:      1.1;  --ls-h2:      -0.01em;
+  --fs-body:    16px; --lh-body:    1.5;
+  --fs-label:   13px; --ls-label:   0.04em; /* uppercase */
+  --fs-mono:    13px;
+
+  /* ── Weights ── */
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold:600;
+  --fw-bold:    700;
+}

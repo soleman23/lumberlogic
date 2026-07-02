@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; }
+  input::placeholder{ color:#A99B86; }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  input[type=number]{ -moz-appearance:textfield; }
+  input:focus{ border-color:#BC7A2C !important; box-shadow:0 0 0 3px rgba(188,122,44,.16); }
+</style>
+</helmet>
+
+<div data-screen-label="Prices" style="background:#EFE7D8; min-height:100vh; font-family:'IBM Plex Sans',sans-serif; color:#221A12; -webkit-font-smoothing:antialiased; line-height:1.5;">
+
+  <!-- TOP BAR -->
+  <header style="background:#FAF6EF; border-bottom:1px solid #E6DCCC; z-index:20; {{ headerStick }}">
+    <div style="max-width:1240px; margin:0 auto; padding:12px clamp(14px,3.5vw,28px); display:flex; align-items:center; gap:12px;">
+      <div style="display:flex; align-items:center; gap:11px;">
+        <svg width="30" height="30" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="60" height="60" rx="15" fill="#BC7A2C"/><rect x="13" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="26" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="39" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="19.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="32.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="26" y="12" width="12" height="12" rx="2.5" fill="#17120D"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:-.01em;"><span style="color:#221A12;">Lumber</span> <span style="color:#A0641F;">Logic</span></span>
+      </div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex; gap:4px; margin-left:18px;">
+        <a href="Tally Home.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Calculator</a>
+        <a href="Tally Saved Loads.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Saved loads</a>
+        <a href="#" style="font-size:14px; font-weight:600; color:#221A12; text-decoration:none; padding:7px 13px; border-radius:8px; background:#F3ECE0;">Prices</a>
+      </nav>
+      </sc-if>
+      <div style="flex:1;"></div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><button style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#7E4E18; background:#fff; border:1px solid #E6DCCC; border-radius:9px; padding:9px 14px; cursor:pointer; display:flex; align-items:center; gap:7px;" style-hover="border-color:#BC7A2C;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 11a8 8 0 1 0-2.3 5.6M20 5v6h-6" stroke="#7E4E18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync market</button></sc-if>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button title="Sync market" style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#fff; border:1px solid #E6DCCC; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="border-color:#BC7A2C;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 11a8 8 0 1 0-2.3 5.6M20 5v6h-6" stroke="#7E4E18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></sc-if>
+      <div style="width:34px; height:34px; border-radius:50%; background:#7E4E18; color:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px;">CB</div>
+    </div>
+  </header>
+
+  <main style="max-width:1240px; margin:0 auto; padding:clamp(20px,5vw,32px) clamp(14px,3.5vw,28px) 72px;">
+
+    <!-- title + controls -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:18px; margin-bottom:22px;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F; margin-bottom:6px;">Price sheet · week of Jun 29</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(26px,7vw,32px); letter-spacing:-.02em; margin:0;">Board price book</h1>
+        <p style="font-size:14px; color:#6B5E4D; margin:6px 0 0; max-width:540px;">Your selling price against this week's market. Edit any cell — margins recompute live.</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:0 12px; height:40px; flex:1 1 180px; min-width:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8C7E6B" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8C7E6B" stroke-width="2" stroke-linecap="round"/></svg>
+          <input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search species or grade" style="border:none; outline:none; background:transparent; font-family:'IBM Plex Sans',sans-serif; font-size:14px; color:#221A12; width:196px; min-width:0; flex:1;">
+        </div>
+        <div style="display:flex; gap:4px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:4px;">
+          <button onClick="{{ onAll }}" style="{{ allStyle }}">All</button>
+          <button onClick="{{ onSoft }}" style="{{ softStyle }}">Softwood</button>
+          <button onClick="{{ onHard }}" style="{{ hardStyle }}">Hardwood</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- stat tiles -->
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:26px;">
+      <sc-for list="{{ stats }}" as="t" hint-placeholder-count="5">
+        <div style="flex:1; min-width:150px; background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 16px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">{{ t.label }}</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; color:{{ t.valueColor }}; line-height:1.12; margin-top:2px;">{{ t.value }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; margin-top:1px;">{{ t.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- grouped price cards -->
+    <sc-for list="{{ view }}" as="grp" hint-placeholder-count="2">
+      <div style="margin-bottom:26px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+          <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; letter-spacing:.03em; text-transform:uppercase; color:#7E4E18;">{{ grp.label }}</span>
+          <span style="height:1px; flex:1; background:#DDD0BC;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B;">{{ grp.countLabel }}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(384px,100%),1fr)); gap:16px; align-items:start;">
+          <sc-for list="{{ grp.species }}" as="sp" hint-placeholder-count="3">
+            <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:16px 17px 14px; box-shadow:0 3px 14px rgba(60,40,15,.05);">
+              <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:12px;">
+                <span style="width:13px; height:13px; flex-shrink:0; margin-top:4px; border-radius:4px; background:{{ sp.accent }};"></span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; letter-spacing:-.01em; color:#221A12;">{{ sp.name }}</div>
+                  <div style="display:flex; align-items:center; gap:7px; margin-top:4px;">
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:#7E4E18; background:#F4E4CC; border-radius:6px; padding:2px 7px;">{{ sp.grade }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A99B86;">Upd {{ sp.updated }}</span>
+                  </div>
+                </div>
+                <span style="{{ sp.chgBadgeStyle }}"><span style="{{ sp.chgCaretStyle }}"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span>{{ sp.chgLabel }}</span>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:9px; padding-bottom:6px; border-bottom:1px solid #EFE7D8; margin-bottom:2px;">
+                <span style="width:46px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Size</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Your $</span>
+                <sc-if value="{{ showMarket }}" hint-placeholder-val="{{ true }}"><span style="flex:1; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Market</span></sc-if>
+                <sc-if value="{{ showMargin }}" hint-placeholder-val="{{ true }}"><span style="margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Margin</span></sc-if>
+              </div>
+
+              <sc-for list="{{ sp.dims }}" as="dim" hint-placeholder-count="5">
+                <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                  <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">{{ dim.label }}</span>
+                  <input type="number" value="{{ dim.yourVal }}" onChange="{{ dim.onYour }}" style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px; outline:none;">
+                  <sc-if value="{{ showMarket }}" hint-placeholder-val="{{ true }}">
+                    <div style="flex:1; min-width:0;">
+                      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">{{ dim.marketLabel }}</div>
+                      <div style="display:flex; align-items:center; gap:3px; margin-top:1px;">
+                        <span style="{{ dim.caretStyle }}"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span>
+                        <span style="{{ dim.deltaStyle }}">{{ dim.deltaLabel }}</span>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ showMargin }}" hint-placeholder-val="{{ true }}">
+                    <span style="{{ dim.markupStyle }}">{{ dim.markupLabel }}</span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+
+    <!-- empty -->
+    <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:60px 22px; text-align:center; color:#8C7E6B; font-size:14px; background:#fff; border:1px solid #E6DCCC; border-radius:16px;">No species match your search.</div>
+    </sc-if>
+
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="height:{{ spacerH }};"></div></sc-if>
+  </main>
+
+  <!-- MOBILE TAB BAR -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <nav style="position:fixed; left:0; right:0; bottom:0; z-index:40; background:#FAF6EF; border-top:1px solid #E6DCCC; display:grid; grid-template-columns:1fr 1fr 1fr; padding:{{ tabBarPad }};">
+      <a href="Tally Home.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2.5" stroke="#8C7E6B" stroke-width="1.8"/><path d="M8 7.5h8M8 11.5h4M8 15.5h5" stroke="#8C7E6B" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Calculator</span>
+      </a>
+      <a href="Tally Saved Loads.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" stroke="#8C7E6B" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 8l8 4 8-4M12 12v8" stroke="#8C7E6B" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Loads</span>
+      </a>
+      <a href="#" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#A0641F;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M7 7.5h7a2.5 2.5 0 010 5H9a2.5 2.5 0 000 5h8" stroke="#A0641F" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:600; {{ tabLabelHide }}">Prices</span>
+      </a>
+    </nav>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showMarket&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Columns&quot;},&quot;showMargin&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Columns&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const D5 = ["2\u00d74", "2\u00d76", "2\u00d78", "2\u00d710", "2\u00d712"];
+    const D4 = ["4/4", "5/4", "6/4", "8/4"];
+    const S = [
+      { key: "df1", name: "Doug Fir #1", grade: "Green", group: "Softwood", accent: "#7BA23F", updated: "2026-06-28", dims: D5, market: [545, 560, 588, 612, 640], chg: [6, 4, 8, -3, 5], factor: 1.15 },
+      { key: "spf", name: "SPF #2", grade: "Kiln-dried", group: "Softwood", accent: "#7BA23F", updated: "2026-06-29", dims: D5, market: [452, 468, 502, 528, 556], chg: [-4, -2, 3, 0, -5], factor: 1.13 },
+      { key: "hf", name: "Hem-Fir", grade: "#2 & Btr", group: "Softwood", accent: "#7BA23F", updated: "2026-06-27", dims: D5, market: [470, 486, 515, 540, 566], chg: [2, 0, -3, 4, 1], factor: 1.14 },
+      { key: "pp", name: "Ponderosa Pine", grade: "#3 Com", group: "Softwood", accent: "#E2A615", updated: "2026-06-26", dims: D5, market: [498, 512, 545, 570, 598], chg: [8, 6, -2, 3, 7], factor: 1.16 },
+      { key: "wrc", name: "W. Red Cedar", grade: "Clear", group: "Softwood", accent: "#C77A2B", updated: "2026-06-25", dims: D5, market: [1180, 1240, 1360, 1480, 1620], chg: [-15, 10, 22, -8, 14], factor: 1.12 },
+      { key: "wo", name: "White Oak", grade: "FAS", group: "Hardwood", accent: "#8A6D3B", updated: "2026-06-28", dims: D4, market: [2650, 2820, 3050, 3380], chg: [35, -20, 40, 55], factor: 1.18 },
+      { key: "hm", name: "Hard Maple", grade: "Sel & Btr", group: "Hardwood", accent: "#B79A5B", updated: "2026-06-27", dims: D4, market: [2380, 2520, 2740, 3010], chg: [-30, 15, 0, 25], factor: 1.15 },
+      { key: "wal", name: "Black Walnut", grade: "FAS", group: "Hardwood", accent: "#5A4326", updated: "2026-06-29", dims: D4, market: [5800, 6200, 6850, 7600], chg: [120, -60, 90, 140], factor: 1.17 },
+      { key: "ipe", name: "Ipe", grade: "Clear FEQ", group: "Hardwood", accent: "#6E4A2A", updated: "2026-06-30", dims: D4, market: [3900, 4150, 4480, 4920], chg: [-45, 30, 60, -25], factor: 1.14 },
+    ];
+    const prices = {}, MK = {}, CH = {};
+    S.forEach(sp => sp.dims.forEach((d, i) => {
+      const k = sp.key + "|" + d;
+      MK[k] = sp.market[i];
+      CH[k] = sp.chg[i];
+      prices[k] = Math.round(sp.market[i] * sp.factor / 5) * 5;
+    }));
+    this.S = S; this.MK = MK; this.CH = CH;
+    this.state = { prices, q: "", group: "all", mobile: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 760px)').matches, shortH: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-height: 480px)').matches };
+  }
+
+  componentDidMount() {
+    const defs = [['mobile', '(max-width: 760px)'], ['shortH', '(max-height: 480px)']];
+    this._mqs = defs.map(d => [d[0], window.matchMedia(d[1])]);
+    this._onMq = () => { const p = {}; this._mqs.forEach(m => p[m[0]] = m[1].matches); this.setState(p); };
+    this._mqs.forEach(m => { if (m[1].addEventListener) m[1].addEventListener('change', this._onMq); else m[1].addListener(this._onMq); });
+  }
+  componentWillUnmount() {
+    if (!this._mqs) return;
+    this._mqs.forEach(m => { if (m[1].removeEventListener) m[1].removeEventListener('change', this._onMq); else m[1].removeListener(this._onMq); });
+  }
+
+  fmt(n) { return Math.round(n || 0).toLocaleString("en-US"); }
+  money(n) { return "$" + this.fmt(n); }
+  num(v) { const n = parseFloat(v); return isFinite(n) ? n : 0; }
+  setYour(k, v) { this.setState(s => ({ prices: { ...s.prices, [k]: this.num(v) } })); }
+  dateLabel(iso) {
+    const M = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const d = new Date(iso + "T00:00:00Z");
+    return M[d.getUTCMonth()] + " " + d.getUTCDate();
+  }
+
+  filterStyle(active) {
+    return "font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; cursor:pointer; border:none; border-radius:7px; padding:6px 12px; background:" +
+      (active ? "#7E4E18" : "transparent") + "; color:" + (active ? "#F4E4CC" : "#8C7E6B") + ";";
+  }
+
+  markupStyle(mk) {
+    const pos = mk >= 0;
+    return "display:inline-flex; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:" +
+      (pos ? "#2F6342" : "#B5482F") + "; background:" + (pos ? "#E4EFE6" : "#FBEFE9") + "; border:1px solid " + (pos ? "#CADDCD" : "#E0B8A8") + ";";
+  }
+
+  dimVM(sp, d) {
+    const k = sp.key + "|" + d;
+    const your = this.state.prices[k] || 0;
+    const mk = this.MK[k], ch = this.CH[k];
+    const mkup = mk > 0 ? ((your - mk) / mk) * 100 : 0;
+    const dcol = ch > 0 ? "#2F6342" : ch < 0 ? "#B5482F" : "#A99B86";
+    return {
+      label: d,
+      yourVal: your,
+      onYour: (e) => this.setYour(k, e.target.value),
+      marketLabel: this.money(mk),
+      deltaLabel: ch === 0 ? "unch" : (ch > 0 ? "+" : "\u2212") + this.fmt(Math.abs(ch)),
+      deltaStyle: "font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:" + dcol + ";",
+      caretStyle: "display:" + (ch === 0 ? "none" : "inline-flex") + "; align-items:center; color:" + (ch > 0 ? "#2F6342" : "#B5482F") + "; transform:rotate(" + (ch < 0 ? "180" : "0") + "deg);",
+      markupLabel: (mkup >= 0 ? "+" : "\u2212") + Math.abs(mkup).toFixed(1) + "%",
+      markupStyle: this.markupStyle(mkup),
+      _mkup: mkup,
+    };
+  }
+
+  speciesVM(sp) {
+    const dims = sp.dims.map(d => this.dimVM(sp, d));
+    let sMk = 0, sPrev = 0, sumMk = 0;
+    sp.dims.forEach(d => {
+      const mk = this.MK[sp.key + "|" + d], ch = this.CH[sp.key + "|" + d];
+      sMk += mk; sPrev += (mk - ch);
+    });
+    dims.forEach(x => sumMk += x._mkup);
+    const pct = sPrev > 0 ? ((sMk - sPrev) / sPrev) * 100 : 0;
+    const avgMk = dims.length ? sumMk / dims.length : 0;
+    const flat = Math.abs(pct) < 0.05;
+    const up = pct >= 0;
+    const badgeCol = flat ? "#8C7E6B" : up ? "#2F6342" : "#B5482F";
+    const badgeBg = flat ? "#F3ECE0" : up ? "#E4EFE6" : "#FBEFE9";
+    const badgeBd = flat ? "#E6DCCC" : up ? "#CADDCD" : "#E0B8A8";
+    return {
+      key: sp.key, name: sp.name, grade: sp.grade, accent: sp.accent,
+      updated: this.dateLabel(sp.updated),
+      skuLabel: sp.dims.length + " sizes",
+      dims,
+      chgLabel: Math.abs(pct).toFixed(1) + "%",
+      chgBadgeStyle: "display:inline-flex; align-items:center; gap:4px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 9px; border-radius:999px; color:" + badgeCol + "; background:" + badgeBg + "; border:1px solid " + badgeBd + ";",
+      chgCaretStyle: "display:" + (flat ? "none" : "inline-flex") + "; align-items:center; color:" + badgeCol + "; transform:rotate(" + (up ? "0" : "180") + "deg);",
+      avgMarkupLabel: (avgMk >= 0 ? "+" : "\u2212") + Math.abs(avgMk).toFixed(1) + "%",
+    };
+  }
+
+  renderVals() {
+    const showMarket = this.props && this.props.showMarket != null ? this.props.showMarket : true;
+    const showMargin = this.props && this.props.showMargin != null ? this.props.showMargin : true;
+
+    const q = (this.state.q || "").trim().toLowerCase();
+    const gf = this.state.group;
+    const matches = (sp) =>
+      (gf === "all" || sp.group === gf) &&
+      (q === "" || sp.name.toLowerCase().includes(q) || sp.grade.toLowerCase().includes(q));
+
+    const view = ["Softwood", "Hardwood"].map(g => {
+      const species = this.S.filter(sp => sp.group === g && matches(sp));
+      return {
+        label: g,
+        countLabel: species.length + " species",
+        species: species.map(sp => this.speciesVM(sp)),
+      };
+    }).filter(grp => grp.species.length > 0);
+
+    let softV = [], hardV = [], mkups = [], up = 0, down = 0;
+    this.S.forEach(sp => sp.dims.forEach(d => {
+      const k = sp.key + "|" + d;
+      const your = this.state.prices[k] || 0, mk = this.MK[k], ch = this.CH[k];
+      (sp.group === "Softwood" ? softV : hardV).push(your);
+      if (mk > 0) mkups.push(((your - mk) / mk) * 100);
+      if (ch > 0) up++; else if (ch < 0) down++;
+    }));
+    const avg = (a) => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+    const stats = [
+      { label: "Softwood avg", value: this.money(avg(softV)), sub: "per MBF", valueColor: "#221A12" },
+      { label: "Hardwood avg", value: this.money(avg(hardV)), sub: "per MBF", valueColor: "#221A12" },
+      { label: "Avg margin", value: "+" + avg(mkups).toFixed(1) + "%", sub: "over market", valueColor: "#2F6342" },
+      { label: "Movers up", value: "" + up, sub: "sizes this week", valueColor: "#2F6342" },
+      { label: "Movers down", value: "" + down, sub: "sizes this week", valueColor: "#B5482F" },
+    ];
+
+    return {
+      view, stats, showMarket, showMargin,
+      isMobile: this.state.mobile,
+      isDesktop: !this.state.mobile,
+      headerStick: this.state.shortH ? '' : 'position:sticky; top:0;',
+      tabBarPad: this.state.shortH ? '6px 0 calc(6px + env(safe-area-inset-bottom))' : '7px 0 calc(9px + env(safe-area-inset-bottom))',
+      tabLabelHide: this.state.shortH ? 'display:none;' : '',
+      spacerH: this.state.shortH ? '48px' : '70px',
+      empty: view.length === 0,
+      query: this.state.q,
+      onQuery: (e) => this.setState({ q: e.target.value }),
+      onAll: () => this.setState({ group: "all" }),
+      onSoft: () => this.setState({ group: "Softwood" }),
+      onHard: () => this.setState({ group: "Hardwood" }),
+      allStyle: this.filterStyle(gf === "all"),
+      softStyle: this.filterStyle(gf === "Softwood"),
+      hardStyle: this.filterStyle(gf === "Hardwood"),
+    };
+  }
+}
+</script>
+</body>
+</html>

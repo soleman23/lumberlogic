@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  input[type=number]{ -moz-appearance:textfield; }
+  input:focus{ border-color:#BC7A2C !important; box-shadow:0 0 0 3px rgba(188,122,44,.16); }
+</style>
+</helmet>
+
+<div data-screen-label="Tally calculator" style="background:#EFE7D8; min-height:100vh; font-family:'IBM Plex Sans',sans-serif; color:#221A12; -webkit-font-smoothing:antialiased; line-height:1.5;">
+
+  <!-- TOP BAR -->
+  <header style="background:#FAF6EF; border-bottom:1px solid #E6DCCC; z-index:20; {{ headerStick }}">
+    <div style="max-width:1240px; margin:0 auto; padding:12px clamp(14px,3.5vw,28px); display:flex; align-items:center; gap:12px;">
+      <div style="display:flex; align-items:center; gap:11px;">
+        <svg width="30" height="30" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="60" height="60" rx="15" fill="#BC7A2C"/><rect x="13" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="26" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="39" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="19.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="32.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="26" y="12" width="12" height="12" rx="2.5" fill="#17120D"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:-.01em;"><span style="color:#221A12;">Lumber</span> <span style="color:#A0641F;">Logic</span></span>
+      </div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex; gap:4px; margin-left:18px;">
+        <a href="#" style="font-size:14px; font-weight:600; color:#221A12; text-decoration:none; padding:7px 13px; border-radius:8px; background:#F3ECE0;">Calculator</a>
+        <a href="Tally Saved Loads.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Saved loads</a>
+        <a href="Tally Prices.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Prices</a>
+      </nav>
+      </sc-if>
+      <div style="flex:1;"></div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><button onClick="{{ resetAll }}" style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#7E4E18; background:#fff; border:1px solid #E6DCCC; border-radius:9px; padding:9px 14px; cursor:pointer;" style-hover="border-color:#BC7A2C;">Clear tally</button></sc-if>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><button onClick="{{ resetAll }}" style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#7E4E18; background:#fff; border:1px solid #E6DCCC; border-radius:9px; padding:9px 12px; cursor:pointer;" style-hover="border-color:#BC7A2C;">Clear</button></sc-if>
+      <div style="display:flex; align-items:center; gap:9px;">
+        <div style="width:34px; height:34px; border-radius:50%; background:#7E4E18; color:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px;">CB</div>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1240px; margin:0 auto; padding:clamp(20px,5vw,32px) clamp(14px,3.5vw,28px) 72px;">
+
+    <!-- TITLE + GRAND TOTALS -->
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:20px; margin-bottom:26px;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F; margin-bottom:6px;">Random length price converter</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(26px,7vw,32px); letter-spacing:-.02em; margin:0;">Load tally</h1>
+        <p style="font-size:14px; color:#6B5E4D; margin:6px 0 0; max-width:520px;">Enter units per length. Board footage builds automatically — add $/MBF to price the load.</p>
+      </div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex; gap:12px;">
+        <div style="background:#17120D; border-radius:14px; padding:14px 20px; color:#F3ECE0; min-width:130px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#A89A85;">Total board ft</div>
+          <div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:28px; color:#fff;">{{ grandBF }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#CE8E3F;">bf</span></div>
+        </div>
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 20px; min-width:120px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">Pieces</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:28px;">{{ grandPieces }}</div>
+        </div>
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 20px; min-width:130px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">Load value</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:28px; color:#2F6342;">{{ grandCost }}</div>
+        </div>
+      </div>
+      </sc-if>
+    </div>
+
+    <!-- DIMENSION BLOCKS -->
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <sc-for list="{{ dims }}" as="dim" hint-placeholder-count="5">
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; box-shadow:0 3px 14px rgba(60,40,15,.05); overflow:hidden;">
+          <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; align-items:stretch; flex-wrap:wrap;">
+
+            <!-- INFO PANEL -->
+            <div style="width:188px; flex-shrink:0; background:#FAF6EF; border-right:1px solid #E6DCCC; padding:18px 18px 16px; display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; align-items:center; gap:9px;">
+                <span style="width:12px; height:12px; border-radius:3px; background:{{ dim.accent }};"></span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; letter-spacing:-.01em;">{{ dim.label }}</span>
+              </div>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#8C7E6B;">Pieces / unit</span>
+                <input type="number" value="{{ dim.pieces }}" onChange="{{ dim.onPieces }}" style="width:100%; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:17px; color:#B5482F; background:#fff; border:1px solid #D6C8B2; border-radius:8px; padding:8px 4px; outline:none;">
+              </label>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#8C7E6B;">Base $ / MBF</span>
+                <div style="display:flex; align-items:center; background:#fff; border:1px solid #D6C8B2; border-radius:8px; padding:0 4px 0 9px;">
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8C7E6B;">$</span>
+                  <input type="number" value="{{ dim.base }}" onChange="{{ dim.onBase }}" placeholder="0" style="flex:1; min-width:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:15px; color:#7E4E18; background:transparent; border:none; padding:8px 2px; outline:none;">
+                </div>
+              </label>
+            </div>
+
+            <!-- GRID -->
+            <div style="flex:1; min-width:300px; padding:16px 18px;">
+              <!-- length header -->
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+                <span style="width:62px; flex-shrink:0; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#A0641F;">ft</span>
+                <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                  <div style="flex:1; min-width:0; text-align:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">{{ cell.len }}</div>
+                </sc-for>
+              </div>
+              <!-- units row -->
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
+                <span style="width:62px; flex-shrink:0; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#221A12;">Units</span>
+                <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                  <input type="number" value="{{ cell.units }}" onChange="{{ cell.onUnits }}" placeholder="0" style="flex:1; min-width:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:16px; color:#221A12; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:9px 2px; outline:none;">
+                </sc-for>
+              </div>
+              <!-- price row -->
+              <sc-if value="{{ showPriceRow }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
+                  <span style="width:62px; flex-shrink:0; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">$/MBF</span>
+                  <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                    <input type="number" value="{{ cell.price }}" onChange="{{ cell.onPrice }}" placeholder="—" style="{{ cell.priceStyle }}">
+                  </sc-for>
+                </div>
+              </sc-if>
+              <!-- footage row -->
+              <div style="display:flex; gap:6px; align-items:center;">
+                <span style="width:62px; flex-shrink:0; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Board ft</span>
+                <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                  <div style="flex:1; min-width:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; padding:7px 0;">{{ cell.bf }}</div>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- ROW SUMMARY -->
+            <div style="width:212px; flex-shrink:0; background:#17120D; color:#F3ECE0; padding:18px 20px; display:flex; flex-direction:column; gap:11px;">
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#A89A85;">Board feet</div>
+                <div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:30px; color:#fff; line-height:1.05;">{{ dim.bf }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#CE8E3F;">bf</span></div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:9px 14px; border-top:1px solid #2C231A; padding-top:11px;">
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A89A85;">Pieces</div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:15px; color:#F3ECE0;">{{ dim.totalPieces }}</div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A89A85;">LF</div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:15px; color:#F3ECE0;">{{ dim.lf }}</div>
+                </div>
+                <sc-if value="{{ showCost }}" hint-placeholder-val="{{ true }}">
+                  <div>
+                    <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A89A85;">Avg $/MBF</div>
+                    <div style="font-family:'IBM Plex Mono',monospace; font-size:15px; color:#CE8E3F;">{{ dim.avg }}</div>
+                  </div>
+                  <div>
+                    <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A89A85;">Cost</div>
+                    <div style="font-family:'IBM Plex Mono',monospace; font-size:15px; color:#9FCBAE;">{{ dim.cost }}</div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+
+          </div>
+          </sc-if>
+
+          <!-- TABLET: header row + horizontal worksheet -->
+          <sc-if value="{{ isTablet }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="background:#FAF6EF; border-bottom:1px solid #E6DCCC; padding:12px 18px; display:flex; align-items:center; gap:10px;">
+              <span style="width:12px; height:12px; border-radius:3px; background:{{ dim.accent }};"></span>
+              <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:21px; letter-spacing:-.01em;">{{ dim.label }}</span>
+              <div style="flex:1;"></div>
+              <label style="display:flex; align-items:center; gap:6px;"><span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#8C7E6B;">Pieces / unit</span><input type="number" value="{{ dim.pieces }}" onChange="{{ dim.onPieces }}" style="width:64px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:15px; color:#B5482F; background:#fff; border:1px solid #D6C8B2; border-radius:8px; padding:8px 2px; outline:none;"></label>
+              <label style="display:flex; align-items:center; gap:6px;"><span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#8C7E6B;">Base $ / MBF</span><input type="number" value="{{ dim.base }}" onChange="{{ dim.onBase }}" placeholder="0" style="width:72px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:15px; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:8px; padding:8px 2px; outline:none;"></label>
+            </div>
+            <div style="padding:14px 18px;">
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:8px;">
+                <span style="width:62px; flex-shrink:0; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#A0641F;">ft</span>
+                <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                  <div style="flex:1; min-width:0; text-align:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">{{ cell.len }}</div>
+                </sc-for>
+              </div>
+              <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
+                <span style="width:62px; flex-shrink:0; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#221A12;">Units</span>
+                <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                  <input type="number" value="{{ cell.units }}" onChange="{{ cell.onUnits }}" placeholder="0" style="flex:1; min-width:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:16px; color:#221A12; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:9px 2px; outline:none;">
+                </sc-for>
+              </div>
+              <sc-if value="{{ showPriceRow }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex; gap:6px; align-items:center; margin-bottom:6px;">
+                  <span style="width:62px; flex-shrink:0; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">$/MBF</span>
+                  <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                    <input type="number" value="{{ cell.price }}" onChange="{{ cell.onPrice }}" placeholder="—" style="{{ cell.priceStyle }}">
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="display:flex; gap:6px; align-items:center;">
+                <span style="width:62px; flex-shrink:0; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Board ft</span>
+                <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                  <div style="flex:1; min-width:0; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; padding:7px 0;">{{ cell.bf }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#17120D; color:#F3ECE0; padding:12px 18px; display:flex; align-items:center; gap:16px;">
+              <div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:24px; color:#fff;">{{ dim.bf }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#CE8E3F;">bf</span></div>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A89A85;">{{ dim.totalPieces }} pcs · {{ dim.lf }} LF</span>
+              <div style="flex:1;"></div>
+              <sc-if value="{{ showCost }}" hint-placeholder-val="{{ true }}"><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#CE8E3F;">avg {{ dim.avg }}</span></sc-if>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#9FCBAE;">{{ dim.cost }}</span>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- MOBILE: stacked length rows -->
+          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="background:#FAF6EF; border-bottom:1px solid #E6DCCC; padding:12px 14px; display:flex; align-items:center; gap:8px;">
+              <span style="width:11px; height:11px; border-radius:3px; background:{{ dim.accent }};"></span>
+              <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:19px; letter-spacing:-.01em;">{{ dim.label }}</span>
+              <div style="flex:1;"></div>
+              <label style="display:flex; align-items:center; gap:5px;"><span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#8C7E6B;">pc/unit</span><input type="number" value="{{ dim.pieces }}" onChange="{{ dim.onPieces }}" style="width:52px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#B5482F; background:#fff; border:1px solid #D6C8B2; border-radius:7px; padding:7px 2px; outline:none;"></label>
+              <label style="display:flex; align-items:center; gap:5px;"><span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#8C7E6B;">$/MBF</span><input type="number" value="{{ dim.base }}" onChange="{{ dim.onBase }}" placeholder="0" style="width:56px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:14px; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:7px; padding:7px 2px; outline:none;"></label>
+            </div>
+            <div style="padding:10px 14px 12px;">
+              <div style="display:grid; grid-template-columns:40px 1fr 76px; gap:8px; align-items:center; padding-bottom:6px;">
+                <span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#A0641F;">ft</span>
+                <span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#221A12; text-align:center;">Units</span>
+                <span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#8C7E6B; text-align:right;">Board ft</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <sc-for list="{{ dim.cells }}" as="cell" hint-placeholder-count="7">
+                  <div style="display:grid; grid-template-columns:40px 1fr 76px; gap:8px; align-items:center;">
+                    <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px;">{{ cell.lenFt }}</span>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <button onClick="{{ cell.onMinus }}" style="width:40px; height:44px; flex-shrink:0; border-radius:9px; background:#FAF6EF; border:1px solid #D6C8B2; cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:18px; color:#7E4E18;">−</button>
+                      <input type="number" value="{{ cell.units }}" onChange="{{ cell.onUnits }}" placeholder="0" style="flex:1; min-width:0; height:44px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:17px; color:#221A12; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:9px; outline:none;">
+                      <button onClick="{{ cell.onPlus }}" style="width:40px; height:44px; flex-shrink:0; border-radius:9px; background:#FAF6EF; border:1px solid #D6C8B2; cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:18px; color:#7E4E18;">+</button>
+                    </div>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8C7E6B; text-align:right;">{{ cell.bf }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#17120D; color:#F3ECE0; padding:12px 14px; display:flex; align-items:center; gap:12px;">
+              <div style="display:flex; align-items:baseline; gap:4px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:20px; color:#fff;">{{ dim.bf }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#CE8E3F;">bf</span></div>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A89A85;">{{ dim.totalPieces }} pcs · {{ dim.lf }} LF</span>
+              <div style="flex:1;"></div>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#9FCBAE;">{{ dim.cost }}</span>
+            </div>
+          </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- MIXED-TRUCK BUILDER -->
+    <div style="margin-top:38px;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-bottom:16px;">
+        <div>
+          <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:24px; letter-spacing:-.01em; margin:0;">Mixed-truck builder</h2>
+          <p style="font-size:14px; color:#6B5E4D; margin:5px 0 0; max-width:560px;">Group widths into a truck and watch board footage fill toward your target capacity.</p>
+        </div>
+        <button onClick="{{ addGroup }}" style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#fff; background:#BC7A2C; border:none; border-radius:10px; padding:11px 18px; cursor:pointer; display:flex; align-items:center; gap:8px;" style-hover="background:#A0641F;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>Add truck</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr)); gap:16px; align-items:start;">
+        <sc-for list="{{ groups }}" as="grp" hint-placeholder-count="3">
+          <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:20px 20px 22px; box-shadow:0 3px 14px rgba(60,40,15,.05);">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+              <input value="{{ grp.name }}" onChange="{{ grp.onName }}" style="flex:1; min-width:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; color:#221A12; background:transparent; border:none; border-bottom:1.5px solid #E6DCCC; padding:3px 2px; outline:none;" style-focus="border-color:#BC7A2C;">
+              <button onClick="{{ grp.onRemove }}" title="Remove truck" style="width:30px; height:30px; flex-shrink:0; border-radius:8px; background:#FAF6EF; border:1px solid #E6DCCC; cursor:pointer; color:#9c4a36; display:flex; align-items:center; justify-content:center;" style-hover="background:#EFE0DB;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" stroke="#9c4a36" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+
+            <!-- member chips -->
+            <div style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px;">
+              <sc-for list="{{ grp.chips }}" as="chip" hint-placeholder-count="5">
+                <button onClick="{{ chip.onToggle }}" style="{{ chip.style }}">{{ chip.label }}</button>
+              </sc-for>
+            </div>
+
+            <!-- totals -->
+            <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:10px;">
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">On this truck</div>
+                <div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:30px; color:#221A12; line-height:1.05;">{{ grp.bf }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A0641F;">bf</span></div>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; margin-top:1px;">{{ grp.lf }} LF · {{ grp.pieces }} pcs</div>
+              </div>
+              <label style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+                <span style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#8C7E6B;">Target bf</span>
+                <input type="number" value="{{ grp.target }}" onChange="{{ grp.onTarget }}" style="width:96px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:14px; color:#221A12; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:7px 4px; outline:none;">
+              </label>
+            </div>
+
+            <!-- progress -->
+            <div style="height:10px; background:#F3ECE0; border-radius:999px; overflow:hidden;">
+              <div style="{{ grp.barStyle }}"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:7px;">
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:{{ grp.pctColor }};">{{ grp.pctLabel }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;">{{ grp.remainLabel }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="height:{{ spacerH }};"></div></sc-if>
+  </main>
+
+  <!-- MOBILE TOTALS STRIP -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; left:0; right:0; bottom:{{ totalsBottom }}; z-index:39; background:#17120D; color:#F3ECE0; padding:10px 16px; display:flex; align-items:center; gap:14px;">
+      <div style="display:flex; align-items:baseline; gap:4px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:20px; color:#fff;">{{ grandBF }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#CE8E3F;">bf</span></div>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A89A85;">{{ grandPieces }} pcs</span>
+      <div style="flex:1;"></div>
+      <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; color:#9FCBAE;">{{ grandCost }}</span>
+    </div>
+  </sc-if>
+
+  <!-- MOBILE TAB BAR -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <nav style="position:fixed; left:0; right:0; bottom:0; z-index:40; background:#FAF6EF; border-top:1px solid #E6DCCC; display:grid; grid-template-columns:1fr 1fr 1fr; padding:{{ tabBarPad }};">
+      <a href="#" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#A0641F;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2.5" stroke="#A0641F" stroke-width="1.8"/><path d="M8 7.5h8M8 11.5h4M8 15.5h5" stroke="#A0641F" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:600; {{ tabLabelHide }}">Calculator</span>
+      </a>
+      <a href="Tally Saved Loads.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" stroke="#8C7E6B" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 8l8 4 8-4M12 12v8" stroke="#8C7E6B" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Loads</span>
+      </a>
+      <a href="Tally Prices.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M7 7.5h7a2.5 2.5 0 010 5H9a2.5 2.5 0 000 5h8" stroke="#8C7E6B" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Prices</span>
+      </a>
+    </nav>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:1000},&quot;showPriceRow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Display&quot;},&quot;showCost&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Display&quot;},&quot;truckTarget&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:12000,&quot;min&quot;:2000,&quot;max&quot;:40000,&quot;step&quot;:1000,&quot;unit&quot;:&quot;bf&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Trucks&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const DEFS = [
+      { name: '2x4',  label: '2\u00d74',  t: 2, w: 4,  pieces: 208, accent: '#7BA23F' },
+      { name: '2x6',  label: '2\u00d76',  t: 2, w: 6,  pieces: 128, accent: '#7BA23F' },
+      { name: '2x8',  label: '2\u00d78',  t: 2, w: 8,  pieces: 147, accent: '#E2A615' },
+      { name: '2x10', label: '2\u00d710', t: 2, w: 10, pieces: 105, accent: '#E2A615' },
+      { name: '2x12', label: '2\u00d712', t: 2, w: 12, pieces: 84,  accent: '#C77A2B' },
+    ];
+    const LENS = [8, 10, 12, 14, 16, 18, 20];
+    // seeded from the user's screenshot so totals match their sheet
+    const seedUnits = { '2x4|8': 1, '2x4|12': 1, '2x6|10': 1, '2x6|16': 1, '2x8|10': 1, '2x8|14': 1 };
+    const seedBase = { '2x4': 485, '2x6': 467, '2x8': 545, '2x10': 500, '2x12': 520 };
+    const pieces = {}, base = {}, units = {}, override = {};
+    DEFS.forEach(d => {
+      pieces[d.name] = d.pieces;
+      base[d.name] = seedBase[d.name] || 0;
+      LENS.forEach(L => {
+        const k = d.name + '|' + L;
+        units[k] = seedUnits[k] || 0;
+        override[k] = null;
+      });
+    });
+    const tgt = this.props && this.props.truckTarget != null ? this.props.truckTarget : 12000;
+    this.DEFS = DEFS; this.LENS = LENS;
+    this.state = {
+      mobile: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 760px)').matches,
+      tablet: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(min-width: 761px) and (max-width: 1099px)').matches,
+      shortH: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-height: 480px)').matches,
+      pieces, base, units, override,
+      gid: 4,
+      groups: [
+        { id: 1, name: '4" & 6"',  target: 8000,  members: ['2x4', '2x6'] },
+        { id: 2, name: '4" \u2013 10"', target: tgt, members: ['2x4', '2x6', '2x8', '2x10'] },
+        { id: 3, name: '8" \u2013 12"', target: 8000, members: ['2x8', '2x10', '2x12'] },
+      ],
+    };
+  }
+
+  componentDidMount() {
+    const defs = [['mobile', '(max-width: 760px)'], ['tablet', '(min-width: 761px) and (max-width: 1099px)'], ['shortH', '(max-height: 480px)']];
+    this._mqs = defs.map(d => [d[0], window.matchMedia(d[1])]);
+    this._onMq = () => { const p = {}; this._mqs.forEach(m => p[m[0]] = m[1].matches); this.setState(p); };
+    this._mqs.forEach(m => { if (m[1].addEventListener) m[1].addEventListener('change', this._onMq); else m[1].addListener(this._onMq); });
+  }
+  componentWillUnmount() {
+    if (!this._mqs) return;
+    this._mqs.forEach(m => { if (m[1].removeEventListener) m[1].removeEventListener('change', this._onMq); else m[1].removeListener(this._onMq); });
+  }
+
+  fmt(n, d) {
+    if (!isFinite(n)) n = 0;
+    return Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  num(v) { const n = parseFloat(v); return isFinite(n) ? n : 0; }
+
+  // ---- per-dimension math ----
+  bfPerFt(d) { return (d.t * d.w) / 12; }
+  cellBF(d, L) {
+    const u = this.state.units[d.name + '|' + L] || 0;
+    return u * L * (this.state.pieces[d.name] || 0) * this.bfPerFt(d);
+  }
+  effPrice(name, L) {
+    const o = this.state.override[name + '|' + L];
+    return o != null ? o : (this.state.base[name] || 0);
+  }
+  dimTotals(d) {
+    let bf = 0, lf = 0, pcs = 0, cost = 0;
+    this.LENS.forEach(L => {
+      const u = this.state.units[d.name + '|' + L] || 0;
+      const cbf = this.cellBF(d, L);
+      bf += cbf;
+      lf += u * L;
+      pcs += u * (this.state.pieces[d.name] || 0);
+      cost += (cbf * this.effPrice(d.name, L)) / 1000;
+    });
+    return { bf, lf, pcs, cost, avg: bf > 0 ? (cost / bf) * 1000 : 0 };
+  }
+
+  // ---- setters ----
+  setPieces(name, v) { this.setState(s => ({ pieces: { ...s.pieces, [name]: this.num(v) } })); }
+  setBase(name, v) { this.setState(s => ({ base: { ...s.base, [name]: this.num(v) } })); }
+  setUnits(name, L, v) { this.setState(s => ({ units: { ...s.units, [name + '|' + L]: this.num(v) } })); }
+  setPrice(name, L, v) {
+    const t = String(v).trim();
+    this.setState(s => ({ override: { ...s.override, [name + '|' + L]: t === '' ? null : this.num(v) } }));
+  }
+  resetAll() {
+    this.setState(s => {
+      const units = {}, override = {};
+      Object.keys(s.units).forEach(k => units[k] = 0);
+      Object.keys(s.override).forEach(k => override[k] = null);
+      return { units, override };
+    });
+  }
+
+  // ---- group setters ----
+  updGroup(id, patch) {
+    this.setState(s => ({ groups: s.groups.map(g => g.id === id ? { ...g, ...patch } : g) }));
+  }
+  toggleMember(id, name) {
+    this.setState(s => ({
+      groups: s.groups.map(g => {
+        if (g.id !== id) return g;
+        const has = g.members.includes(name);
+        return { ...g, members: has ? g.members.filter(m => m !== name) : [...g.members, name] };
+      })
+    }));
+  }
+  addGroup() {
+    this.setState(s => ({
+      gid: s.gid + 1,
+      groups: [...s.groups, { id: s.gid, name: 'New truck', target: 12000, members: [] }],
+    }));
+  }
+  removeGroup(id) { this.setState(s => ({ groups: s.groups.filter(g => g.id !== id) })); }
+
+  renderVals() {
+    const showCost = this.props && this.props.showCost != null ? this.props.showCost : true;
+    const showPriceRow = this.props && this.props.showPriceRow != null ? this.props.showPriceRow : true;
+
+    let gBF = 0, gPcs = 0, gCost = 0;
+    const dims = this.DEFS.map(d => {
+      const tot = this.dimTotals(d);
+      gBF += tot.bf; gPcs += tot.pcs; gCost += tot.cost;
+      const cells = this.LENS.map(L => {
+        const u = this.state.units[d.name + '|' + L] || 0;
+        const ov = this.state.override[d.name + '|' + L];
+        const eff = this.effPrice(d.name, L);
+        const cbf = this.cellBF(d, L);
+        return {
+          len: L,
+          lenFt: L + '\u2032',
+          units: u === 0 ? '' : u,
+          price: eff === 0 ? '' : eff,
+          bf: cbf > 0 ? this.fmt(cbf, 0) : '\u00b7',
+          priceStyle: 'flex:1; min-width:0; text-align:center; font-family:\'IBM Plex Mono\',monospace; font-weight:500; font-size:14px; color:' + (ov != null ? '#B5482F' : '#7E4E18') + '; background:' + (ov != null ? '#FBEFE9' : '#fff') + '; border:1px solid ' + (ov != null ? '#E0B8A8' : '#E6DCCC') + '; border-radius:8px; padding:8px 2px; outline:none;',
+          onUnits: (e) => this.setUnits(d.name, L, e.target.value),
+          onMinus: () => this.setUnits(d.name, L, Math.max(0, u - 1)),
+          onPlus: () => this.setUnits(d.name, L, u + 1),
+          onPrice: (e) => this.setPrice(d.name, L, e.target.value),
+        };
+      });
+      return {
+        name: d.name, label: d.label, accent: d.accent,
+        pieces: this.state.pieces[d.name],
+        base: this.state.base[d.name] === 0 ? '' : this.state.base[d.name],
+        onPieces: (e) => this.setPieces(d.name, e.target.value),
+        onBase: (e) => this.setBase(d.name, e.target.value),
+        cells,
+        bf: this.fmt(tot.bf, 0),
+        lf: this.fmt(tot.lf, 0),
+        totalPieces: this.fmt(tot.pcs, 0),
+        avg: tot.avg > 0 ? '$' + this.fmt(tot.avg, 0) : '\u2014',
+        cost: tot.cost > 0 ? '$' + this.fmt(tot.cost, 0) : '\u2014',
+      };
+    });
+
+    const groups = this.state.groups.map(g => {
+      let bf = 0, lf = 0, pcs = 0;
+      g.members.forEach(name => {
+        const d = this.DEFS.find(x => x.name === name);
+        if (!d) return;
+        const t = this.dimTotals(d);
+        bf += t.bf; lf += t.lf; pcs += t.pcs;
+      });
+      const target = g.target || 0;
+      const pct = target > 0 ? (bf / target) * 100 : 0;
+      const over = pct > 100;
+      const barColor = pct >= 92 && pct <= 105 ? '#2F6342' : (over ? '#B5482F' : '#BC7A2C');
+      const remain = target - bf;
+      const chips = this.DEFS.map(d => {
+        const on = g.members.includes(d.name);
+        return {
+          label: d.label,
+          onToggle: () => this.toggleMember(g.id, d.name),
+          style: 'font-family:\'IBM Plex Sans\',sans-serif; font-weight:600; font-size:13px; cursor:pointer; border-radius:999px; padding:7px 13px; border:1px solid ' + (on ? '#7E4E18' : '#D6C8B2') + '; background:' + (on ? '#7E4E18' : '#fff') + '; color:' + (on ? '#F4E4CC' : '#8C7E6B') + ';',
+        };
+      });
+      return {
+        name: g.name, target: g.target,
+        bf: this.fmt(bf, 0), lf: this.fmt(lf, 0), pieces: this.fmt(pcs, 0),
+        pctLabel: this.fmt(Math.round(pct), 0) + '% full',
+        pctColor: barColor,
+        remainLabel: over ? '+' + this.fmt(-remain, 0) + ' over' : this.fmt(remain, 0) + ' bf left',
+        barStyle: 'height:100%; width:' + Math.min(100, pct) + '%; background:' + barColor + '; border-radius:999px; transition:width .25s ease;',
+        chips,
+        onName: (e) => this.updGroup(g.id, { name: e.target.value }),
+        onTarget: (e) => this.updGroup(g.id, { target: this.num(e.target.value) }),
+        onRemove: () => this.removeGroup(g.id),
+      };
+    });
+
+    return {
+      dims, groups, showCost, showPriceRow,
+      isMobile: this.state.mobile,
+      isDesktop: !this.state.mobile,
+      isWide: !this.state.mobile && !this.state.tablet,
+      isTablet: this.state.tablet,
+      headerStick: this.state.shortH ? '' : 'position:sticky; top:0;',
+      tabBarPad: this.state.shortH ? '6px 0 calc(6px + env(safe-area-inset-bottom))' : '7px 0 calc(9px + env(safe-area-inset-bottom))',
+      tabLabelHide: this.state.shortH ? 'display:none;' : '',
+      totalsBottom: this.state.shortH ? 'calc(34px + env(safe-area-inset-bottom))' : 'calc(55px + env(safe-area-inset-bottom))',
+      spacerH: this.state.shortH ? '92px' : '120px',
+      grandBF: this.fmt(gBF, 0),
+      grandPieces: this.fmt(gPcs, 0),
+      grandCost: gCost > 0 ? '$' + this.fmt(gCost, 0) : '$0',
+      addGroup: () => this.addGroup(),
+      resetAll: () => this.resetAll(),
+    };
+  }
+}
+</script>
+</body>
+</html>

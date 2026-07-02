@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="description" content="Fast, accurate lumber calculations: board feet, pricing, piece count, linear feet, waste, and truck loads." />
+  <title>Lumber Calculator</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#2D6A4F" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Lumber Calc" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <h1 class="app-title">Lumber Calculator</h1>
+  </header>
+
+  <!-- ===================== MAIN / SCREENS ===================== -->
+  <main class="app-main" id="appMain">
+
+    <!-- ---------- 1. BOARD FEET (multi-line, Q7=Yes) ---------- -->
+    <section class="screen" id="screen-bf" aria-labelledby="bf-title">
+      <div class="card">
+        <h2 class="card-title" id="bf-title">Board Feet</h2>
+        <p class="card-sub">Add one or more dimensions and total the board feet.</p>
+
+        <div id="bfLines" class="lines"></div>
+
+        <button type="button" class="btn btn-add" id="bfAddLine">+ Add Line</button>
+
+        <div class="result" id="bfResult" aria-live="polite">
+          <div class="result-main"><span id="bfTotal">—</span> <span class="result-unit">BF total</span></div>
+          <div class="result-sub" id="bfSub">Enter dimensions to calculate</div>
+        </div>
+        <div class="warning" id="bfWarn" hidden></div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-clear" id="bfClear">Clear</button>
+          <button type="button" class="btn btn-copy" id="bfCopy">Copy 📋</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 2. PRICING ---------- -->
+    <section class="screen" id="screen-price" aria-labelledby="price-title" hidden>
+      <div class="card">
+        <h2 class="card-title" id="price-title">Pricing</h2>
+        <p class="card-sub">Calculate the cost of an order.</p>
+
+        <div class="seg" role="group" aria-label="Price unit">
+          <button type="button" class="seg-btn active" data-priceunit="MBF" id="priceUnitMBF">$ / MBF</button>
+          <button type="button" class="seg-btn" data-priceunit="BF" id="priceUnitBF">$ / BF</button>
+        </div>
+
+        <div class="row">
+          <label for="priceBF">Total Board Feet</label>
+          <div class="input-wrap">
+            <input id="priceBF" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 5000" />
+            <span class="unit">BF</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="priceRate" id="priceRateLabel">Price per MBF</label>
+          <div class="input-wrap">
+            <span class="unit unit-pre">$</span>
+            <input id="priceRate" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 850" />
+            <span class="unit" id="priceRateUnit">/MBF</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <label for="priceQty">Quantity (pieces) <span class="optional">— optional</span></label>
+          <div class="input-wrap">
+            <input id="priceQty" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g. 100" />
+            <span class="unit">pcs</span>
+          </div>
+        </div>
+
+        <div class="result" id="priceResult" aria-live="polite">
+          <div class="result-main"><span id="priceTotal">—</span></div>
+          <div class="result-sub" id="priceSub">Enter board feet and price</div>
+        </div>
+        <div class="warning" id="priceWarn" hidden></div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-clear" id="priceClear">Clear</button>
+          <button type="button" class="btn btn-copy" id="priceCopy">Copy 📋</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 3. PIECE COUNT ---------- -->
+    <section class="screen" id="screen-pcs" aria-labelledby="pcs-title" hidden>
+      <div class="card">
+        <h2 class="card-title" id="pcs-title">Piece Count</h2>
+        <p class="card-sub">How many pieces to hit a target board footage.</p>
+
+        <div class="row">
+          <label for="pcsTarget">Target Board Feet</label>
+          <div class="input-wrap">
+            <input id="pcsTarget" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 1000" />
+            <span class="unit">BF</span>
+          </div>
+        </div>
+        <div class="row dims">
+          <div class="dim">
+            <label for="pcsT">Thickness</label>
+            <div class="input-wrap"><input id="pcsT" type="number" inputmode="decimal" min="0" step="any" placeholder="2" /><span class="unit">in</span></div>
+          </div>
+          <div class="dim">
+            <label for="pcsW">Width</label>
+            <div class="input-wrap"><input id="pcsW" type="number" inputmode="decimal" min="0" step="any" placeholder="4" /><span class="unit">in</span></div>
+          </div>
+          <div class="dim">
+            <label for="pcsL">Length</label>
+            <div class="input-wrap"><input id="pcsL" type="number" inputmode="decimal" min="0" step="any" placeholder="8" /><span class="unit">ft</span></div>
+          </div>
+        </div>
+
+        <div class="result" id="pcsResult" aria-live="polite">
+          <div class="result-main"><span id="pcsPieces">—</span> <span class="result-unit">pieces</span></div>
+          <div class="result-sub" id="pcsSub">Enter target and dimensions</div>
+        </div>
+        <div class="warning" id="pcsWarn" hidden></div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-clear" id="pcsClear">Clear</button>
+          <button type="button" class="btn btn-copy" id="pcsCopy">Copy 📋</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 4. LINEAR FEET ---------- -->
+    <section class="screen" id="screen-lf" aria-labelledby="lf-title" hidden>
+      <div class="card">
+        <h2 class="card-title" id="lf-title">Linear ↔ Board Feet</h2>
+        <p class="card-sub">Convert between linear feet and board feet for a dimension.</p>
+
+        <div class="seg" role="group" aria-label="Conversion direction">
+          <button type="button" class="seg-btn active" data-lfdir="LF2BF" id="lfDirA">Linear → Board</button>
+          <button type="button" class="seg-btn" data-lfdir="BF2LF" id="lfDirB">Board → Linear</button>
+        </div>
+
+        <div class="row" id="lfInputRow">
+          <label for="lfValue" id="lfValueLabel">Linear Feet</label>
+          <div class="input-wrap">
+            <input id="lfValue" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 100" />
+            <span class="unit" id="lfValueUnit">LF</span>
+          </div>
+        </div>
+        <div class="row dims two">
+          <div class="dim">
+            <label for="lfT">Thickness</label>
+            <div class="input-wrap"><input id="lfT" type="number" inputmode="decimal" min="0" step="any" placeholder="2" /><span class="unit">in</span></div>
+          </div>
+          <div class="dim">
+            <label for="lfW">Width</label>
+            <div class="input-wrap"><input id="lfW" type="number" inputmode="decimal" min="0" step="any" placeholder="6" /><span class="unit">in</span></div>
+          </div>
+        </div>
+
+        <div class="result" id="lfResult" aria-live="polite">
+          <div class="result-main"><span id="lfOut">—</span> <span class="result-unit" id="lfOutUnit">BF</span></div>
+          <div class="result-sub" id="lfSub">Enter a value and dimensions</div>
+        </div>
+        <div class="warning" id="lfWarn" hidden></div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-clear" id="lfClear">Clear</button>
+          <button type="button" class="btn btn-copy" id="lfCopy">Copy 📋</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 5. WASTE ---------- -->
+    <section class="screen" id="screen-waste" aria-labelledby="waste-title" hidden>
+      <div class="card">
+        <h2 class="card-title" id="waste-title">Waste / Overage</h2>
+        <p class="card-sub">Add a waste buffer to a quantity.</p>
+
+        <div class="row">
+          <label for="wasteBase">Base Quantity</label>
+          <div class="input-wrap">
+            <input id="wasteBase" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 1000" />
+            <span class="unit">BF / pcs</span>
+          </div>
+        </div>
+
+        <div class="presets" role="group" aria-label="Waste presets">
+          <button type="button" class="pill" data-waste="10">10% Framing</button>
+          <button type="button" class="pill" data-waste="15">15% Decking</button>
+          <button type="button" class="pill" data-waste="20">20% Flooring</button>
+          <button type="button" class="pill" data-waste="25">25% Custom</button>
+        </div>
+
+        <div class="row">
+          <label for="wastePct">Waste %</label>
+          <div class="input-wrap">
+            <input id="wastePct" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 15" />
+            <span class="unit">%</span>
+          </div>
+        </div>
+
+        <div class="result" id="wasteResult" aria-live="polite">
+          <div class="result-main"><span id="wasteTotal">—</span></div>
+          <div class="result-sub" id="wasteSub">Enter a base quantity and waste %</div>
+        </div>
+        <div class="warning" id="wasteWarn" hidden></div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-clear" id="wasteClear">Clear</button>
+          <button type="button" class="btn btn-copy" id="wasteCopy">Copy 📋</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- 6. LOAD ESTIMATOR (weight/BF toggle, Q8) ---------- -->
+    <section class="screen" id="screen-load" aria-labelledby="load-title" hidden>
+      <div class="card">
+        <h2 class="card-title" id="load-title">Load Estimator</h2>
+        <p class="card-sub">Estimate trucks needed for a load.</p>
+
+        <div class="seg" role="group" aria-label="Capacity mode">
+          <button type="button" class="seg-btn active" data-loadmode="weight" id="loadModeWeight">By Weight</button>
+          <button type="button" class="seg-btn" data-loadmode="bf" id="loadModeBF">By Board Feet</button>
+        </div>
+
+        <!-- Weight mode -->
+        <div id="loadWeightFields">
+          <div class="presets" role="group" aria-label="Truck presets">
+            <button type="button" class="pill" data-truck="65000">Maxi 65,000 lb</button>
+            <button type="button" class="pill" data-truck="48000">Reg 48,000 lb</button>
+          </div>
+          <div class="row">
+            <label for="loadCapW">Truck Capacity</label>
+            <div class="input-wrap"><input id="loadCapW" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 65000" /><span class="unit">lb</span></div>
+          </div>
+          <div class="row">
+            <label for="loadBFw">Total Board Feet</label>
+            <div class="input-wrap"><input id="loadBFw" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 30000" /><span class="unit">BF</span></div>
+          </div>
+          <div class="row">
+            <label for="loadLbsPerBF">Weight per BF <span class="optional">— by species</span></label>
+            <div class="input-wrap"><input id="loadLbsPerBF" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 2.5" /><span class="unit">lb/BF</span></div>
+          </div>
+        </div>
+
+        <!-- BF mode -->
+        <div id="loadBFFields" hidden>
+          <div class="presets" role="group" aria-label="Truck presets (BF)">
+            <button type="button" class="pill" data-truckbf="100000">53' 100k BF</button>
+            <button type="button" class="pill" data-truckbf="80000">48' 80k BF</button>
+            <button type="button" class="pill" data-truckbf="40000">Local 40k BF</button>
+          </div>
+          <div class="row">
+            <label for="loadCapBF">Truck Capacity</label>
+            <div class="input-wrap"><input id="loadCapBF" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 100000" /><span class="unit">BF</span></div>
+          </div>
+          <div class="row">
+            <label for="loadBFb">Total Board Feet</label>
+            <div class="input-wrap"><input id="loadBFb" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 250000" /><span class="unit">BF</span></div>
+          </div>
+        </div>
+
+        <div class="result" id="loadResult" aria-live="polite">
+          <div class="result-main"><span id="loadTrucks">—</span> <span class="result-unit">trucks</span></div>
+          <div class="result-sub" id="loadSub">Enter capacity and load</div>
+        </div>
+        <div class="warning" id="loadWarn" hidden></div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-clear" id="loadClear">Clear</button>
+          <button type="button" class="btn btn-copy" id="loadCopy">Copy 📋</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== TOAST ===================== -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- ===================== BOTTOM TAB BAR ===================== -->
+  <nav class="tabbar" id="tabbar" role="tablist" aria-label="Calculators">
+    <button class="tab active" role="tab" aria-selected="true" data-target="screen-bf"><span class="tab-icon" aria-hidden="true">📐</span><span class="tab-label">Board Ft</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-target="screen-price"><span class="tab-icon" aria-hidden="true">💲</span><span class="tab-label">Pricing</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-target="screen-pcs"><span class="tab-icon" aria-hidden="true">🔢</span><span class="tab-label">Pieces</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-target="screen-lf"><span class="tab-icon" aria-hidden="true">📏</span><span class="tab-label">Linear</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-target="screen-waste"><span class="tab-icon" aria-hidden="true">♻️</span><span class="tab-label">Waste</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-target="screen-load"><span class="tab-icon" aria-hidden="true">🚚</span><span class="tab-label">Load</span></button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

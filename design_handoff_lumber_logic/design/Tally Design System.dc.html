@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; }
+  @keyframes tallyrise{ from{ stroke-dashoffset:251.3; } to{ stroke-dashoffset:33; } }
+</style>
+</helmet>
+
+<div style="background:#EFE7D8; font-family:'IBM Plex Sans',sans-serif; color:#221A12; -webkit-font-smoothing:antialiased; line-height:1.5;">
+
+  <!-- ============ COVER ============ -->
+  <header style="background:#17120D; color:#F3ECE0; padding:72px 40px 64px;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="display:flex; align-items:center; gap:14px; margin-bottom:48px;">
+        <div style="width:34px; height:34px; border-radius:8px; background:#BC7A2C; display:flex; align-items:center; justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7l8-4 8 4-8 4-8-4z" stroke="#17120D" stroke-width="2" stroke-linejoin="round"/><path d="M4 7v10l8 4 8-4V7" stroke="#17120D" stroke-width="2" stroke-linejoin="round"/><path d="M12 11v10" stroke="#17120D" stroke-width="2"/></svg>
+        </div>
+        <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; letter-spacing:-.01em;">Tally</span>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#A89A85; margin-left:6px; padding:4px 9px; border:1px solid #3A2F23; border-radius:999px;">Design System v1.0</span>
+      </div>
+      <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(40px,6vw,72px); line-height:1.02; letter-spacing:-.025em; margin:0 0 24px; max-width:18ch;">The lumber broker's quoting toolkit.</h1>
+      <p style="font-size:18px; color:#C9BCA6; max-width:60ch; margin:0 0 40px;">A worksheet-grade design language for converting dimensions and piece counts into board feet, volume and price — fast, legible, and built to trust under a deadline.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <div style="width:60px; height:60px; border-radius:12px; background:#BC7A2C;"></div>
+        <div style="width:60px; height:60px; border-radius:12px; background:#7E4E18;"></div>
+        <div style="width:60px; height:60px; border-radius:12px; background:#3F7D54;"></div>
+        <div style="width:60px; height:60px; border-radius:12px; background:#C0492F;"></div>
+        <div style="width:60px; height:60px; border-radius:12px; background:#F3ECE0;"></div>
+        <div style="width:60px; height:60px; border-radius:12px; background:#2B221A; border:1px solid #3A2F23;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ COLOR ============ -->
+  <section style="padding:80px 40px; background:#FAF6EF;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#A0641F; margin-bottom:12px;">01 — Foundations</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; letter-spacing:-.02em; margin:0 0 8px;">Color</h2>
+      <p style="font-size:16px; color:#6B5E4D; max-width:62ch; margin:0 0 40px;">Timber amber carries the brand and every primary action. Forest signals yield and savings; clay flags waste and overage. Warm oak neutrals keep long worksheets calm under fluorescent light.</p>
+
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin:0 0 12px;">Timber — primary</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:8px; margin-bottom:36px;">
+        <div style="background:#FBF4EA; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end; border:1px solid #E6DCCC;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7E4E18;">50</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A89A85;">FBF4EA</span></div>
+        <div style="background:#F4E4CC; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7E4E18;">100</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#9c7d4f;">F4E4CC</span></div>
+        <div style="background:#E9C99B; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#5C3914;">200</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8a6a3c;">E9C99B</span></div>
+        <div style="background:#DDAC6A; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#5C3914;">300</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7a5526;">DDAC6A</span></div>
+        <div style="background:#CE8E3F; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#3D260F;">400</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#5e3d1a;">CE8E3F</span></div>
+        <div style="background:#BC7A2C; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#FBF4EA;">500</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#f0dcc0;">BC7A2C</span></div>
+        <div style="background:#A0641F; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#FBF4EA;">600</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#e9cfa8;">A0641F</span></div>
+        <div style="background:#7E4E18; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#FBF4EA;">700</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#d8b98c;">7E4E18</span></div>
+        <div style="background:#5C3914; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#F4E4CC;">800</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#bf9968;">5C3914</span></div>
+        <div style="background:#3D260F; border-radius:10px; padding:14px 12px; height:96px; display:flex; flex-direction:column; justify-content:flex-end;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#F4E4CC;">900</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#a37e4f;">3D260F</span></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px;">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin:0 0 12px;">Semantic</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:10px 12px;"><span style="width:30px; height:30px; border-radius:7px; background:#3F7D54;"></span><div><div style="font-size:13px; font-weight:600;">Forest — yield / savings</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B;">#3F7D54</div></div></div>
+            <div style="display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:10px 12px;"><span style="width:30px; height:30px; border-radius:7px; background:#C0492F;"></span><div><div style="font-size:13px; font-weight:600;">Clay — waste / overage</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B;">#C0492F</div></div></div>
+            <div style="display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:10px 12px;"><span style="width:30px; height:30px; border-radius:7px; background:#D69A2E;"></span><div><div style="font-size:13px; font-weight:600;">Amber — review / hold</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B;">#D69A2E</div></div></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin:0 0 12px;">Oak neutrals</div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
+            <div style="background:#FFFFFF; border:1px solid #E6DCCC; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B;">Surface</span></div>
+            <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B;">Paper</span></div>
+            <div style="background:#F3ECE0; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B;">100</span></div>
+            <div style="background:#E6DCCC; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B;">200</span></div>
+            <div style="background:#D6C8B2; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5b4f3f;">300</span></div>
+            <div style="background:#8C7E6B; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#F3ECE0;">500</span></div>
+            <div style="background:#4A3F33; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#F3ECE0;">700</span></div>
+            <div style="background:#221A12; border-radius:9px; height:70px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#F3ECE0;">Ink</span></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin:18px 0 12px;">Walnut — dark surfaces</div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
+            <div style="background:#17120D; border-radius:9px; height:54px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#A89A85;">BG</span></div>
+            <div style="background:#211A13; border-radius:9px; height:54px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#A89A85;">Surf</span></div>
+            <div style="background:#2B221A; border-radius:9px; height:54px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#A89A85;">Surf2</span></div>
+            <div style="background:#3A2F23; border-radius:9px; height:54px; display:flex; align-items:flex-end; padding:8px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#A89A85;">Line</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TYPE ============ -->
+  <section style="padding:80px 40px; background:#FFFFFF; border-top:1px solid #E6DCCC; border-bottom:1px solid #E6DCCC;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#A0641F; margin-bottom:12px;">01 — Foundations</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; letter-spacing:-.02em; margin:0 0 40px;">Typography</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px; margin-bottom:48px;">
+        <div style="border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:1; letter-spacing:-.02em;">Aa</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; margin-top:14px;">Space Grotesk</div>
+          <div style="font-size:13px; color:#8C7E6B; margin-top:2px;">Figures · headlines · the big number</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; letter-spacing:-.01em; margin-top:14px; color:#4A3F33;">1,284.5 bf · 0123456789</div>
+        </div>
+        <div style="border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'IBM Plex Sans',sans-serif; font-size:56px; line-height:1;">Aa</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; margin-top:14px;">IBM Plex Sans</div>
+          <div style="font-size:13px; color:#8C7E6B; margin-top:2px;">Interface · labels · body</div>
+          <div style="font-size:15px; margin-top:14px; color:#4A3F33;">Regular 400 · Medium 500 · Semibold 600</div>
+        </div>
+        <div style="border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:52px; line-height:1;">Aa</div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; margin-top:14px;">IBM Plex Mono</div>
+          <div style="font-size:13px; color:#8C7E6B; margin-top:2px;">Tally rows · SKUs · units · tabular data</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:15px; margin-top:14px; color:#4A3F33;">8/4 × 6″ × 12′ · WO-0840</div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:18px; border-top:1px solid #E6DCCC; padding-top:36px;">
+        <div style="display:flex; align-items:baseline; gap:20px; flex-wrap:wrap;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; width:120px;">Display / 64</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:64px; letter-spacing:-.025em; line-height:1;">1,284.5</span></div>
+        <div style="display:flex; align-items:baseline; gap:20px; flex-wrap:wrap;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; width:120px;">H1 / 34</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; letter-spacing:-.02em;">New quote worksheet</span></div>
+        <div style="display:flex; align-items:baseline; gap:20px; flex-wrap:wrap;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; width:120px;">H2 / 22</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; letter-spacing:-.01em;">Cost breakdown</span></div>
+        <div style="display:flex; align-items:baseline; gap:20px; flex-wrap:wrap;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; width:120px;">Body / 16</span><span style="font-size:16px;">Enter rough dimensions and a piece count to tally a load.</span></div>
+        <div style="display:flex; align-items:baseline; gap:20px; flex-wrap:wrap;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; width:120px;">Label / 13</span><span style="font-size:13px; font-weight:600; letter-spacing:.01em; text-transform:uppercase; color:#8C7E6B;">Species</span></div>
+        <div style="display:flex; align-items:baseline; gap:20px; flex-wrap:wrap;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; width:120px;">Mono / 13</span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#4A3F33;">WO-0840 · 50 pcs · $1.85/bf</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SPACING / RADIUS / ELEVATION ============ -->
+  <section style="padding:80px 40px; background:#FAF6EF;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#A0641F; margin-bottom:12px;">01 — Foundations</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; letter-spacing:-.02em; margin:0 0 40px;">Space, radius &amp; elevation</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px;">
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:18px;">Spacing · 4px base</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; width:42px;">4</span><span style="height:14px; width:4px; background:#BC7A2C; border-radius:2px;"></span></div>
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; width:42px;">8</span><span style="height:14px; width:8px; background:#BC7A2C; border-radius:2px;"></span></div>
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; width:42px;">12</span><span style="height:14px; width:12px; background:#BC7A2C; border-radius:2px;"></span></div>
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; width:42px;">16</span><span style="height:14px; width:16px; background:#BC7A2C; border-radius:2px;"></span></div>
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; width:42px;">24</span><span style="height:14px; width:24px; background:#BC7A2C; border-radius:2px;"></span></div>
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; width:42px;">32</span><span style="height:14px; width:32px; background:#BC7A2C; border-radius:2px;"></span></div>
+            <div style="display:flex; align-items:center; gap:14px;"><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; width:42px;">48</span><span style="height:14px; width:48px; background:#BC7A2C; border-radius:2px;"></span></div>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:18px;">Radius</div>
+          <div style="display:flex; flex-wrap:wrap; gap:12px;">
+            <div style="text-align:center;"><div style="width:64px; height:48px; background:#F3ECE0; border:1px solid #D6C8B2; border-radius:6px;"></div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B; margin-top:6px;">6 · field</div></div>
+            <div style="text-align:center;"><div style="width:64px; height:48px; background:#F3ECE0; border:1px solid #D6C8B2; border-radius:10px;"></div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B; margin-top:6px;">10 · chip</div></div>
+            <div style="text-align:center;"><div style="width:64px; height:48px; background:#F3ECE0; border:1px solid #D6C8B2; border-radius:14px;"></div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B; margin-top:6px;">14 · card</div></div>
+            <div style="text-align:center;"><div style="width:64px; height:48px; background:#F3ECE0; border:1px solid #D6C8B2; border-radius:999px;"></div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B; margin-top:6px;">pill</div></div>
+          </div>
+        </div>
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:18px;">Elevation</div>
+          <div style="display:flex; gap:16px; flex-wrap:wrap;">
+            <div style="width:84px; height:64px; background:#fff; border:1px solid #E6DCCC; border-radius:12px; box-shadow:0 1px 2px rgba(60,40,15,.06);"></div>
+            <div style="width:84px; height:64px; background:#fff; border-radius:12px; box-shadow:0 4px 14px rgba(60,40,15,.10);"></div>
+            <div style="width:84px; height:64px; background:#fff; border-radius:12px; box-shadow:0 12px 30px rgba(60,40,15,.16);"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B; margin-top:10px;">flat · raised · floating</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPONENTS ============ -->
+  <section style="padding:80px 40px 32px; background:#FFFFFF; border-top:1px solid #E6DCCC;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#A0641F; margin-bottom:12px;">02 — Components</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; letter-spacing:-.02em; margin:0 0 8px;">Building blocks</h2>
+      <p style="font-size:16px; color:#6B5E4D; max-width:62ch; margin:0 0 40px;">Every control is sized for thumb-and-cursor use on a phone or a shop laptop, with tabular figures so columns of numbers always line up.</p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px;">
+
+        <!-- Buttons -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:18px;">Buttons</div>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+            <button style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#fff; background:#BC7A2C; border:none; border-radius:10px; padding:11px 18px; cursor:pointer; box-shadow:0 1px 2px rgba(60,40,15,.14);" style-hover="background:#A0641F;">Calculate</button>
+            <button style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:10px; padding:11px 18px; cursor:pointer;" style-hover="border-color:#BC7A2C;">Save quote</button>
+            <button style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#8C7E6B; background:transparent; border:none; border-radius:10px; padding:11px 14px; cursor:pointer;" style-hover="color:#221A12;">Reset</button>
+            <button style="width:40px; height:40px; border-radius:10px; background:#fff; border:1px solid #D6C8B2; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="border-color:#BC7A2C;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#7E4E18" stroke-width="2" stroke-linecap="round"/></svg></button>
+            <button disabled="true" style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#B7AB98; background:#F3ECE0; border:none; border-radius:10px; padding:11px 18px;">Disabled</button>
+          </div>
+        </div>
+
+        <!-- Unit toggle (interactive) -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:18px;">Unit toggle</div>
+          <div style="display:inline-flex; background:#E6DCCC; border-radius:11px; padding:4px; gap:4px;">
+            <button onClick="{{ setImp }}" style="{{ impBtnStyle }}">Imperial</button>
+            <button onClick="{{ setMet }}" style="{{ metBtnStyle }}">Metric</button>
+          </div>
+          <div style="font-size:13px; color:#6B5E4D; margin-top:16px;">Now showing: <span style="font-family:'IBM Plex Mono',monospace; color:#7E4E18;">{{ unitWord }}</span> — toggles dimension and volume readouts across the worksheet.</div>
+        </div>
+
+        <!-- Stepper -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:18px;">Dimension stepper</div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Width</span>
+            <div style="display:flex; align-items:stretch; background:#fff; border:1px solid #D6C8B2; border-radius:10px; overflow:hidden;">
+              <button onClick="{{ decW }}" style="width:46px; background:#F3ECE0; border:none; border-right:1px solid #E6DCCC; cursor:pointer; font-size:20px; color:#7E4E18; line-height:1;">−</button>
+              <div style="flex:1; display:flex; align-items:baseline; justify-content:center; gap:4px; padding:12px 0;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px;">{{ w }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8C7E6B;">in</span></div>
+              <button onClick="{{ incW }}" style="width:46px; background:#F3ECE0; border:none; border-left:1px solid #E6DCCC; cursor:pointer; font-size:20px; color:#7E4E18; line-height:1;">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Species chips -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:18px;">Species chips</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <span style="font-size:13px; font-weight:600; color:#fff; background:#7E4E18; border-radius:999px; padding:8px 14px;">White Oak</span>
+            <span style="font-size:13px; font-weight:500; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:999px; padding:8px 14px;">Hard Maple</span>
+            <span style="font-size:13px; font-weight:500; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:999px; padding:8px 14px;">Walnut</span>
+            <span style="font-size:13px; font-weight:500; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:999px; padding:8px 14px;">Cherry</span>
+            <span style="font-size:13px; font-weight:500; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:999px; padding:8px 14px;">Poplar</span>
+            <span style="font-size:13px; font-weight:500; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:999px; padding:8px 14px;">Pine SYP</span>
+          </div>
+        </div>
+
+        <!-- Efficiency gauge -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px; display:flex; flex-direction:column; align-items:center;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:8px; align-self:flex-start;">Yield gauge</div>
+          <svg width="220" height="128" viewBox="0 0 220 128">
+            <path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#E6DCCC" stroke-width="16" stroke-linecap="round"/>
+            <path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#3F7D54" stroke-width="16" stroke-linecap="round" stroke-dasharray="282.7" style="stroke-dashoffset:36.8; animation:tallyrise 1.1s ease-out;"/>
+            <text x="110" y="98" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:40px; fill:#221A12;">87%</text>
+            <text x="110" y="120" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace; font-size:11px; fill:#8C7E6B; letter-spacing:.08em;">YIELD · 13% WASTE</text>
+          </svg>
+        </div>
+
+        <!-- Cost breakdown card -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:14px;">Cost breakdown</div>
+          <div style="background:#fff; border:1px solid #E6DCCC; border-radius:12px; padding:16px 18px;">
+            <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #F3ECE0;"><span style="font-size:14px; color:#4A3F33;">Board feet</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">1,284.5 bf</span></div>
+            <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #F3ECE0;"><span style="font-size:14px; color:#4A3F33;">Unit price</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">$1.85 / bf</span></div>
+            <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #F3ECE0;"><span style="font-size:14px; color:#4A3F33;">Mill freight</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">$240.00</span></div>
+            <div style="display:flex; justify-content:space-between; padding:11px 0 2px; align-items:baseline;"><span style="font-size:14px; font-weight:600; color:#221A12;">Quote total</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; color:#7E4E18;">$2,616.33</span></div>
+          </div>
+        </div>
+
+        <!-- Cut / load diagram -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:14px;">Load layout</div>
+          <div style="display:grid; grid-template-columns:2fr 1fr; gap:6px; height:150px;">
+            <div style="background:#E9C99B; border-radius:8px; padding:10px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:12px; font-weight:600; color:#5C3914;">8/4 White Oak</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7E4E18;">6″×12′ · 50 pc</span></div>
+            <div style="display:grid; grid-template-rows:1fr 1fr; gap:6px;">
+              <div style="background:#CFE0D4; border-radius:8px; padding:10px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:11px; font-weight:600; color:#2F5740;">4/4 Maple</span><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#3F7D54;">20 pc</span></div>
+              <div style="background:#E6DCCC; border-radius:8px; padding:10px; display:flex; flex-direction:column; justify-content:space-between;"><span style="font-size:11px; font-weight:600; color:#7a6a52;">Drop / waste</span><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B;">13%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Saved project rows -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:14px;">Saved quote row</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:center; gap:14px; background:#fff; border:1px solid #E6DCCC; border-radius:12px; padding:12px 14px;">
+              <div style="width:42px; height:42px; border-radius:10px; background:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:12px; color:#7E4E18;">WO</div>
+              <div style="flex:1; min-width:0;"><div style="font-size:14px; font-weight:600; color:#221A12;">Hardwood Co. — Lot 84</div><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;">1,284 bf · White Oak</div></div>
+              <div style="text-align:right;"><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px; color:#221A12;">$2,616</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#3F7D54;">Quoted</div></div>
+            </div>
+            <div style="display:flex; align-items:center; gap:14px; background:#fff; border:1px solid #E6DCCC; border-radius:12px; padding:12px 14px;">
+              <div style="width:42px; height:42px; border-radius:10px; background:#E7F0E9; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:12px; color:#2F6342;">HM</div>
+              <div style="flex:1; min-width:0;"><div style="font-size:14px; font-weight:600; color:#221A12;">Ridgeline Mill — order 22</div><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;">640 bf · Hard Maple</div></div>
+              <div style="text-align:right;"><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px; color:#221A12;">$1,184</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#D69A2E;">Draft</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checklist -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:14px;">Verify checklist</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:24px; height:24px; border-radius:7px; background:#3F7D54; display:flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="font-size:14px; color:#4A3F33; text-decoration:line-through;">Piece count matches tally</span></div>
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:24px; height:24px; border-radius:7px; background:#3F7D54; display:flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L20 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="font-size:14px; color:#4A3F33; text-decoration:line-through;">Species &amp; grade confirmed</span></div>
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:24px; height:24px; border-radius:7px; background:#fff; border:1.5px solid #D6C8B2;"></span><span style="font-size:14px; color:#221A12;">Freight added to quote</span></div>
+            <div style="display:flex; align-items:center; gap:12px;"><span style="width:24px; height:24px; border-radius:7px; background:#fff; border:1.5px solid #D6C8B2;"></span><span style="font-size:14px; color:#221A12;">Sent to customer</span></div>
+          </div>
+        </div>
+
+        <!-- Numeric keypad -->
+        <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:16px; padding:24px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:14px;">Numeric keypad</div>
+          <div style="text-align:right; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; color:#221A12; padding:4px 6px 14px;">12.5 <span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#8C7E6B;">in</span></div>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr) auto; gap:8px;">
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">7</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">8</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">9</button>
+            <button style="background:#F4E4CC; border:none; border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; grid-row:span 2;" style-hover="background:#E9C99B;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#7E4E18" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">4</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">5</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">6</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">1</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">2</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">3</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px; color:#fff; background:#BC7A2C; border:none; border-radius:10px; cursor:pointer; grid-row:span 2;" style-hover="background:#A0641F;">=</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12; grid-column:span 2;" style-hover="border-color:#BC7A2C;">0</button>
+            <button style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:14px 0; cursor:pointer; color:#221A12;" style-hover="border-color:#BC7A2C;">.</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APP SCREENS ============ -->
+  <section style="padding:64px 40px 96px; background:#FFFFFF;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#A0641F; margin-bottom:12px;">03 — Screens</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; letter-spacing:-.02em; margin:0 0 8px;">The system, assembled</h2>
+      <p style="font-size:16px; color:#6B5E4D; max-width:62ch; margin:0 0 40px;">A responsive worksheet on web, a saved-loads card grid for the tally book, a price book that pits your $/MBF against the market, the same tokens in a walnut night theme for the yard, and quote summaries. The calculator below is live — step the dimensions and toggle units.</p>
+
+      <!-- LIVE CALCULATOR (web app) -->
+      <div style="border:1px solid #E6DCCC; border-radius:18px; overflow:hidden; box-shadow:0 12px 36px rgba(60,40,15,.10); margin-bottom:48px;">
+        <div style="display:flex; align-items:center; gap:8px; background:#F3ECE0; padding:12px 16px; border-bottom:1px solid #E6DCCC;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; margin-left:10px;">tally.app / quote / new</span>
+        </div>
+        <div style="background:#FAF6EF; padding:32px; display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:28px; align-items:start;">
+          <!-- inputs -->
+          <div>
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:24px; letter-spacing:-.01em; margin:0 0 4px;">New quote</h3>
+            <p style="font-size:14px; color:#8C7E6B; margin:0 0 20px;">Enter rough dimensions and a piece count.</p>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+              <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Units</span>
+              <div style="display:inline-flex; background:#E6DCCC; border-radius:10px; padding:3px; gap:3px;">
+                <button onClick="{{ setImp }}" style="{{ impBtnStyleSm }}">in / ft</button>
+                <button onClick="{{ setMet }}" style="{{ metBtnStyleSm }}">mm / m</button>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Thickness</span>
+                <div style="display:flex; background:#fff; border:1px solid #D6C8B2; border-radius:10px; overflow:hidden;">
+                  <button onClick="{{ decT }}" style="width:40px; background:#F3ECE0; border:none; border-right:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">−</button>
+                  <div style="flex:1; text-align:center; padding:11px 0;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px;">{{ t }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;"> in</span></div>
+                  <button onClick="{{ incT }}" style="width:40px; background:#F3ECE0; border:none; border-left:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">+</button>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Width</span>
+                <div style="display:flex; background:#fff; border:1px solid #D6C8B2; border-radius:10px; overflow:hidden;">
+                  <button onClick="{{ decW }}" style="width:40px; background:#F3ECE0; border:none; border-right:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">−</button>
+                  <div style="flex:1; text-align:center; padding:11px 0;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px;">{{ w }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;"> in</span></div>
+                  <button onClick="{{ incW }}" style="width:40px; background:#F3ECE0; border:none; border-left:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">+</button>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Length</span>
+                <div style="display:flex; background:#fff; border:1px solid #D6C8B2; border-radius:10px; overflow:hidden;">
+                  <button onClick="{{ decL }}" style="width:40px; background:#F3ECE0; border:none; border-right:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">−</button>
+                  <div style="flex:1; text-align:center; padding:11px 0;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px;">{{ l }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;"> ft</span></div>
+                  <button onClick="{{ incL }}" style="width:40px; background:#F3ECE0; border:none; border-left:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">+</button>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Pieces</span>
+                <div style="display:flex; background:#fff; border:1px solid #D6C8B2; border-radius:10px; overflow:hidden;">
+                  <button onClick="{{ decQ }}" style="width:40px; background:#F3ECE0; border:none; border-right:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">−</button>
+                  <div style="flex:1; text-align:center; padding:11px 0;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px;">{{ qty }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;"> pc</span></div>
+                  <button onClick="{{ incQ }}" style="width:40px; background:#F3ECE0; border:none; border-left:1px solid #E6DCCC; cursor:pointer; font-size:18px; color:#7E4E18;">+</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:6px; margin-top:14px;">
+              <span style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#8C7E6B;">Species</span>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                <span style="font-size:13px; font-weight:600; color:#fff; background:#7E4E18; border-radius:999px; padding:8px 14px;">{{ species }}</span>
+                <span style="font-size:13px; font-weight:500; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:999px; padding:8px 14px;">Hard Maple</span>
+                <span style="font-size:13px; font-weight:500; color:#7E4E18; background:#fff; border:1px solid #D6C8B2; border-radius:999px; padding:8px 14px;">Walnut</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- results -->
+          <div style="background:#17120D; border-radius:16px; padding:28px; color:#F3ECE0;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#A89A85;">Board feet</div>
+            <div style="display:flex; align-items:baseline; gap:8px; margin:6px 0 2px;">
+              <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:60px; line-height:1; letter-spacing:-.02em; color:#fff;">{{ boardFeet }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:16px; color:#CE8E3F;">bf</span>
+            </div>
+            <div style="font-size:14px; color:#C9BCA6;">{{ dims }} · {{ species }}</div>
+
+            <div style="height:1px; background:#3A2F23; margin:22px 0;"></div>
+
+            <div style="display:flex; justify-content:space-between; padding:6px 0;"><span style="font-size:14px; color:#C9BCA6;">Volume</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#F3ECE0;">{{ volLabel }}</span></div>
+            <div style="display:flex; justify-content:space-between; padding:6px 0;"><span style="font-size:14px; color:#C9BCA6;">Unit price</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#F3ECE0;">{{ price }} / bf</span></div>
+            <div style="display:flex; justify-content:space-between; padding:6px 0;"><span style="font-size:14px; color:#C9BCA6;">Pieces</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#F3ECE0;">{{ qty }} pc</span></div>
+
+            <div style="display:flex; justify-content:space-between; align-items:baseline; background:#211A13; border:1px solid #3A2F23; border-radius:12px; padding:16px 18px; margin-top:18px;">
+              <span style="font-size:14px; font-weight:600; color:#F3ECE0;">Quote total</span>
+              <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:30px; color:#CE8E3F; line-height:1;">{{ total }}</span>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:16px;">
+              <button style="flex:1; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#17120D; background:#BC7A2C; border:none; border-radius:10px; padding:12px 0; cursor:pointer;" style-hover="background:#CE8E3F;">Save quote</button>
+              <button style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#F3ECE0; background:transparent; border:1px solid #3A2F23; border-radius:10px; padding:12px 18px; cursor:pointer;" style-hover="border-color:#CE8E3F;">Export</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVED LOADS — card grid (web) -->
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:12px;">Saved loads · card grid</div>
+      <div style="border:1px solid #E6DCCC; border-radius:18px; overflow:hidden; box-shadow:0 12px 36px rgba(60,40,15,.10); margin-bottom:48px;">
+        <div style="display:flex; align-items:center; gap:8px; background:#F3ECE0; padding:12px 16px; border-bottom:1px solid #E6DCCC;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; margin-left:10px;">tally.app / saved</span>
+        </div>
+        <div style="background:#EFE7D8; padding:28px;">
+          <!-- toolbar -->
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F; margin-bottom:5px;">Saved loads</div>
+              <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; letter-spacing:-.02em; margin:0;">Your tally book</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:0 12px; height:38px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8C7E6B" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8C7E6B" stroke-width="2" stroke-linecap="round"/></svg>
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-size:13px; color:#A99B86;">Search customer or species</span>
+              </div>
+              <div style="display:flex; gap:4px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:4px;">
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; border-radius:7px; padding:5px 12px; background:#7E4E18; color:#F4E4CC;">All</span>
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; border-radius:7px; padding:5px 12px; color:#8C7E6B;">Quoted</span>
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; border-radius:7px; padding:5px 12px; color:#8C7E6B;">Draft</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- cards -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(268px,1fr)); gap:16px; align-items:start;">
+
+            <!-- card: quoted -->
+            <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:18px 18px 16px; box-shadow:0 3px 14px rgba(60,40,15,.05); display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; align-items:flex-start; gap:11px;">
+                <div style="width:40px; height:40px; flex-shrink:0; border-radius:10px; background:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; color:#7E4E18;">HC</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:15px; font-weight:600; color:#221A12;">Hardwood Co.</div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F;">Lot 84 · White Oak</div>
+                </div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 9px; border-radius:999px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">Quoted</span>
+              </div>
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:10px; padding:2px 2px 0;">
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Board feet</div><div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:29px; color:#221A12; line-height:1.04;">1,284</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A0641F;">bf</span></div></div>
+                <div style="text-align:right;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Value</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; color:#2F6342; line-height:1.1;">$2,616</div></div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; background:#FAF6EF; border:1px solid #F0E8DB; border-radius:11px; padding:11px 13px;">
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Pieces</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">642</div></div>
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">$/MBF</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">$2,037</div></div>
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Saved</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">Jun 24</div></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="flex:1; height:38px; border-radius:10px; background:#fff; border:1px solid #D6C8B2; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#7E4E18; display:flex; align-items:center; justify-content:center; gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-9 9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Open</span>
+                <span style="flex:1; height:38px; border-radius:10px; background:#BC7A2C; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#fff; display:flex; align-items:center; justify-content:center; gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 3L10.5 13.5M21 3l-6.6 18-3.9-8.1L2.4 9 21 3z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Send</span>
+                <span style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2.5" stroke="#7E4E18" stroke-width="1.8"/><path d="M5 15V6a2 2 0 0 1 2-2h9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                <span style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" stroke="#9c4a36" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+
+            <!-- card: draft -->
+            <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:18px 18px 16px; box-shadow:0 3px 14px rgba(60,40,15,.05); display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; align-items:flex-start; gap:11px;">
+                <div style="width:40px; height:40px; flex-shrink:0; border-radius:10px; background:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; color:#7E4E18;">CM</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:15px; font-weight:600; color:#221A12;">Cascade Millworks</div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F;">PO 2231 · Doug Fir #1</div>
+                </div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 9px; border-radius:999px; color:#9A6A12; background:#F8ECCF; border:1px solid #EAD7A6;">Draft</span>
+              </div>
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:10px; padding:2px 2px 0;">
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Board feet</div><div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:29px; color:#221A12; line-height:1.04;">8,420</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A0641F;">bf</span></div></div>
+                <div style="text-align:right;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Value</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; color:#2F6342; line-height:1.1;">$4,092</div></div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; background:#FAF6EF; border:1px solid #F0E8DB; border-radius:11px; padding:11px 13px;">
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Pieces</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">388</div></div>
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">$/MBF</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">$486</div></div>
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Saved</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">Jun 28</div></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="flex:1; height:38px; border-radius:10px; background:#fff; border:1px solid #D6C8B2; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#7E4E18; display:flex; align-items:center; justify-content:center; gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-9 9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Open</span>
+                <span style="flex:1; height:38px; border-radius:10px; background:#BC7A2C; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#fff; display:flex; align-items:center; justify-content:center; gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 3L10.5 13.5M21 3l-6.6 18-3.9-8.1L2.4 9 21 3z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Send</span>
+                <span style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2.5" stroke="#7E4E18" stroke-width="1.8"/><path d="M5 15V6a2 2 0 0 1 2-2h9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                <span style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" stroke="#9c4a36" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+
+            <!-- card: quoted 2 -->
+            <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:18px 18px 16px; box-shadow:0 3px 14px rgba(60,40,15,.05); display:flex; flex-direction:column; gap:14px;">
+              <div style="display:flex; align-items:flex-start; gap:11px;">
+                <div style="width:40px; height:40px; flex-shrink:0; border-radius:10px; background:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; color:#7E4E18;">RP</div>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:15px; font-weight:600; color:#221A12;">Riverside Pallet</div>
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F;">Truck A · SPF #2</div>
+                </div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 9px; border-radius:999px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">Quoted</span>
+              </div>
+              <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:10px; padding:2px 2px 0;">
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Board feet</div><div style="display:flex; align-items:baseline; gap:5px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:29px; color:#221A12; line-height:1.04;">12,680</span><span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A0641F;">bf</span></div></div>
+                <div style="text-align:right;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Value</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px; color:#2F6342; line-height:1.1;">$5,704</div></div>
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; background:#FAF6EF; border:1px solid #F0E8DB; border-radius:11px; padding:11px 13px;">
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Pieces</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">1,040</div></div>
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">$/MBF</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">$450</div></div>
+                <div><div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Saved</div><div style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#221A12;">Jun 22</div></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="flex:1; height:38px; border-radius:10px; background:#fff; border:1px solid #D6C8B2; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#7E4E18; display:flex; align-items:center; justify-content:center; gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-9 9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Open</span>
+                <span style="flex:1; height:38px; border-radius:10px; background:#BC7A2C; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#fff; display:flex; align-items:center; justify-content:center; gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21 3L10.5 13.5M21 3l-6.6 18-3.9-8.1L2.4 9 21 3z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Send</span>
+                <span style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2.5" stroke="#7E4E18" stroke-width="1.8"/><path d="M5 15V6a2 2 0 0 1 2-2h9" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+                <span style="width:38px; height:38px; flex-shrink:0; border-radius:10px; background:#FAF6EF; border:1px solid #E6DCCC; display:flex; align-items:center; justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" stroke="#9c4a36" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- PRICES · price book (web) -->
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:12px;">Prices · price book</div>
+      <div style="border:1px solid #E6DCCC; border-radius:18px; overflow:hidden; box-shadow:0 12px 36px rgba(60,40,15,.10); margin-bottom:48px;">
+        <div style="display:flex; align-items:center; gap:8px; background:#F3ECE0; padding:12px 16px; border-bottom:1px solid #E6DCCC;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; margin-left:10px;">tally.app / prices</span>
+        </div>
+        <div style="background:#EFE7D8; padding:28px;">
+          <!-- toolbar -->
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F; margin-bottom:5px;">Price sheet · week of Jun 29</div>
+              <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; letter-spacing:-.02em; margin:0;">Board price book</h3>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:0 12px; height:38px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8C7E6B" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8C7E6B" stroke-width="2" stroke-linecap="round"/></svg>
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-size:13px; color:#A99B86;">Search species or grade</span>
+              </div>
+              <div style="display:flex; gap:4px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:4px;">
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; border-radius:7px; padding:5px 12px; background:#7E4E18; color:#F4E4CC;">All</span>
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; border-radius:7px; padding:5px 12px; color:#8C7E6B;">Softwood</span>
+                <span style="font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; border-radius:7px; padding:5px 12px; color:#8C7E6B;">Hardwood</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- stat tiles -->
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
+            <div style="flex:1; min-width:150px; background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 16px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">Softwood avg</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; color:#221A12; line-height:1.12; margin-top:2px;">$820</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; margin-top:1px;">per MBF</div></div>
+            <div style="flex:1; min-width:150px; background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 16px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">Hardwood avg</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; color:#221A12; line-height:1.12; margin-top:2px;">$4,676</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; margin-top:1px;">per MBF</div></div>
+            <div style="flex:1; min-width:150px; background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 16px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">Avg margin</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; color:#2F6342; line-height:1.12; margin-top:2px;">+15.4%</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; margin-top:1px;">over market</div></div>
+            <div style="flex:1; min-width:150px; background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 16px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">Movers up</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; color:#2F6342; line-height:1.12; margin-top:2px;">18</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; margin-top:1px;">sizes this week</div></div>
+            <div style="flex:1; min-width:150px; background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:14px 16px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B;">Movers down</div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; color:#B5482F; line-height:1.12; margin-top:2px;">11</div><div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A0641F; margin-top:1px;">sizes this week</div></div>
+          </div>
+
+          <!-- group band: softwood -->
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; letter-spacing:.03em; text-transform:uppercase; color:#7E4E18;">Softwood</span>
+            <span style="height:1px; flex:1; background:#DDD0BC;"></span>
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B;">5 species</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; align-items:start; margin-bottom:24px;">
+
+            <!-- card: Doug Fir #1 -->
+            <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:16px 17px 14px; box-shadow:0 3px 14px rgba(60,40,15,.05);">
+              <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:12px;">
+                <span style="width:13px; height:13px; flex-shrink:0; margin-top:4px; border-radius:4px; background:#7BA23F;"></span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; letter-spacing:-.01em; color:#221A12;">Doug Fir #1</div>
+                  <div style="display:flex; align-items:center; gap:7px; margin-top:4px;">
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:#7E4E18; background:#F4E4CC; border-radius:6px; padding:2px 7px;">Green</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A99B86;">Upd Jun 28</span>
+                  </div>
+                </div>
+                <span style="display:inline-flex; align-items:center; gap:4px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 9px; border-radius:999px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span>0.7%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding-bottom:6px; border-bottom:1px solid #EFE7D8; margin-bottom:2px;">
+                <span style="width:46px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Size</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Your $</span>
+                <span style="flex:1; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Market</span>
+                <span style="margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Margin</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">2×4</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">625</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$545</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#2F6342;">+6</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+14.7%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">2×6</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">645</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$560</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#2F6342;">+4</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+15.2%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">2×10</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">705</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$612</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#B5482F; transform:rotate(180deg);"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#B5482F;">−3</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+15.2%</span>
+              </div>
+            </div>
+
+            <!-- card: W. Red Cedar -->
+            <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:16px 17px 14px; box-shadow:0 3px 14px rgba(60,40,15,.05);">
+              <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:12px;">
+                <span style="width:13px; height:13px; flex-shrink:0; margin-top:4px; border-radius:4px; background:#C77A2B;"></span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; letter-spacing:-.01em; color:#221A12;">W. Red Cedar</div>
+                  <div style="display:flex; align-items:center; gap:7px; margin-top:4px;">
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:#7E4E18; background:#F4E4CC; border-radius:6px; padding:2px 7px;">Clear</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A99B86;">Upd Jun 25</span>
+                  </div>
+                </div>
+                <span style="display:inline-flex; align-items:center; gap:4px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 9px; border-radius:999px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span>0.4%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding-bottom:6px; border-bottom:1px solid #EFE7D8; margin-bottom:2px;">
+                <span style="width:46px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Size</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Your $</span>
+                <span style="flex:1; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Market</span>
+                <span style="margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Margin</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">2×6</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">1,390</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$1,240</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#2F6342;">+10</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+12.1%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">2×10</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">1,655</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$1,480</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#B5482F; transform:rotate(180deg);"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#B5482F;">−8</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+11.8%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- group band: hardwood -->
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; letter-spacing:.03em; text-transform:uppercase; color:#7E4E18;">Hardwood</span>
+            <span style="height:1px; flex:1; background:#DDD0BC;"></span>
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B;">4 species</span>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; align-items:start;">
+            <!-- card: White Oak -->
+            <div style="background:#fff; border:1px solid #E6DCCC; border-radius:16px; padding:16px 17px 14px; box-shadow:0 3px 14px rgba(60,40,15,.05);">
+              <div style="display:flex; align-items:flex-start; gap:10px; margin-bottom:12px;">
+                <span style="width:13px; height:13px; flex-shrink:0; margin-top:4px; border-radius:4px; background:#8A6D3B;"></span>
+                <div style="flex:1; min-width:0;">
+                  <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; letter-spacing:-.01em; color:#221A12;">White Oak</div>
+                  <div style="display:flex; align-items:center; gap:7px; margin-top:4px;">
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500; letter-spacing:.04em; text-transform:uppercase; color:#7E4E18; background:#F4E4CC; border-radius:6px; padding:2px 7px;">FAS</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#A99B86;">Upd Jun 28</span>
+                  </div>
+                </div>
+                <span style="display:inline-flex; align-items:center; gap:4px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 9px; border-radius:999px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span>0.9%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding-bottom:6px; border-bottom:1px solid #EFE7D8; margin-bottom:2px;">
+                <span style="width:46px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Size</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Your $</span>
+                <span style="flex:1; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Market</span>
+                <span style="margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#A99B86;">Margin</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">4/4</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">3,125</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$2,650</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#2F6342;">+35</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+17.9%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">6/4</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">3,600</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$3,050</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#2F6342;">+40</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+18.0%</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:9px; padding:6px 0; border-bottom:1px dashed #F2EBDE;">
+                <span style="width:46px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#221A12;">8/4</span>
+                <span style="width:80px; text-align:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:#7E4E18; background:#FAF6EF; border:1px solid #D6C8B2; border-radius:8px; padding:6px 4px;">3,990</span>
+                <div style="flex:1; min-width:0;"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B5E4D;">$3,380</div><div style="display:flex; align-items:center; gap:3px; margin-top:1px;"><span style="display:inline-flex; color:#2F6342;"><svg width="7" height="7" viewBox="0 0 10 10"><path d="M5 1l4 8H1z" fill="currentColor"/></svg></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:#2F6342;">+55</span></div></div>
+                <span style="display:inline-flex; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; padding:3px 8px; border-radius:7px; color:#2F6342; background:#E4EFE6; border:1px solid #CADDCD;">+18.0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- SEND TO CUSTOMER · quote document + compose rail (web) -->
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:12px;">Send to customer · quote document</div>
+      <div style="border:1px solid #E6DCCC; border-radius:18px; overflow:hidden; box-shadow:0 12px 36px rgba(60,40,15,.10); margin-bottom:48px;">
+        <div style="display:flex; align-items:center; gap:8px; background:#F3ECE0; padding:12px 16px; border-bottom:1px solid #E6DCCC;">
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="width:11px; height:11px; border-radius:50%; background:#D6C8B2;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; margin-left:10px;">tally.app / quote / send</span>
+        </div>
+        <div style="background:#EFE7D8; padding:28px;">
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F; margin-bottom:5px;">Cascade Millworks · Q-2026-0428</div>
+              <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:26px; letter-spacing:-.02em; margin:0;">Send quote</h3>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap;">
+            <!-- document -->
+            <div style="flex:2; min-width:420px; background:#fff; border-radius:14px; box-shadow:0 8px 24px rgba(60,40,15,.10); overflow:hidden;">
+              <div style="background:#FBF4EA; border-bottom:1px solid #F0E0C6; padding:22px 26px; display:flex; align-items:flex-start; justify-content:space-between;">
+                <div style="display:flex; gap:11px;">
+                  <svg width="32" height="32" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="60" height="60" rx="15" fill="#BC7A2C"/><rect x="13" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="26" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="39" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="19.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="32.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="26" y="12" width="12" height="12" rx="2.5" fill="#17120D"/></svg>
+                  <div>
+                    <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; color:#221A12;">Meridian Lumber Co.</div>
+                    <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#8C7E6B; margin-top:2px;">Bend, OR &middot; casey@meridianlumber.co</div>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F;">Quote</div>
+                  <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; color:#221A12;">Q-2026-0428</div>
+                </div>
+              </div>
+              <div style="padding:20px 26px 24px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Prepared for</span>
+                  <span style="font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; color:#221A12; background:#F3ECE0; border-radius:999px; padding:4px 12px;">Cascade Millworks</span>
+                </div>
+                <div style="border-radius:11px; overflow:hidden; border:1px solid #EFE7D8;">
+                  <div style="display:grid; grid-template-columns:1fr 56px 74px 84px; gap:10px; background:#221A12; padding:9px 14px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:#C9BCA6;">
+                    <div>Material</div><div style="text-align:right;">Pcs</div><div style="text-align:right;">Bd ft</div><div style="text-align:right;">Amount</div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 56px 74px 84px; gap:10px; align-items:center; padding:11px 14px; background:#fff;">
+                    <div><span style="font-size:13px; font-weight:600; color:#221A12;">Doug Fir</span> <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#7E4E18; background:#F4E4CC; border-radius:5px; padding:1px 6px;">#1 & Btr</span></div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#221A12;">264</div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#221A12;">4,224</div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:#221A12;">$2,893.44</div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 56px 74px 84px; gap:10px; align-items:center; padding:11px 14px; background:#FAF6EF;">
+                    <div><span style="font-size:13px; font-weight:600; color:#221A12;">W. Red Cedar</span> <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#7E4E18; background:#F4E4CC; border-radius:5px; padding:1px 6px;">Clear</span></div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#221A12;">400</div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#221A12;">1,600</div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:#221A12;">$1,888.00</div>
+                  </div>
+                  <div style="display:grid; grid-template-columns:1fr 56px 74px 84px; gap:10px; align-items:center; padding:11px 14px; background:#fff;">
+                    <div><span style="font-size:13px; font-weight:600; color:#221A12;">Hem-Fir</span> <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#7E4E18; background:#F4E4CC; border-radius:5px; padding:1px 6px;">#1 posts</span></div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#221A12;">90</div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#221A12;">1,200</div>
+                    <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; color:#221A12;">$864.00</div>
+                  </div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+                  <div style="width:220px; background:#FBF4EA; border:1px solid #F0E0C6; border-radius:11px; padding:12px 15px;">
+                    <div style="display:flex; justify-content:space-between; padding:3px 0; font-family:'IBM Plex Mono',monospace; font-size:12px;"><span style="color:#6B5E4D;">Subtotal</span><span style="color:#221A12;">$9,127.04</span></div>
+                    <div style="display:flex; justify-content:space-between; padding:3px 0; font-family:'IBM Plex Mono',monospace; font-size:12px;"><span style="color:#6B5E4D;">Freight</span><span style="color:#221A12;">$685.00</span></div>
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; padding:9px 0 0; margin-top:6px; border-top:1px solid #E9C99B;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13px; color:#221A12;">Total due</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; color:#A0641F;">$9,812.04</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- compose rail -->
+            <div style="flex:1; min-width:260px; background:#fff; border-radius:14px; box-shadow:0 8px 24px rgba(60,40,15,.10); padding:18px; display:flex; flex-direction:column; gap:14px;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">To</div>
+              <div style="display:flex; align-items:center; gap:9px; background:#FAF6EF; border:1px solid #E6DCCC; border-radius:10px; padding:8px 10px; margin-top:-8px;">
+                <div style="width:28px; height:28px; flex-shrink:0; border-radius:8px; background:#7E4E18; color:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:11px;">CM</div>
+                <div style="font-size:13px; font-weight:600; color:#221A12;">Cascade Millworks</div>
+              </div>
+
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:#8C7E6B;">Delivery</div>
+              <div style="display:flex; gap:3px; background:#F3ECE0; border-radius:9px; padding:3px; margin-top:-8px;">
+                <span style="flex:1; text-align:center; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:11px; border-radius:6px; padding:6px 0; background:#fff; color:#221A12; box-shadow:0 1px 3px rgba(60,40,15,.12);">Email</span>
+                <span style="flex:1; text-align:center; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:11px; border-radius:6px; padding:6px 0; color:#8C7E6B;">Link</span>
+                <span style="flex:1; text-align:center; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:11px; border-radius:6px; padding:6px 0; color:#8C7E6B;">PDF</span>
+              </div>
+
+              <div style="height:1px; background:#EFE7D8;"></div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:12px; font-weight:600; color:#221A12;">Show $/MBF</span>
+                <span style="width:38px; height:22px; border-radius:999px; background:#BC7A2C; display:flex; justify-content:flex-end; padding:2px;"><span style="width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.25);"></span></span>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; background:#FBF4EA; border:1px solid #F0E0C6; border-radius:10px; padding:9px 12px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:#8C7E6B;">Total</span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; color:#2F6342;">$9,812.04</span>
+              </div>
+
+              <span style="width:100%; text-align:center; height:38px; border-radius:10px; background:#BC7A2C; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:#fff; display:flex; align-items:center; justify-content:center; gap:7px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 3L10.5 13.5M21 3l-6.6 18-3.9-8.1L2.4 9 21 3z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Send quote</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two phone screens: result (light) + result (dark) -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:28px;">
+
+        <!-- Light result -->
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:12px;">Quote summary · day</div>
+          <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:28px; padding:14px; box-shadow:0 12px 30px rgba(60,40,15,.12); max-width:340px;">
+            <div style="background:#fff; border-radius:18px; overflow:hidden;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid #F3ECE0;">
+                <span style="font-size:14px; color:#7E4E18; font-weight:600;">Back</span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px;">Lot 84</span>
+                <span style="font-size:14px; color:#7E4E18; font-weight:600;">Save</span>
+              </div>
+              <div style="padding:20px 18px;">
+                <div style="display:flex; gap:18px; align-items:center;">
+                  <svg width="120" height="74" viewBox="0 0 220 128"><path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#E6DCCC" stroke-width="16" stroke-linecap="round"/><path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#3F7D54" stroke-width="16" stroke-linecap="round" stroke-dasharray="282.7" stroke-dashoffset="36.8"/><text x="110" y="100" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:42px; fill:#221A12;">87%</text></svg>
+                  <div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; line-height:1;">1,284<span style="font-size:16px; color:#8C7E6B; font-family:'IBM Plex Mono',monospace;"> bf</span></div><div style="font-size:13px; color:#8C7E6B; margin-top:4px;">87% yield · 13% drop</div></div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:7px; margin-top:18px;">
+                  <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #F3ECE0;"><span style="font-size:14px; color:#4A3F33;">2″ × 6″ × 12′</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px;">50 pc</span></div>
+                  <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #F3ECE0;"><span style="font-size:14px; color:#4A3F33;">White Oak · 8/4</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px;">$1.85/bf</span></div>
+                  <div style="display:flex; justify-content:space-between; align-items:baseline; padding:12px 0 2px;"><span style="font-size:14px; font-weight:600;">Quote total</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:24px; color:#7E4E18;">$2,616</span></div>
+                </div>
+                <button style="width:100%; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:15px; color:#fff; background:#BC7A2C; border:none; border-radius:12px; padding:14px 0; margin-top:16px; cursor:pointer;">Send to customer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark result -->
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:12px;">Quote summary · night</div>
+          <div style="background:#0F0C08; border:1px solid #2B221A; border-radius:28px; padding:14px; box-shadow:0 12px 30px rgba(0,0,0,.3); max-width:340px;">
+            <div style="background:#17120D; border-radius:18px; overflow:hidden;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid #2B221A;">
+                <span style="font-size:14px; color:#CE8E3F; font-weight:600;">Back</span>
+                <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#F3ECE0;">Lot 84</span>
+                <span style="font-size:14px; color:#CE8E3F; font-weight:600;">Save</span>
+              </div>
+              <div style="padding:20px 18px;">
+                <div style="display:flex; gap:18px; align-items:center;">
+                  <svg width="120" height="74" viewBox="0 0 220 128"><path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#2B221A" stroke-width="16" stroke-linecap="round"/><path d="M20 110 A90 90 0 0 1 200 110" fill="none" stroke="#4F9E6A" stroke-width="16" stroke-linecap="round" stroke-dasharray="282.7" stroke-dashoffset="36.8"/><text x="110" y="100" text-anchor="middle" style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:42px; fill:#F3ECE0;">87%</text></svg>
+                  <div><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; line-height:1; color:#fff;">1,284<span style="font-size:16px; color:#A89A85; font-family:'IBM Plex Mono',monospace;"> bf</span></div><div style="font-size:13px; color:#A89A85; margin-top:4px;">87% yield · 13% drop</div></div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:7px; margin-top:18px;">
+                  <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #2B221A;"><span style="font-size:14px; color:#C9BCA6;">2″ × 6″ × 12′</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#F3ECE0;">50 pc</span></div>
+                  <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #2B221A;"><span style="font-size:14px; color:#C9BCA6;">White Oak · 8/4</span><span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#F3ECE0;">$1.85/bf</span></div>
+                  <div style="display:flex; justify-content:space-between; align-items:baseline; padding:12px 0 2px;"><span style="font-size:14px; font-weight:600; color:#F3ECE0;">Quote total</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:24px; color:#CE8E3F;">$2,616</span></div>
+                </div>
+                <button style="width:100%; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:15px; color:#17120D; background:#BC7A2C; border:none; border-radius:12px; padding:14px 0; margin-top:16px; cursor:pointer;">Send to customer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Saved projects -->
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8C7E6B; margin-bottom:12px;">Saved quotes</div>
+          <div style="background:#FAF6EF; border:1px solid #E6DCCC; border-radius:28px; padding:14px; box-shadow:0 12px 30px rgba(60,40,15,.12); max-width:340px;">
+            <div style="background:#fff; border-radius:18px; overflow:hidden;">
+              <div style="padding:18px 18px 12px; border-bottom:1px solid #F3ECE0;">
+                <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:22px;">Quotes</div>
+                <div style="font-size:13px; color:#8C7E6B;">8 active · $14,208 open</div>
+              </div>
+              <div style="padding:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="display:flex; align-items:center; gap:12px; padding:8px 6px;">
+                  <div style="width:40px; height:40px; border-radius:10px; background:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7E4E18;">WO</div>
+                  <div style="flex:1; min-width:0;"><div style="font-size:14px; font-weight:600;">Hardwood Co.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;">1,284 bf</div></div>
+                  <div style="text-align:right;"><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px;">$2,616</div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#3F7D54;">QUOTED</div></div>
+                </div>
+                <div style="height:1px; background:#F3ECE0;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:8px 6px;">
+                  <div style="width:40px; height:40px; border-radius:10px; background:#E7F0E9; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#2F6342;">HM</div>
+                  <div style="flex:1; min-width:0;"><div style="font-size:14px; font-weight:600;">Ridgeline Mill</div><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;">640 bf</div></div>
+                  <div style="text-align:right;"><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px;">$1,184</div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#D69A2E;">DRAFT</div></div>
+                </div>
+                <div style="height:1px; background:#F3ECE0;"></div>
+                <div style="display:flex; align-items:center; gap:12px; padding:8px 6px;">
+                  <div style="width:40px; height:40px; border-radius:10px; background:#EFE0DB; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#9c4a36;">WN</div>
+                  <div style="flex:1; min-width:0;"><div style="font-size:14px; font-weight:600;">Cabinet Works</div><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B;">312 bf</div></div>
+                  <div style="text-align:right;"><div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px;">$1,560</div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#3F7D54;">QUOTED</div></div>
+                </div>
+              </div>
+              <div style="padding:0 12px 16px;"><button style="width:100%; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:15px; color:#fff; background:#BC7A2C; border:none; border-radius:12px; padding:13px 0; cursor:pointer;">+ New quote</button></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESPONSIVE ============ -->
+  <section style="padding:80px 40px 96px; background:#FAF6EF; border-top:1px solid #E6DCCC;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#A0641F; margin-bottom:12px;">04 — Responsive</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:34px; letter-spacing:-.02em; margin:0 0 8px;">Phone patterns</h2>
+      <p style="font-size:16px; color:#6B5E4D; max-width:62ch; margin:0 0 40px;">Three tiers: phone <span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#7E4E18;">&le;760px</span> (designed down to 375), tablet <span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#7E4E18;">761&ndash;1099px</span>, desktop above. On phones the top nav becomes a bottom tab bar, grand totals pin above it as a Walnut strip, and the tally worksheet restacks to one row per length with &minus;/+ steppers. On tablets the worksheet keeps its horizontal grid but folds the side panels into a header row and a Walnut summary strip. Landscape phones (height &le;480px) unstick the header and drop tab labels to icons so the worksheet keeps the screen.</p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px;">
+
+        <!-- tab bar spec -->
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; margin-bottom:4px;">Bottom tab bar</div>
+          <p style="font-size:13px; color:#6B5E4D; margin:0 0 18px;">Fixed, three tabs, Paper surface with a hairline top border. Active tab in Timber 600; 44px+ targets; safe-area padding below.</p>
+          <div style="border:1px solid #E6DCCC; border-radius:12px; overflow:hidden;">
+            <nav style="background:#FAF6EF; border-top:1px solid #E6DCCC; display:grid; grid-template-columns:1fr 1fr 1fr; padding:8px 0 10px;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; color:#A0641F;">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2.5" stroke="#A0641F" stroke-width="1.8"/><path d="M8 7.5h8M8 11.5h4M8 15.5h5" stroke="#A0641F" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span style="font-size:11px; font-weight:600;">Calculator</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; color:#8C7E6B;">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" stroke="#8C7E6B" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 8l8 4 8-4M12 12v8" stroke="#8C7E6B" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                <span style="font-size:11px; font-weight:500;">Loads</span>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; color:#8C7E6B;">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M7 7.5h7a2.5 2.5 0 010 5H9a2.5 2.5 0 000 5h8" stroke="#8C7E6B" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span style="font-size:11px; font-weight:500;">Prices</span>
+              </div>
+            </nav>
+          </div>
+        </div>
+
+        <!-- totals strip spec -->
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; margin-bottom:4px;">Pinned totals strip</div>
+          <p style="font-size:13px; color:#6B5E4D; margin:0 0 18px;">Grand totals collapse into a fixed Walnut strip that sits directly above the tab bar — bf and price never scroll away.</p>
+          <div style="border-radius:12px; overflow:hidden;">
+            <div style="background:#17120D; color:#F3ECE0; padding:10px 16px; display:flex; align-items:center; gap:14px;">
+              <div style="display:flex; align-items:baseline; gap:4px;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:20px; color:#fff;">10,805</span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#CE8E3F;">bf</span></div>
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#A89A85;">966 pcs</span>
+              <div style="flex:1;"></div>
+              <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px; color:#9FCBAE;">$5,463</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- stacked row spec -->
+        <div style="background:#fff; border:1px solid #E6DCCC; border-radius:14px; padding:24px;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:17px; margin-bottom:4px;">Stacked length row</div>
+          <p style="font-size:13px; color:#6B5E4D; margin:0 0 18px;">The worksheet grid becomes one row per length: length label, −/+ steppers flanking the unit field (44px hit targets), computed board feet at right. Per-length $/MBF overrides stay desktop-only.</p>
+          <div style="display:grid; grid-template-columns:40px 1fr 66px; gap:8px; align-items:center;">
+            <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:16px;">16&#8242;</span>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="width:40px; height:44px; flex-shrink:0; border-radius:9px; background:#FAF6EF; border:1px solid #D6C8B2; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:18px; color:#7E4E18;">&#8722;</span>
+              <span style="flex:1; min-width:0; height:44px; border-radius:9px; background:#FAF6EF; border:1px solid #D6C8B2; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:17px; color:#221A12;">4</span>
+              <span style="width:40px; height:44px; flex-shrink:0; border-radius:9px; background:#FAF6EF; border:1px solid #D6C8B2; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:18px; color:#7E4E18;">+</span>
+            </div>
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8C7E6B; text-align:right;">8,192</span>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; margin-top:16px;">Gutters &amp; display type scale with clamp(); card grids use minmax(min(col,100%),1fr).</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer style="background:#17120D; color:#A89A85; padding:32px 40px; text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em;">
+    Tally — Lumber Calculator Design System · Timber + Walnut · Space Grotesk / IBM Plex
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultUnit&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;imperial&quot;,&quot;metric&quot;],&quot;default&quot;:&quot;imperial&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;pricePerBoardFoot&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:1.85,&quot;min&quot;:0.25,&quot;max&quot;:20,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;},&quot;species&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;White Oak&quot;,&quot;Hard Maple&quot;,&quot;Walnut&quot;,&quot;Cherry&quot;,&quot;Poplar&quot;,&quot;Pine SYP&quot;],&quot;default&quot;:&quot;White Oak&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    unit: this.props?.defaultUnit || 'imperial',
+    t: 2, w: 6, l: 12, qty: 50,
+    price: (this.props?.pricePerBoardFoot != null) ? this.props.pricePerBoardFoot : 1.85,
+    species: this.props?.species || 'White Oak',
+  };
+  fmt(n, d) {
+    return Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  renderVals() {
+    const s = this.state;
+    const imp = s.unit === 'imperial';
+    const bf = (s.t * s.w * s.l / 12) * s.qty;
+    const cubicFt = (s.t / 12) * (s.w / 12) * s.l * s.qty;
+    const total = bf * s.price;
+    const dims = imp
+      ? s.t + '″ × ' + s.w + '″ × ' + s.l + '′'
+      : Math.round(s.t * 25.4) + ' × ' + Math.round(s.w * 25.4) + ' mm × ' + (s.l * 0.3048).toFixed(2) + ' m';
+    const volLabel = imp
+      ? this.fmt(cubicFt, 1) + ' ft³'
+      : this.fmt(cubicFt * 0.0283168, 3) + ' m³';
+
+    const seg = {
+      base: { fontFamily: "'IBM Plex Sans',sans-serif", fontSize: '13px', border: 'none', borderRadius: '8px', padding: '7px 16px', cursor: 'pointer' },
+      on: { background: '#fff', color: '#221A12', fontWeight: 600, boxShadow: '0 1px 2px rgba(60,40,15,.16)' },
+      off: { background: 'transparent', color: '#8C7E6B', fontWeight: 500 },
+    };
+    const segSm = {
+      base: { fontFamily: "'IBM Plex Sans',sans-serif", fontSize: '12px', border: 'none', borderRadius: '7px', padding: '6px 13px', cursor: 'pointer' },
+    };
+    const mk = (b, on) => Object.assign({}, b, on ? seg.on : seg.off);
+
+    const step = (k, d, min) => this.setState(st => ({ [k]: Math.max(min, +(st[k] + d).toFixed(2)) }));
+
+    return {
+      setImp: () => this.setState({ unit: 'imperial' }),
+      setMet: () => this.setState({ unit: 'metric' }),
+      unitWord: imp ? 'imperial' : 'metric',
+      impBtnStyle: mk(seg.base, imp),
+      metBtnStyle: mk(seg.base, !imp),
+      impBtnStyleSm: mk(segSm.base, imp),
+      metBtnStyleSm: mk(segSm.base, !imp),
+      t: s.t, w: s.w, l: s.l, qty: s.qty, species: s.species,
+      price: '$' + this.fmt(s.price, 2),
+      dims, volLabel,
+      boardFeet: this.fmt(bf, 1),
+      total: '$' + this.fmt(total, 2),
+      incT: () => step('t', 0.25, 0.25), decT: () => step('t', -0.25, 0.25),
+      incW: () => step('w', 0.5, 1), decW: () => step('w', -0.5, 1),
+      incL: () => step('l', 1, 1), decL: () => step('l', -1, 1),
+      incQ: () => step('qty', 5, 5), decQ: () => step('qty', -5, 5),
+    };
+  }
+}
+</script>
+</body>
+</html>

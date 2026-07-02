@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; }
+  input::placeholder,textarea::placeholder{ color:#A99B86; }
+  .tally-page{ box-shadow:0 20px 50px rgba(60,40,15,.16), 0 2px 6px rgba(60,40,15,.08); }
+</style>
+</helmet>
+
+<div data-screen-label="Send to customer" style="background:#EFE7D8; min-height:100vh; font-family:'IBM Plex Sans',sans-serif; color:#221A12; -webkit-font-smoothing:antialiased; line-height:1.5;">
+
+  <!-- TOP BAR -->
+  <header style="background:#FAF6EF; border-bottom:1px solid #E6DCCC; z-index:20; {{ headerStick }}">
+    <div style="max-width:1240px; margin:0 auto; padding:12px clamp(14px,3.5vw,28px); display:flex; align-items:center; gap:12px;">
+      <div style="display:flex; align-items:center; gap:11px;">
+        <svg width="30" height="30" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="60" height="60" rx="15" fill="#BC7A2C"/><rect x="13" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="26" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="39" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="19.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="32.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="26" y="12" width="12" height="12" rx="2.5" fill="#17120D"/></svg>
+        <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:-.01em;"><span style="color:#221A12;">Lumber</span> <span style="color:#A0641F;">Logic</span></span>
+      </div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex; gap:4px; margin-left:18px;">
+        <a href="Tally Home.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Calculator</a>
+        <a href="Tally Saved Loads.dc.html" style="font-size:14px; font-weight:600; color:#221A12; text-decoration:none; padding:7px 13px; border-radius:8px; background:#F3ECE0;">Saved loads</a>
+        <a href="Tally Prices.dc.html" style="font-size:14px; font-weight:500; color:#8C7E6B; text-decoration:none; padding:7px 13px; border-radius:8px;" style-hover="color:#221A12;">Prices</a>
+      </nav>
+      </sc-if>
+      <div style="flex:1;"></div>
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#8C7E6B; display:flex; align-items:center; gap:7px;"><span style="width:7px; height:7px; border-radius:50%; background:#D69A2E;"></span>Draft &middot; Q-2026-0428</div></sc-if>
+      <div style="width:34px; height:34px; border-radius:50%; background:#7E4E18; color:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px;">CB</div>
+    </div>
+  </header>
+
+  <main style="max-width:1240px; margin:0 auto; padding:clamp(18px,4.5vw,28px) clamp(14px,3.5vw,28px) 72px;">
+
+    <!-- TITLE -->
+    <div style="margin-bottom:22px;">
+      <a href="Tally Saved Loads.dc.html" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:#7E4E18; text-decoration:none; margin-bottom:12px;" style-hover="color:#A0641F;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#7E4E18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Saved loads
+      </a>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#A0641F; margin-bottom:6px;">Cascade Millworks &middot; Q-2026-0428</div>
+      <h1 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(26px,7vw,32px); letter-spacing:-.02em; margin:0;">Send quote</h1>
+      <p style="font-size:14px; color:#6B5E4D; margin:6px 0 0; max-width:560px;">Review the customer copy, add a note, and send. Toggle unit pricing or push out the valid-through date &mdash; the document updates live.</p>
+    </div>
+
+    <!-- WORKSPACE -->
+    <div style="display:flex; gap:clamp(16px,3vw,28px); align-items:flex-start; flex-wrap:wrap; flex-direction:{{ wsDir }};">
+
+      <!-- DOCUMENT DESK -->
+      <div style="flex:1; min-width:min(520px,100%); background:#EAE0CF; border:1px solid #DCCFB9; border-radius:18px; padding:clamp(10px,3vw,32px); display:flex; justify-content:center;">
+        <div class="tally-page" style="width:816px; max-width:100%; min-height:{{ pageMinH }}; background:#fff; display:flex; flex-direction:column;">
+
+          <!-- header band -->
+          <div style="background:#FBF4EA; border-bottom:1px solid #F0E0C6; padding:clamp(20px,4.5vw,40px) clamp(18px,5.5vw,56px); display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+            <div style="display:flex; gap:14px;">
+              <svg width="46" height="46" viewBox="0 0 64 64" fill="none"><rect x="2" y="2" width="60" height="60" rx="15" fill="#BC7A2C"/><rect x="13" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="26" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="39" y="37" width="12" height="12" rx="2.5" fill="#2B221A"/><rect x="19.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="32.5" y="24.5" width="12" height="12" rx="2.5" fill="#3D260F"/><rect x="26" y="12" width="12" height="12" rx="2.5" fill="#17120D"/></svg>
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; letter-spacing:-.01em; color:#221A12;">Meridian Lumber Co.</div>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; line-height:1.7; margin-top:4px;">4120 Butler Market Rd, Bend, OR 97701<br>(541) 555-0143 &middot; casey@meridianlumber.co</div>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#A0641F;">Quote</div>
+              <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; color:#221A12; margin-top:2px;">Q-2026-0428</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; margin-top:8px; line-height:1.7;">Issued Jun 30, 2026<br>Valid through {{ validUntilLabel }}</div>
+            </div>
+          </div>
+
+          <div style="padding:clamp(20px,4.5vw,34px) clamp(18px,5.5vw,56px) clamp(28px,5vw,48px); display:flex; flex-direction:column; flex:1;">
+            <!-- prepared for chip -->
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:28px; flex-wrap:wrap;">
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#8C7E6B;">Prepared for</span>
+              <span style="display:inline-flex; align-items:center; gap:8px; background:#F3ECE0; border-radius:999px; padding:6px 14px; flex-wrap:wrap;"><span style="font-size:14px; font-weight:600; color:#221A12;">Cascade Millworks</span><span style="width:4px; height:4px; border-radius:50%; background:#C7B79E;"></span><span style="font-size:12px; color:#6B5E4D;">Dana Okafor</span><span style="width:4px; height:4px; border-radius:50%; background:#C7B79E;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B;">PO 2231</span></span>
+            </div>
+
+            <!-- banded rows -->
+            <div style="border-radius:14px; overflow:hidden; border:1px solid #EFE7D8;">
+              <div style="display:grid; grid-template-columns:{{ gridCols }}; gap:14px; background:#221A12; padding:11px 20px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#C9BCA6;">
+                <div>Material</div><sc-if value="{{ showPcsCol }}" hint-placeholder-val="{{ true }}"><div style="text-align:right;">Pcs</div></sc-if><div style="text-align:right;">Bd ft</div><sc-if value="{{ showUnitCol }}" hint-placeholder-val="{{ true }}"><div style="text-align:right;">$ / MBF</div></sc-if><div style="text-align:right;">Amount</div>
+              </div>
+              <sc-for list="{{ lines }}" as="ln" hint-placeholder-count="5">
+                <div style="display:grid; grid-template-columns:{{ gridCols }}; gap:14px; align-items:center; padding:15px 20px; background:{{ ln.bandStyle }};">
+                  <div>
+                    <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;"><span style="font-size:14px; font-weight:600; color:#221A12;">{{ ln.species }}</span><span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#7E4E18; background:#F4E4CC; border-radius:5px; padding:2px 7px;">{{ ln.grade }}</span></div>
+                    <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; margin-top:4px;">{{ ln.dims }}</div>
+                  </div>
+                  <sc-if value="{{ showPcsCol }}" hint-placeholder-val="{{ true }}"><div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#221A12;">{{ ln.pcs }}</div></sc-if>
+                  <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#221A12;">{{ ln.bf }}</div>
+                  <sc-if value="{{ showUnitCol }}" hint-placeholder-val="{{ true }}"><div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#6B5E4D;">{{ ln.mbf }}</div></sc-if>
+                  <div style="text-align:right; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500; color:#221A12;">{{ ln.ext }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- totals card -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-top:26px; flex-wrap:wrap;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8C7E6B; line-height:1.9;">{{ totals.itemCount }} items<br>{{ totals.totalPcs }} pieces<br>{{ totals.totalBf }} board feet</div>
+              <div style="width:300px; max-width:100%; background:#FBF4EA; border:1px solid #F0E0C6; border-radius:14px; padding:18px 20px;">
+                <div style="display:flex; justify-content:space-between; padding:5px 0; font-family:'IBM Plex Mono',monospace; font-size:13px;"><span style="color:#6B5E4D;">Subtotal</span><span style="color:#221A12;">{{ totals.subtotal }}</span></div>
+                <div style="display:flex; justify-content:space-between; padding:5px 0; font-family:'IBM Plex Mono',monospace; font-size:13px;"><span style="color:#6B5E4D;">Freight</span><span style="color:#221A12;">{{ totals.freight }}</span></div>
+                <div style="display:flex; justify-content:space-between; padding:5px 0; font-family:'IBM Plex Mono',monospace; font-size:13px;"><span style="color:#6B5E4D;">Tax &middot; resale exempt</span><span style="color:#221A12;">$0.00</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:baseline; padding:13px 0 2px; margin-top:8px; border-top:1px solid #E9C99B;"><span style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; color:#221A12;">Total due</span><span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:26px; color:#A0641F;">{{ totals.total }}</span></div>
+              </div>
+            </div>
+
+            <!-- note -->
+            <div style="margin-top:28px; background:#FAF6EF; border:1px solid #EFE7D8; border-radius:14px; padding:18px 20px;">
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#A0641F; margin-bottom:8px;">Note from Casey Brooks</div>
+              <div style="font-size:13px; color:#4A3F33; line-height:1.65; white-space:pre-wrap;">{{ message }}</div>
+            </div>
+
+            <div style="flex:1;"></div>
+            <div style="margin-top:30px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:#A99B86; text-align:center;">Quote valid through {{ validUntilLabel }} &middot; Prices in USD, FOB Bend OR &middot; Meridian Lumber Co.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPOSE RAIL -->
+      <div style="width:{{ railW }}; flex-shrink:0; background:#fff; border:1px solid #E6DCCC; border-radius:18px; box-shadow:0 12px 30px rgba(60,40,15,.08); padding:22px 22px 26px; display:flex; flex-direction:column; gap:17px; {{ railSticky }}">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:#A0641F;">Send to customer</div>
+          <h3 style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:20px; margin:4px 0 0; letter-spacing:-.01em;">Send quote</h3>
+        </div>
+
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:#8C7E6B; margin-bottom:8px;">To</div>
+          <div style="display:flex; align-items:center; gap:11px; background:#FAF6EF; border:1px solid #E6DCCC; border-radius:11px; padding:10px 12px;">
+            <div style="width:34px; height:34px; flex-shrink:0; border-radius:9px; background:#7E4E18; color:#F4E4CC; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:13px;">CM</div>
+            <div style="min-width:0;"><div style="font-size:14px; font-weight:600; color:#221A12;">Cascade Millworks</div><div style="font-size:12px; color:#8C7E6B;">Dana Okafor &middot; Purchasing</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #E6DCCC; border-radius:10px; padding:0 11px; height:40px; margin-top:9px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="#8C7E6B" stroke-width="1.7"/><path d="M4 7l8 6 8-6" stroke="#8C7E6B" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <input value="{{ email }}" onChange="{{ onEmail }}" style="border:none; outline:none; background:transparent; font-family:'IBM Plex Sans',sans-serif; font-size:13px; color:#221A12; width:100%;">
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:#8C7E6B; margin-bottom:8px;">Delivery</div>
+          <div style="display:flex; gap:4px; background:#F3ECE0; border-radius:10px; padding:4px;">
+            <button onClick="{{ onPickEmail }}" style="{{ segEmail }}">Email</button>
+            <button onClick="{{ onPickLink }}" style="{{ segLink }}">Share link</button>
+            <button onClick="{{ onPickPdf }}" style="{{ segPdf }}">PDF</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:#8C7E6B; margin-bottom:8px;">Message to customer</div>
+          <textarea value="{{ message }}" onChange="{{ onMessage }}" rows="5" style="width:100%; resize:vertical; border:1px solid #E6DCCC; border-radius:11px; padding:11px 12px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; line-height:1.55; color:#221A12; outline:none; background:#fff;"></textarea>
+        </div>
+
+        <div style="height:1px; background:#EFE7D8;"></div>
+
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:#8C7E6B; margin-bottom:11px;">Document options</div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <div><div style="font-size:13px; font-weight:600; color:#221A12;">Show per-line $/MBF</div><div style="font-size:11px; color:#8C7E6B;">Unit pricing on each row</div></div>
+            <button onClick="{{ onToggleUnit }}" style="{{ toggleTrack }}"><span style="{{ toggleKnob }}"></span></button>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="font-size:13px; font-weight:600; color:#221A12;">Valid through</div>
+            <input type="date" value="{{ validUntil }}" onChange="{{ onValidUntil }}" style="border:1px solid #E6DCCC; border-radius:9px; padding:6px 9px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#221A12; outline:none; background:#fff;">
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; background:#FBF4EA; border:1px solid #F0E0C6; border-radius:11px; padding:11px 14px;">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#8C7E6B;">Quote total</span>
+          <span style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; color:#2F6342;">{{ totals.total }}</span>
+        </div>
+
+        <div style="display:flex; gap:9px;">
+          <button onClick="{{ onSend }}" style="flex:1; height:44px; border-radius:11px; background:#BC7A2C; border:none; cursor:pointer; font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:14px; color:#fff; display:flex; align-items:center; justify-content:center; gap:8px;" style-hover="background:#A0641F;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 3L10.5 13.5M21 3l-6.6 18-3.9-8.1L2.4 9 21 3z" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Send quote</button>
+          <button style="width:44px; height:44px; flex-shrink:0; border-radius:11px; background:#FAF6EF; border:1px solid #E6DCCC; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="background:#F3ECE0;" title="Download PDF"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="#7E4E18" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}"><div style="height:{{ spacerH }};"></div></sc-if>
+  </main>
+
+  <!-- toast -->
+  <sc-if value="{{ toastShown }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; bottom:{{ toastBottom }}; left:50%; transform:translateX(-50%); background:#17120D; color:#F3ECE0; font-family:'IBM Plex Sans',sans-serif; font-size:14px; font-weight:500; padding:13px 20px; border-radius:12px; box-shadow:0 12px 30px rgba(60,40,15,.3); display:flex; align-items:center; gap:10px; z-index:100;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#9FCBAE" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ toast }}
+    </div>
+  </sc-if>
+
+  <!-- MOBILE TAB BAR -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <nav style="position:fixed; left:0; right:0; bottom:0; z-index:40; background:#FAF6EF; border-top:1px solid #E6DCCC; display:grid; grid-template-columns:1fr 1fr 1fr; padding:{{ tabBarPad }};">
+      <a href="Tally Home.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2.5" stroke="#8C7E6B" stroke-width="1.8"/><path d="M8 7.5h8M8 11.5h4M8 15.5h5" stroke="#8C7E6B" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Calculator</span>
+      </a>
+      <a href="Tally Saved Loads.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#A0641F;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" stroke="#A0641F" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 8l8 4 8-4M12 12v8" stroke="#A0641F" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px; font-weight:600; {{ tabLabelHide }}">Loads</span>
+      </a>
+      <a href="Tally Prices.dc.html" style="display:flex; flex-direction:column; align-items:center; gap:3px; text-decoration:none; color:#8C7E6B;">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M7 7.5h7a2.5 2.5 0 010 5H9a2.5 2.5 0 000 5h8" stroke="#8C7E6B" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:11px; font-weight:500; {{ tabLabelHide }}">Prices</span>
+      </a>
+    </nav>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.LINES = [
+      { species: 'Doug Fir',     grade: '#1 & Btr S4S',        t: 2, w: 6,  lenFt: 16, pcs: 264, mbf: 685 },
+      { species: 'Doug Fir',     grade: '#2 KD S4S',           t: 2, w: 4,  lenFt: 12, pcs: 320, mbf: 560 },
+      { species: 'SPF',          grade: '#2 & Btr',            t: 2, w: 10, lenFt: 16, pcs: 120, mbf: 640 },
+      { species: 'W. Red Cedar', grade: 'Clear decking S1S2E', t: 1, w: 6,  lenFt: 8,  pcs: 400, mbf: 1180 },
+      { species: 'Hem-Fir',      grade: '#1 posts S4S',        t: 4, w: 4,  lenFt: 10, pcs: 90,  mbf: 720 },
+    ];
+    this.FREIGHT = 685;
+    this.state = {
+      mobile: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 760px)').matches,
+      narrow: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 999px)').matches,
+      shortH: typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-height: 480px)').matches,
+      message: 'Thanks for the chance to quote this one, Dana. Pricing below covers the full mixed truckload FOB our Bend yard, delivered to your Redmond shop. Cedar decking is running tight this month, so these numbers hold through the valid-through date. Give me a call if you want to shift the Doug Fir counts.',
+      email: 'purchasing@cascademill.com',
+      validUntil: '2026-07-14',
+      showUnit: true,
+      delivery: 'email',
+      toast: null,
+    };
+    this._t = null;
+    this._navT = null;
+  }
+
+  componentDidMount() {
+    const defs = [['mobile', '(max-width: 760px)'], ['narrow', '(max-width: 999px)'], ['shortH', '(max-height: 480px)']];
+    this._mqs = defs.map(d => [d[0], window.matchMedia(d[1])]);
+    this._onMq = () => { const p = {}; this._mqs.forEach(m => p[m[0]] = m[1].matches); this.setState(p); };
+    this._mqs.forEach(m => { if (m[1].addEventListener) m[1].addEventListener('change', this._onMq); else m[1].addListener(this._onMq); });
+  }
+  componentWillUnmount() {
+    if (!this._mqs) return;
+    this._mqs.forEach(m => { if (m[1].removeEventListener) m[1].removeEventListener('change', this._onMq); else m[1].removeListener(this._onMq); });
+  }
+
+  int(n) { return Number(n || 0).toLocaleString('en-US'); }
+  money2(n) { return '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  dateLabel(iso) {
+    const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const d = new Date(iso + 'T00:00:00Z');
+    if (isNaN(d)) return iso;
+    return M[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
+  }
+
+  compute() {
+    const rows = this.LINES.map((l, i) => {
+      const bf = l.pcs * (l.t * l.w * l.lenFt) / 12;
+      const ext = bf / 1000 * l.mbf;
+      return {
+        num: i + 1,
+        species: l.species,
+        grade: l.grade,
+        dims: l.t + '\u2033\u00d7' + l.w + '\u2033\u00d7' + l.lenFt + '\u2032',
+        pcs: this.int(l.pcs),
+        bf: this.int(Math.round(bf)),
+        mbf: '$' + this.int(l.mbf),
+        ext: this.money2(ext),
+        bandStyle: i % 2 === 0 ? '#FFFFFF' : '#FAF6EF',
+        _bf: bf, _ext: ext, _pcs: l.pcs,
+      };
+    });
+    const subtotal = rows.reduce((s, r) => s + r._ext, 0);
+    const totalBf = rows.reduce((s, r) => s + r._bf, 0);
+    const totalPcs = rows.reduce((s, r) => s + r._pcs, 0);
+    const total = subtotal + this.FREIGHT;
+    return {
+      rows,
+      totals: {
+        subtotal: this.money2(subtotal),
+        freight: this.money2(this.FREIGHT),
+        total: this.money2(total),
+        totalBf: this.int(Math.round(totalBf)),
+        totalPcs: this.int(totalPcs),
+        itemCount: rows.length,
+      },
+    };
+  }
+
+  seg(active) {
+    return 'flex:1; font-family:\'IBM Plex Sans\',sans-serif; font-weight:600; font-size:12px; cursor:pointer; border:none; border-radius:7px; padding:8px 4px; background:' +
+      (active ? '#fff' : 'transparent') + '; color:' + (active ? '#221A12' : '#8C7E6B') +
+      '; box-shadow:' + (active ? '0 1px 3px rgba(60,40,15,.12)' : 'none') + ';';
+  }
+
+  showToast(msg) {
+    this.setState({ toast: msg });
+    if (this._t) clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: null }), 2800);
+  }
+
+  send() {
+    const label = { email: 'Emailed', link: 'Share link created for', pdf: 'PDF ready for' }[this.state.delivery] || 'Sent to';
+    this.showToast(label + ' Cascade Millworks \u00b7 Q-2026-0428');
+    if (this._navT) clearTimeout(this._navT);
+    this._navT = setTimeout(() => { window.location.href = 'Tally Saved Loads.dc.html'; }, 1400);
+  }
+
+  renderVals() {
+    const { rows, totals } = this.compute();
+    const showUnit = this.state.showUnit;
+    const mobile = this.state.mobile;
+    const narrow = this.state.narrow;
+    const shortH = this.state.shortH;
+    const gridCols = mobile ? '1fr 62px 92px' : (showUnit ? '1fr 64px 78px 88px 104px' : '1fr 72px 92px 120px');
+    return {
+      lines: rows,
+      totals,
+      showUnit,
+      gridCols,
+      showUnitCol: showUnit && !mobile,
+      showPcsCol: !mobile,
+      isMobile: mobile,
+      isDesktop: !mobile,
+      wsDir: narrow ? 'column-reverse' : 'row',
+      railSticky: narrow ? '' : 'position:sticky; top:86px;',
+      railW: narrow ? '100%' : 'min(360px,100%)',
+      pageMinH: mobile ? 'auto' : '1056px',
+      headerStick: shortH ? '' : 'position:sticky; top:0;',
+      tabBarPad: shortH ? '6px 0 calc(6px + env(safe-area-inset-bottom))' : '7px 0 calc(9px + env(safe-area-inset-bottom))',
+      tabLabelHide: shortH ? 'display:none;' : '',
+      spacerH: shortH ? '48px' : '70px',
+      toastBottom: mobile ? (shortH ? 'calc(48px + env(safe-area-inset-bottom))' : 'calc(76px + env(safe-area-inset-bottom))') : '28px',
+      message: this.state.message,
+      email: this.state.email,
+      validUntil: this.state.validUntil,
+      validUntilLabel: this.dateLabel(this.state.validUntil),
+      onMessage: (e) => this.setState({ message: e.target.value }),
+      onEmail: (e) => this.setState({ email: e.target.value }),
+      onValidUntil: (e) => this.setState({ validUntil: e.target.value }),
+      onToggleUnit: () => this.setState(s => ({ showUnit: !s.showUnit })),
+      onPickEmail: () => this.setState({ delivery: 'email' }),
+      onPickLink: () => this.setState({ delivery: 'link' }),
+      onPickPdf: () => this.setState({ delivery: 'pdf' }),
+      segEmail: this.seg(this.state.delivery === 'email'),
+      segLink: this.seg(this.state.delivery === 'link'),
+      segPdf: this.seg(this.state.delivery === 'pdf'),
+      toggleTrack: 'width:44px; height:26px; flex-shrink:0; border-radius:999px; border:none; cursor:pointer; padding:3px; display:flex; transition:background .16s; background:' + (showUnit ? '#BC7A2C' : '#D6C8B2') + '; justify-content:' + (showUnit ? 'flex-end' : 'flex-start') + ';',
+      toggleKnob: 'width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); display:block;',
+      onSend: () => this.send(),
+      toast: this.state.toast,
+      toastShown: !!this.state.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
