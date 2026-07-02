@@ -54,7 +54,7 @@ export function SavedLoadsScreen() {
   }, [loads, query, statusFilter, sortKey, sortDir])
 
   const handleOpen = (load: SavedLoad) => {
-    openLoad(load.id)
+    if (!openLoad(load.id)) return
     navigate('/')
     showToast(`Opened ${load.name}`)
   }
