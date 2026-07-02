@@ -1,0 +1,11 @@
+# Netlify settings for the Lumber Logic React app in tally/
+[build]
+  base = "tally"
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback — React Router client-side routes (/loads, /prices, /send/…)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

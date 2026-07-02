@@ -23,9 +23,19 @@ npm run build
 npm run preview
 ```
 
-## Deploy
+## Deploy (Netlify)
 
-Build output is in `dist/`. Deploy to GitHub Pages, Netlify, or any static host. PWA service worker registers automatically in production builds.
+This repo includes a root [`netlify.toml`](../netlify.toml) configured for:
+
+| Setting | Value |
+|---------|-------|
+| Base directory | `tally` |
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+
+In the Netlify dashboard, **do not** override these unless you know why. The most common 404 cause is publishing the repo root instead of `tally/dist`.
+
+After connecting the repo, trigger a new deploy. Direct links like `/loads` and `/prices` work via the SPA redirect rule.
 
 ## Structure
 
