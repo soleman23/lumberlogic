@@ -1,0 +1,64 @@
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stepper__label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--oak-500);
+}
+
+.stepper__control {
+  display: flex;
+  align-items: stretch;
+  background: var(--oak-surface);
+  border: 1px solid var(--oak-300);
+  border-radius: var(--radius-chip);
+  overflow: hidden;
+}
+
+.stepper__btn {
+  width: 46px;
+  background: var(--oak-100);
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--timber-700);
+}
+
+.stepper__btn:first-child {
+  border-right: 1px solid var(--oak-200);
+}
+
+.stepper__btn:last-child {
+  border-left: 1px solid var(--oak-200);
+}
+
+.stepper__value {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px 8px;
+  min-height: 44px;
+}
+
+.stepper__num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--oak-ink);
+}
+
+.stepper__unit {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--oak-500);
+}

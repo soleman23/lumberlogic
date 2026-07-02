@@ -1,0 +1,32 @@
+.seg {
+  display: flex;
+  background: var(--oak-100);
+  border: 1px solid var(--oak-200);
+  border-radius: var(--radius-chip);
+  padding: 3px;
+  gap: 2px;
+}
+
+.seg__btn {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--oak-500);
+  min-height: 44px;
+}
+
+.seg__btn--active {
+  background: var(--oak-surface);
+  color: var(--oak-ink);
+  box-shadow: var(--elev-flat);
+}
+
+.seg__btn:hover:not(.seg__btn--active) {
+  color: var(--oak-ink);
+}

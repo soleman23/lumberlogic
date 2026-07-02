@@ -1,0 +1,29 @@
+.chip {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  color: var(--timber-700);
+  background: var(--oak-surface);
+  border: 1px solid var(--oak-300);
+  cursor: default;
+}
+
+button.chip {
+  cursor: pointer;
+}
+
+.chip--selected {
+  font-weight: 600;
+  color: var(--timber-100);
+  background: var(--timber-700);
+  border-color: var(--timber-700);
+}
+
+.chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
