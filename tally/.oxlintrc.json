@@ -4,5 +4,15 @@
   "rules": {
     "react/rules-of-hooks": "error",
     "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/context/**"],
+      "rules": {
+        // Provider + useX hook in one file is this codebase's context
+        // convention; the fast-refresh warning is intentional noise here.
+        "react/only-export-components": "off"
+      }
+    }
+  ]
 }

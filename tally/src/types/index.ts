@@ -93,19 +93,3 @@ export type QuoteLine = {
   pcs: number
   mbf: number
 }
-
-export type QuoteDraft = {
-  loadId?: string
-  customer: string
-  contact: string
-  role: string
-  email: string
-  quoteNumber: string
-  ref: string
-  message: string
-  validUntil: string
-  showUnit: boolean
-  delivery: 'email' | 'link' | 'pdf'
-  lines: QuoteLine[]
-  freight: number
-}
