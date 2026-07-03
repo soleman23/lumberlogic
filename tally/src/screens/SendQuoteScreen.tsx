@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { DEFAULT_QUOTE_LINES } from '../lib/priceData'
 import { tallyToQuoteLines } from '../lib/quoteFromTally'
-import { dateLong, fmt, money2 } from '../lib/formatters'
+import { defaultQuoteMessage, defaultValidUntil, quoteNumberFor } from '../lib/quoteDefaults'
+import { dateLong, fmt, initials, money2 } from '../lib/formatters'
 import { useLoads } from '../context/LoadsContext'
 import { useToast } from '../context/ToastContext'
 import { useBreakpoints } from '../hooks/useMediaQuery'
@@ -40,11 +41,9 @@ export function SendQuoteScreen() {
 
   const load = loads.find((l) => l.id === loadId)
 
-  const [message, setMessage] = useState(
-    'Thanks for the chance to quote this one, Dana. Pricing below covers the full mixed truckload FOB our Bend yard, delivered to your Redmond shop. Cedar decking is running tight this month, so these numbers hold through the valid-through date. Give me a call if you want to shift the Doug Fir counts.',
-  )
-  const [email, setEmail] = useState('purchasing@cascademill.com')
-  const [validUntil, setValidUntil] = useState('2026-07-14')
+  const [message, setMessage] = useState(() => (load ? defaultQuoteMessage(load) : ''))
+  const [email, setEmail] = useState(load?.email ?? '')
+  const [validUntil, setValidUntil] = useState(() => defaultValidUntil())
   const [showUnit, setShowUnit] = useState(true)
   const [delivery, setDelivery] = useState<'email' | 'link' | 'pdf'>('email')
 
@@ -54,9 +53,16 @@ export function SendQuoteScreen() {
   )
   const quote = useMemo(() => computeQuote(lines, showUnit), [lines, showUnit])
 
-  const customer = load?.name ?? 'Cascade Millworks'
-  const ref = load?.sub ?? 'Q-2026-0428'
-  const quoteNumber = 'Q-2026-0428'
+  useEffect(() => {
+    if (!load) showToast('Load not found')
+  }, [load, showToast])
+
+  if (!load) return <Navigate to="/loads" replace />
+
+  const customer = load.name
+  const ref = load.sub
+  const quoteNumber = quoteNumberFor(load)
+  const contactLine = load.contact ? `${load.contact}${load.role ? ` · ${load.role}` : ''}` : null
 
   const handleSend = () => {
     const msg =
@@ -100,8 +106,8 @@ export function SendQuoteScreen() {
 
               <div className="quote-chip">
                 <strong>{customer}</strong>
-                <span>Dana Reeves · Purchasing</span>
-                <span>PO {ref}</span>
+                {contactLine && <span>{contactLine}</span>}
+                <span>{ref}</span>
               </div>
 
               <div className={`quote-table ${!showUnit || isMobile ? 'quote-table--compact' : ''}`}>
@@ -169,6 +175,7 @@ export function SendQuoteScreen() {
           <aside className="compose-rail card-surface">
             <ComposeRail
               customer={customer}
+              contactLine={contactLine}
               email={email}
               setEmail={setEmail}
               message={message}
@@ -191,6 +198,7 @@ export function SendQuoteScreen() {
         <div className="compose-rail compose-rail--stacked card-surface">
           <ComposeRail
             customer={customer}
+            contactLine={contactLine}
             email={email}
             setEmail={setEmail}
             message={message}
@@ -213,6 +221,7 @@ export function SendQuoteScreen() {
 
 function ComposeRail(props: {
   customer: string
+  contactLine: string | null
   email: string
   setEmail: (v: string) => void
   message: string
@@ -233,10 +242,10 @@ function ComposeRail(props: {
       <h2>Send quote</h2>
 
       <div className="compose-customer">
-        <div className="compose-customer__avatar">CM</div>
+        <div className="compose-customer__avatar">{initials(props.customer)}</div>
         <div>
           <strong>{props.customer}</strong>
-          <span>Dana Reeves · Purchasing</span>
+          {props.contactLine && <span>{props.contactLine}</span>}
         </div>
       </div>
 

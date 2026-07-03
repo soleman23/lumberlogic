@@ -16,7 +16,9 @@ import { useToast } from './ToastContext'
 
 type LoadsContextValue = {
   loads: SavedLoad[]
-  saveCurrentLoad: (meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status'>) => SavedLoad
+  saveCurrentLoad: (
+    meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email'>,
+  ) => SavedLoad
   updateLoad: (load: SavedLoad) => void
   deleteLoad: (id: string) => void
   duplicateLoad: (id: string) => SavedLoad | null
@@ -60,7 +62,7 @@ export function LoadsProvider({ children }: { children: ReactNode }) {
   const persist = useCallback((next: SavedLoad[]) => setLoads(next), [])
 
   const saveCurrentLoad = useCallback(
-    (meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status'>) => {
+    (meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email'>) => {
       const load: SavedLoad = {
         id: crypto.randomUUID(),
         ...meta,

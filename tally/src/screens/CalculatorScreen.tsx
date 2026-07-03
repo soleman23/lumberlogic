@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useBreakpoints } from '../hooks/useMediaQuery'
 import { cellBF, dimTotals, effectivePrice, truckProgress, dimTotalUnits, dimAllocationTotals } from '../lib/tallyMath'
 import { DIMENSION_DEFS, LENGTHS, cellKey } from '../lib/constants'
@@ -10,6 +11,7 @@ import type { DimId, DimensionDef } from '../types'
 import { Chip } from '../components/Chip'
 import { Stepper } from '../components/Stepper'
 import { Button } from '../components/Button'
+import { SaveLoadModal, type SaveLoadMeta } from '../components/SaveLoadModal'
 import './CalculatorScreen.css'
 
 function DimensionBlock({ dim, showPriceRow }: { dim: DimensionDef; showPriceRow: boolean }) {
@@ -306,13 +308,11 @@ export function CalculatorScreen() {
     showToast('Applied price book to base $/MBF')
   }
 
-  const handleSaveLoad = () => {
-    const name = window.prompt('Customer name')
-    if (!name?.trim()) return
-    const sub = window.prompt('Reference / PO (optional)') || 'New load'
-    const species = window.prompt('Species (optional)') || 'Mixed load'
-    const status = window.confirm('Mark as Quoted? (Cancel for Draft)') ? 'Quoted' : 'Draft'
-    const load = saveCurrentLoad({ name: name.trim(), sub, species, status: status as 'Quoted' | 'Draft' })
+  const [saveOpen, setSaveOpen] = useState(false)
+
+  const handleSaveLoad = (meta: SaveLoadMeta) => {
+    const load = saveCurrentLoad(meta)
+    setSaveOpen(false)
     showToast(`Saved ${load.name}`)
   }
 
@@ -350,7 +350,7 @@ export function CalculatorScreen() {
             <Button variant="secondary" size="sm" onClick={applyPriceBook}>
               Apply prices
             </Button>
-            <Button variant="primary" size="sm" onClick={handleSaveLoad}>
+            <Button variant="primary" size="sm" onClick={() => setSaveOpen(true)}>
               Save load
             </Button>
           </div>
@@ -379,6 +379,8 @@ export function CalculatorScreen() {
       )}
 
       {isMobile && <div style={{ height: isShort ? 92 : 120 }} aria-hidden="true" />}
+
+      {saveOpen && <SaveLoadModal onClose={() => setSaveOpen(false)} onSave={handleSaveLoad} />}
     </>
   )
 }

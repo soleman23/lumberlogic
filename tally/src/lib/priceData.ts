@@ -56,16 +56,16 @@ export function dimToBaseMbf(dimLabel: string): number | null {
 }
 
 export const SEED_LOADS = [
-  { name: 'Hardwood Co.', sub: 'Lot 84', species: 'White Oak', status: 'Quoted' as const, bf: 1284, value: 2616, pieces: 642, date: '2026-06-24' },
-  { name: 'Cascade Millworks', sub: 'PO 2231', species: 'Doug Fir #1', status: 'Draft' as const, bf: 8420, value: 4092, pieces: 388, date: '2026-06-28' },
-  { name: 'Riverside Pallet', sub: 'Truck A', species: 'SPF #2', status: 'Quoted' as const, bf: 12680, value: 5704, pieces: 1040, date: '2026-06-22' },
-  { name: 'Tahoe Custom Homes', sub: 'Job 31', species: 'W. Red Cedar', status: 'Draft' as const, bf: 3260, value: 5870, pieces: 210, date: '2026-06-27' },
-  { name: 'Apex Framing LLC', sub: 'Job 19', species: 'SPF #2', status: 'Quoted' as const, bf: 9840, value: 4625, pieces: 812, date: '2026-06-19' },
-  { name: 'Northgate Lumber', sub: 'Restock', species: 'Hem-Fir', status: 'Quoted' as const, bf: 15240, value: 6553, pieces: 1188, date: '2026-06-15' },
-  { name: 'Meadow Fence Supply', sub: 'Std run', species: 'PT Pine', status: 'Draft' as const, bf: 2180, value: 1635, pieces: 540, date: '2026-06-29' },
-  { name: 'Sierra Pacific', sub: 'Lot 12', species: 'Ponderosa Pine', status: 'Quoted' as const, bf: 6720, value: 3091, pieces: 446, date: '2026-06-11' },
-  { name: 'Bayview Decking', sub: 'PO 88', species: 'Ipe', status: 'Draft' as const, bf: 980, value: 4312, pieces: 84, date: '2026-06-30' },
-  { name: 'Granite Builders', sub: 'PO 4407', species: 'Doug Fir #2', status: 'Quoted' as const, bf: 11050, value: 5083, pieces: 690, date: '2026-06-17' },
+  { name: 'Hardwood Co.', sub: 'Lot 84', species: 'White Oak', status: 'Quoted' as const, bf: 1284, value: 2616, pieces: 642, date: '2026-06-24', contact: 'Marta Vasquez', role: 'Buyer', email: 'marta@hardwoodco.com' },
+  { name: 'Cascade Millworks', sub: 'PO 2231', species: 'Doug Fir #1', status: 'Draft' as const, bf: 8420, value: 4092, pieces: 388, date: '2026-06-28', contact: 'Dana Reeves', role: 'Purchasing', email: 'purchasing@cascademill.com' },
+  { name: 'Riverside Pallet', sub: 'Truck A', species: 'SPF #2', status: 'Quoted' as const, bf: 12680, value: 5704, pieces: 1040, date: '2026-06-22', contact: 'Sam Ortiz', role: 'Ops Manager', email: 'sam@riversidepallet.com' },
+  { name: 'Tahoe Custom Homes', sub: 'Job 31', species: 'W. Red Cedar', status: 'Draft' as const, bf: 3260, value: 5870, pieces: 210, date: '2026-06-27', contact: 'Erin Walsh', role: 'Project Lead', email: 'erin@tahoecustom.com' },
+  { name: 'Apex Framing LLC', sub: 'Job 19', species: 'SPF #2', status: 'Quoted' as const, bf: 9840, value: 4625, pieces: 812, date: '2026-06-19', contact: 'Mike Danner', role: 'Site Super', email: 'mike@apexframing.com' },
+  { name: 'Northgate Lumber', sub: 'Restock', species: 'Hem-Fir', status: 'Quoted' as const, bf: 15240, value: 6553, pieces: 1188, date: '2026-06-15', contact: 'Priya Shah', role: 'Inventory', email: 'priya@northgatelumber.com' },
+  { name: 'Meadow Fence Supply', sub: 'Std run', species: 'PT Pine', status: 'Draft' as const, bf: 2180, value: 1635, pieces: 540, date: '2026-06-29', contact: 'Ray Coleman', role: 'Owner', email: 'ray@meadowfence.com' },
+  { name: 'Sierra Pacific', sub: 'Lot 12', species: 'Ponderosa Pine', status: 'Quoted' as const, bf: 6720, value: 3091, pieces: 446, date: '2026-06-11', contact: 'Jess Nakamura', role: 'Procurement', email: 'jess@sierrapacific.com' },
+  { name: 'Bayview Decking', sub: 'PO 88', species: 'Ipe', status: 'Draft' as const, bf: 980, value: 4312, pieces: 84, date: '2026-06-30', contact: 'Tom Alvarez', role: 'Estimator', email: 'tom@bayviewdecking.com' },
+  { name: 'Granite Builders', sub: 'PO 4407', species: 'Doug Fir #2', status: 'Quoted' as const, bf: 11050, value: 5083, pieces: 690, date: '2026-06-17', contact: 'Lena Fischer', role: 'Purchasing', email: 'lena@granitebuilders.com' },
 ]
 
 export const DEFAULT_QUOTE_LINES = [

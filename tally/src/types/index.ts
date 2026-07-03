@@ -63,6 +63,9 @@ export type SavedLoad = {
   value: number
   pieces: number
   date: string
+  contact?: string
+  role?: string
+  email?: string
   tally?: TallyState
 }
 
