@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { DEFAULT_QUOTE_LINES } from '../lib/priceData'
 import { tallyToQuoteLines } from '../lib/quoteFromTally'
 import { defaultQuoteMessage, defaultValidUntil, quoteNumberFor } from '../lib/quoteDefaults'
+import { buildMailtoUrl, quoteToPlainText } from '../lib/quoteText'
 import { dateLong, fmt, initials, money2 } from '../lib/formatters'
 import { useLoads } from '../context/LoadsContext'
 import { useToast } from '../context/ToastContext'
@@ -36,7 +37,6 @@ export function SendQuoteScreen() {
   const { loadId } = useParams()
   const { loads } = useLoads()
   const { showToast } = useToast()
-  const navigate = useNavigate()
   const { isMobile, isNarrow } = useBreakpoints()
 
   const load = loads.find((l) => l.id === loadId)
@@ -65,14 +65,28 @@ export function SendQuoteScreen() {
   const contactLine = load.contact ? `${load.contact}${load.role ? ` · ${load.role}` : ''}` : null
 
   const handleSend = () => {
-    const msg =
-      delivery === 'email'
-        ? `Emailed quote to ${email}`
-        : delivery === 'link'
-          ? 'Share link copied'
-          : 'PDF ready for download'
-    showToast(msg)
-    window.setTimeout(() => navigate('/loads'), 1400)
+    const text = quoteToPlainText(quote, {
+      customer,
+      quoteNumber,
+      validUntil,
+      message,
+      freight: FREIGHT,
+    })
+    if (delivery === 'email') {
+      if (!email.trim()) {
+        showToast('Enter an email address first')
+        return
+      }
+      window.location.href = buildMailtoUrl(email, `Quote ${quoteNumber} — ${customer}`, text)
+      showToast(`Opening email to ${email}…`)
+    } else if (delivery === 'link') {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => showToast('Quote copied to clipboard'))
+        .catch(() => showToast('Could not copy to clipboard'))
+    } else {
+      window.print()
+    }
   }
 
   const handlePrint = () => window.print()
