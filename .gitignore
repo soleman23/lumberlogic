@@ -1,0 +1,8 @@
+# Editor / tooling scratch
+.cursor/
+*.log
+
+# Dependencies / build output
+node_modules
+dist
+dist-ssr

@@ -20,7 +20,7 @@ type LoadsContextValue = {
   updateLoad: (load: SavedLoad) => void
   deleteLoad: (id: string) => void
   duplicateLoad: (id: string) => SavedLoad | null
-  openLoad: (id: string) => void
+  openLoad: (id: string) => boolean
 }
 
 const LoadsContext = createContext<LoadsContextValue | null>(null)
@@ -110,17 +110,18 @@ export function LoadsProvider({ children }: { children: ReactNode }) {
   )
 
   const openLoad = useCallback(
-    (id: string) => {
+    (id: string): boolean => {
       const load = loads.find((l) => l.id === id)
       if (!load) {
         showToast('Load not found')
-        return
+        return false
       }
       if (!load.tally) {
         showToast('No worksheet saved for this load')
-        return
+        return false
       }
       replaceState(load.tally as TallyState)
+      return true
     },
     [loads, replaceState, showToast],
   )
