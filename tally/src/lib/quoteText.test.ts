@@ -33,6 +33,21 @@ describe('quoteToPlainText', () => {
     expect(text).toContain('Total due: $1,820.79')
     expect(text).toContain(meta.message)
   })
+
+  it('omits the pcs clause for random-width hardwood rows', () => {
+    const hwQuote = {
+      rows: [{ species: 'White Oak', grade: 'FAS', dims: '4/4 · RW', pcs: 0, bf: 770, mbf: 3120, ext: 2402.4 }],
+      subtotal: 2402.4,
+      totalBf: 770,
+      totalPcs: 0,
+      total: 3087.4,
+    }
+    const text = quoteToPlainText(hwQuote, meta)
+    expect(text).toContain('White Oak (FAS) 4/4 · RW — 770 bd ft @ $3,120/MBF = $2,402.40')
+    expect(text).not.toContain('pcs')
+    expect(text).toContain('1 items · 770 board feet')
+    expect(text).not.toContain('pieces ·')
+  })
 })
 
 describe('buildMailtoUrl', () => {

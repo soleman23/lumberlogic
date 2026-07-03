@@ -1,5 +1,11 @@
 export type DimId = '2x4' | '2x6' | '2x8' | '2x10' | '2x12'
 
+/** Hardwood thickness in quarters: 4/4 = 1″ … 8/4 = 2″. */
+export type HwId = '4/4' | '5/4' | '6/4' | '8/4'
+
+/** Random-width hardwood stock is tallied directly in board feet. */
+export type HardwoodEntry = { bf: number; price: number }
+
 export type DimensionDef = {
   name: DimId
   label: string
@@ -23,6 +29,7 @@ export type TallyState = {
   base: Record<DimId, number>
   units: Record<string, number>
   override: Record<string, number | null>
+  hardwood: Record<HwId, HardwoodEntry>
   trucks: TruckGroup[]
   nextTruckId: number
 }
@@ -66,6 +73,8 @@ export type SavedLoad = {
   contact?: string
   role?: string
   email?: string
+  /** Freight charged on the quote; defaults to app standard when omitted. */
+  freight?: number
   tally?: TallyState
 }
 
@@ -92,4 +101,8 @@ export type QuoteLine = {
   lenFt: number
   pcs: number
   mbf: number
+  /** Direct board feet for lines the t×w×len math can't derive (random-width hardwood). */
+  bf?: number
+  /** Display label overriding the computed t″×w″×len′ dims. */
+  dims?: string
 }

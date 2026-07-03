@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { DEFAULT_QUOTE_LINES } from '../lib/priceData'
 import { tallyToQuoteLines } from '../lib/quoteFromTally'
-import { defaultQuoteMessage, defaultValidUntil, quoteNumberFor } from '../lib/quoteDefaults'
+import { defaultQuoteMessage, defaultValidUntil, defaultFreightFor, quoteNumberFor } from '../lib/quoteDefaults'
 import { buildMailtoUrl, quoteToPlainText } from '../lib/quoteText'
 import { dateLong, fmt, initials, money2 } from '../lib/formatters'
 import { useLoads } from '../context/LoadsContext'
@@ -13,24 +13,23 @@ import { Button } from '../components/Button'
 import { SegmentedControl } from '../components/SegmentedControl'
 import './SendQuoteScreen.css'
 
-const FREIGHT = 685
-
-function computeQuote(lines: QuoteLine[], showUnit: boolean) {
+function computeQuote(lines: QuoteLine[], showUnit: boolean, freight: number) {
   const rows = lines.map((l, i) => {
-    const bf = (l.pcs * l.t * l.w * l.lenFt) / 12
+    // Random-width hardwood lines carry bf directly; dimensional lines derive it.
+    const bf = l.bf ?? (l.pcs * l.t * l.w * l.lenFt) / 12
     const ext = (bf / 1000) * l.mbf
     return {
       ...l,
       bf,
       ext,
-      dims: `${l.t}″×${l.w}″×${l.lenFt}′`,
+      dims: l.dims ?? `${l.t}″×${l.w}″×${l.lenFt}′`,
       band: i % 2 === 0 ? '#FFFFFF' : '#FAF6EF',
     }
   })
   const subtotal = rows.reduce((s, r) => s + r.ext, 0)
   const totalBf = rows.reduce((s, r) => s + r.bf, 0)
   const totalPcs = rows.reduce((s, r) => s + r.pcs, 0)
-  return { rows, subtotal, totalBf, totalPcs, total: subtotal + FREIGHT, showUnit }
+  return { rows, subtotal, totalBf, totalPcs, total: subtotal + freight, showUnit }
 }
 
 export function SendQuoteScreen() {
@@ -44,6 +43,7 @@ export function SendQuoteScreen() {
   const [message, setMessage] = useState(() => (load ? defaultQuoteMessage(load) : ''))
   const [email, setEmail] = useState(load?.email ?? '')
   const [validUntil, setValidUntil] = useState(() => defaultValidUntil())
+  const [freight, setFreight] = useState(() => (load ? defaultFreightFor(load) : 685))
   const [showUnit, setShowUnit] = useState(true)
   const [delivery, setDelivery] = useState<'email' | 'link' | 'pdf'>('email')
 
@@ -51,7 +51,7 @@ export function SendQuoteScreen() {
     () => (load?.tally ? tallyToQuoteLines(load.tally, load.species) : DEFAULT_QUOTE_LINES),
     [load],
   )
-  const quote = useMemo(() => computeQuote(lines, showUnit), [lines, showUnit])
+  const quote = useMemo(() => computeQuote(lines, showUnit, freight), [lines, showUnit, freight])
 
   useEffect(() => {
     if (!load) showToast('Load not found')
@@ -70,7 +70,7 @@ export function SendQuoteScreen() {
       quoteNumber,
       validUntil,
       message,
-      freight: FREIGHT,
+      freight,
     })
     if (delivery === 'email') {
       if (!email.trim()) {
@@ -139,7 +139,7 @@ export function SendQuoteScreen() {
                       <span className="quote-table__grade">{row.grade}</span>
                       <span className="quote-table__dims">{row.dims}</span>
                     </div>
-                    {!isMobile && <span>{fmt(row.pcs, 0)}</span>}
+                    {!isMobile && <span>{row.pcs > 0 ? fmt(row.pcs, 0) : '—'}</span>}
                     <span>{fmt(Math.round(row.bf), 0)}</span>
                     {showUnit && !isMobile && <span>${fmt(row.mbf, 0)}</span>}
                     <span>{money2(row.ext)}</span>
@@ -150,7 +150,7 @@ export function SendQuoteScreen() {
               <div className="quote-totals-wrap">
                 <div className="quote-counts">
                   <p>{quote.rows.length} items</p>
-                  <p>{fmt(quote.totalPcs, 0)} pieces</p>
+                  {quote.totalPcs > 0 && <p>{fmt(quote.totalPcs, 0)} pieces</p>}
                   <p>{fmt(Math.round(quote.totalBf), 0)} board feet</p>
                 </div>
                 <div className="quote-totals card-surface">
@@ -160,7 +160,7 @@ export function SendQuoteScreen() {
                   </div>
                   <div>
                     <span>Freight</span>
-                    <strong>{money2(FREIGHT)}</strong>
+                    <strong>{money2(freight)}</strong>
                   </div>
                   <div>
                     <span>Tax</span>
@@ -196,6 +196,8 @@ export function SendQuoteScreen() {
               setMessage={setMessage}
               validUntil={validUntil}
               setValidUntil={setValidUntil}
+              freight={freight}
+              setFreight={setFreight}
               showUnit={showUnit}
               setShowUnit={setShowUnit}
               delivery={delivery}
@@ -219,6 +221,8 @@ export function SendQuoteScreen() {
             setMessage={setMessage}
             validUntil={validUntil}
             setValidUntil={setValidUntil}
+            freight={freight}
+            setFreight={setFreight}
             showUnit={showUnit}
             setShowUnit={setShowUnit}
             delivery={delivery}
@@ -242,6 +246,8 @@ function ComposeRail(props: {
   setMessage: (v: string) => void
   validUntil: string
   setValidUntil: (v: string) => void
+  freight: number
+  setFreight: (v: number) => void
   showUnit: boolean
   setShowUnit: (v: boolean) => void
   delivery: 'email' | 'link' | 'pdf'
@@ -287,6 +293,17 @@ function ComposeRail(props: {
       <label className="compose-toggle">
         <input type="checkbox" checked={props.showUnit} onChange={(e) => props.setShowUnit(e.target.checked)} />
         Show per-line $/MBF
+      </label>
+
+      <label className="compose-field">
+        Freight ($)
+        <input
+          type="number"
+          min={0}
+          step={1}
+          value={props.freight || ''}
+          onChange={(e) => props.setFreight(Math.max(0, Number(e.target.value) || 0))}
+        />
       </label>
 
       <label className="compose-field">

@@ -19,9 +19,30 @@ describe('quoteFromTally', () => {
     expect(tallyToQuoteLines(state, 'Hem-Fir')[0].grade).toBe('#2 & Btr')
   })
 
-  it('falls back to default lines for hardwoods the 2x worksheet cannot represent', () => {
+  it('falls back to default lines when hardwood species has no bf entered', () => {
     const state = createInitialTallyState()
     expect(tallyToQuoteLines(state, 'White Oak')).toBe(DEFAULT_QUOTE_LINES)
-    expect(tallyToQuoteLines(state, 'Ipe')).toBe(DEFAULT_QUOTE_LINES)
+  })
+
+  it('builds hardwood lines from tally hardwood entries', () => {
+    const state = createInitialTallyState()
+    state.hardwood['4/4'] = { bf: 1200, price: 2650 }
+    state.hardwood['8/4'] = { bf: 400, price: 3380 }
+    const lines = tallyToQuoteLines(state, 'White Oak')
+    expect(lines).toHaveLength(2)
+    expect(lines[0].bf).toBe(1200)
+    expect(lines[0].mbf).toBe(2650)
+    expect(lines[0].dims).toContain('4/4')
+    expect(lines[1].bf).toBe(400)
+  })
+
+  it('appends hardwood lines to softwood loads when bf is present', () => {
+    const state = createInitialTallyState()
+    state.hardwood['5/4'] = { bf: 500, price: 2800 }
+    const lines = tallyToQuoteLines(state, 'Doug Fir')
+    const hw = lines.find((l) => l.dims?.includes('5/4'))
+    expect(hw).toBeDefined()
+    expect(hw?.grade).toBe('Random width')
+    expect(hw?.bf).toBe(500)
   })
 })

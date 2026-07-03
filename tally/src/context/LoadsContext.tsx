@@ -7,17 +7,22 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { SEED_LOADS } from '../lib/priceData'
-import { createInitialTallyState } from '../lib/constants'
+import { SEED_LOADS, SPECIES_CATALOG, buildInitialPrices, priceKey } from '../lib/priceData'
+import { findSpecies } from '../lib/applyPrices'
+import { createInitialTallyState, normalizeTallyState } from '../lib/constants'
 import { loadRepository } from '../repositories/localStorage'
-import type { SavedLoad } from '../types'
+import type { HwId, SavedLoad, TallyState } from '../types'
 import { useTally } from './TallyContext'
 import { useToast } from './ToastContext'
 
+const APPLY_SPECIES_KEY = 'lumber-logic-apply-species'
+
 type LoadsContextValue = {
   loads: SavedLoad[]
+  applySpeciesKey: string
+  setApplySpeciesKey: (key: string) => void
   saveCurrentLoad: (
-    meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email'>,
+    meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email' | 'freight'>,
   ) => SavedLoad
   updateLoad: (load: SavedLoad) => void
   deleteLoad: (id: string) => void
@@ -29,13 +34,28 @@ const LoadsContext = createContext<LoadsContextValue | null>(null)
 
 function withTallyFallback(load: SavedLoad): SavedLoad {
   if (!load.tally) return { ...load, tally: createInitialTallyState() }
-  return {
-    ...load,
-    tally: {
-      ...load.tally,
-      trucks: load.tally.trucks.map((t) => ({ ...t, memberQty: t.memberQty ?? {} })),
-    },
-  }
+  return { ...load, tally: normalizeTallyState(load.tally) }
+}
+
+/** Give hardwood-species seed loads a hardwood tally so their quotes demo real lines. */
+function seedTallyFor(load: (typeof SEED_LOADS)[number]): TallyState {
+  const tally = createInitialTallyState()
+  const species = SPECIES_CATALOG.find((s) => s.name === load.species || load.species.startsWith(s.name))
+  if (species?.group !== 'Hardwood') return tally
+
+  const prices = buildInitialPrices()
+  const split: [HwId, number][] = [
+    ['4/4', 0.6],
+    ['5/4', 0.25],
+    ['8/4', 0.15],
+  ]
+  split.forEach(([id, share]) => {
+    tally.hardwood[id] = {
+      bf: Math.round(load.bf * share),
+      price: prices[priceKey(species.key, id)] || 0,
+    }
+  })
+  return tally
 }
 
 function seedIfEmpty(): SavedLoad[] {
@@ -45,13 +65,16 @@ function seedIfEmpty(): SavedLoad[] {
     : SEED_LOADS.map((l, i) => ({
         id: String(i + 1),
         ...l,
-        tally: createInitialTallyState(),
+        tally: seedTallyFor(l),
       }))
   return result
 }
 
 export function LoadsProvider({ children }: { children: ReactNode }) {
   const [loads, setLoads] = useState<SavedLoad[]>(() => seedIfEmpty())
+  const [applySpeciesKey, setApplySpeciesKey] = useState(
+    () => localStorage.getItem(APPLY_SPECIES_KEY) ?? 'df',
+  )
   const { state, totals, replaceState } = useTally()
   const { showToast } = useToast()
 
@@ -59,10 +82,14 @@ export function LoadsProvider({ children }: { children: ReactNode }) {
     loadRepository.saveAll(loads)
   }, [loads])
 
+  useEffect(() => {
+    localStorage.setItem(APPLY_SPECIES_KEY, applySpeciesKey)
+  }, [applySpeciesKey])
+
   const persist = useCallback((next: SavedLoad[]) => setLoads(next), [])
 
   const saveCurrentLoad = useCallback(
-    (meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email'>) => {
+    (meta: Pick<SavedLoad, 'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email' | 'freight'>) => {
       const load: SavedLoad = {
         id: crypto.randomUUID(),
         ...meta,
@@ -123,14 +150,25 @@ export function LoadsProvider({ children }: { children: ReactNode }) {
         return false
       }
       replaceState(load.tally)
+      const species = findSpecies(load.species)
+      if (species) setApplySpeciesKey(species.key)
       return true
     },
     [loads, replaceState, showToast],
   )
 
   const value = useMemo(
-    () => ({ loads, saveCurrentLoad, updateLoad, deleteLoad, duplicateLoad, openLoad }),
-    [loads, saveCurrentLoad, updateLoad, deleteLoad, duplicateLoad, openLoad],
+    () => ({
+      loads,
+      applySpeciesKey,
+      setApplySpeciesKey,
+      saveCurrentLoad,
+      updateLoad,
+      deleteLoad,
+      duplicateLoad,
+      openLoad,
+    }),
+    [loads, applySpeciesKey, saveCurrentLoad, updateLoad, deleteLoad, duplicateLoad, openLoad],
   )
 
   return <LoadsContext.Provider value={value}>{children}</LoadsContext.Provider>

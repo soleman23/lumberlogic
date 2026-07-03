@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { createInitialTallyState } from '../lib/constants'
+import { createInitialTallyState, normalizeTallyState } from '../lib/constants'
 import {
   addTruck,
   clearTally,
@@ -18,7 +18,7 @@ import {
   updateTruck,
 } from '../lib/tallyMath'
 import { tallyRepository } from '../repositories/localStorage'
-import type { DimId, TallyState } from '../types'
+import type { DimId, HwId, TallyState } from '../types'
 
 type TallyContextValue = {
   state: TallyState
@@ -27,6 +27,8 @@ type TallyContextValue = {
   setBase: (name: DimId, value: number) => void
   setUnits: (name: DimId, length: number, value: number) => void
   setOverride: (name: DimId, length: number, value: number | null) => void
+  setHardwoodBf: (id: HwId, bf: number) => void
+  setHardwoodPrice: (id: HwId, price: number) => void
   resetAll: () => void
   addTruckGroup: () => void
   removeTruckGroup: (id: number) => void
@@ -41,11 +43,7 @@ const TallyContext = createContext<TallyContextValue | null>(null)
 export function TallyProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<TallyState>(() => {
     const loaded = tallyRepository.load()
-    if (!loaded) return createInitialTallyState()
-    return {
-      ...loaded,
-      trucks: loaded.trucks.map((t) => ({ ...t, memberQty: t.memberQty ?? {} })),
-    }
+    return loaded ? normalizeTallyState(loaded) : createInitialTallyState()
   })
 
   useEffect(() => {
@@ -70,6 +68,20 @@ export function TallyProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, override: { ...s.override, [`${name}|${length}`]: value } }))
   }, [])
 
+  const setHardwoodBf = useCallback((id: HwId, bf: number) => {
+    setState((s) => ({
+      ...s,
+      hardwood: { ...s.hardwood, [id]: { ...s.hardwood[id], bf: Math.max(0, bf) } },
+    }))
+  }, [])
+
+  const setHardwoodPrice = useCallback((id: HwId, price: number) => {
+    setState((s) => ({
+      ...s,
+      hardwood: { ...s.hardwood, [id]: { ...s.hardwood[id], price: Math.max(0, price) } },
+    }))
+  }, [])
+
   const resetAll = useCallback(() => setState((s) => clearTally(s)), [])
   const addTruckGroup = useCallback(() => setState((s) => addTruck(s)), [])
   const removeTruckGroup = useCallback((id: number) => setState((s) => removeTruck(s, id)), [])
@@ -92,6 +104,8 @@ export function TallyProvider({ children }: { children: ReactNode }) {
       setBase,
       setUnits,
       setOverride,
+      setHardwoodBf,
+      setHardwoodPrice,
       resetAll,
       addTruckGroup,
       removeTruckGroup,
@@ -107,6 +121,8 @@ export function TallyProvider({ children }: { children: ReactNode }) {
       setBase,
       setUnits,
       setOverride,
+      setHardwoodBf,
+      setHardwoodPrice,
       resetAll,
       addTruckGroup,
       removeTruckGroup,

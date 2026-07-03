@@ -35,11 +35,14 @@ export function quoteToPlainText(quote: QuoteTextInput, meta: QuoteTextMeta): st
     '',
     ...quote.rows.map(
       (r) =>
-        `${r.species} (${r.grade}) ${r.dims} — ${fmt(r.pcs, 0)} pcs, ` +
+        `${r.species} (${r.grade}) ${r.dims} — ` +
+        (r.pcs > 0 ? `${fmt(r.pcs, 0)} pcs, ` : '') +
         `${fmt(Math.round(r.bf), 0)} bd ft @ $${fmt(r.mbf, 0)}/MBF = ${money2(r.ext)}`,
     ),
     '',
-    `${quote.rows.length} items · ${fmt(quote.totalPcs, 0)} pieces · ${fmt(Math.round(quote.totalBf), 0)} board feet`,
+    `${quote.rows.length} items · ` +
+      (quote.totalPcs > 0 ? `${fmt(quote.totalPcs, 0)} pieces · ` : '') +
+      `${fmt(Math.round(quote.totalBf), 0)} board feet`,
     `Subtotal: ${money2(quote.subtotal)}`,
     `Freight: ${money2(meta.freight)}`,
     `Total due: ${money2(quote.total)}`,

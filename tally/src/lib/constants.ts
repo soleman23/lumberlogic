@@ -1,4 +1,4 @@
-import type { DimId, DimensionDef } from '../types'
+import type { DimId, DimensionDef, HardwoodEntry, HwId, TallyState } from '../types'
 
 export const LENGTHS = [8, 10, 12, 14, 16, 18, 20] as const
 
@@ -8,6 +8,15 @@ export const DIMENSION_DEFS: DimensionDef[] = [
   { name: '2x8', label: '2×8', t: 2, w: 8, pieces: 147, accent: '#E2A615' },
   { name: '2x10', label: '2×10', t: 2, w: 10, pieces: 105, accent: '#E2A615' },
   { name: '2x12', label: '2×12', t: 2, w: 12, pieces: 84, accent: '#C77A2B' },
+]
+
+export type HardwoodDef = { id: HwId; label: string; inches: string; accent: string }
+
+export const HARDWOOD_DEFS: HardwoodDef[] = [
+  { id: '4/4', label: '4/4', inches: '1″', accent: '#8A6D3B' },
+  { id: '5/4', label: '5/4', inches: '1¼″', accent: '#B79A5B' },
+  { id: '6/4', label: '6/4', inches: '1½″', accent: '#6E4A2A' },
+  { id: '8/4', label: '8/4', inches: '2″', accent: '#5A4326' },
 ]
 
 export const SEED_UNITS: Record<string, number> = {
@@ -31,7 +40,15 @@ export function cellKey(name: DimId, length: number): string {
   return `${name}|${length}`
 }
 
-export function createInitialTallyState(): import('../types').TallyState {
+export function createInitialHardwoodState(): Record<HwId, HardwoodEntry> {
+  const hardwood = {} as Record<HwId, HardwoodEntry>
+  HARDWOOD_DEFS.forEach((h) => {
+    hardwood[h.id] = { bf: 0, price: 0 }
+  })
+  return hardwood
+}
+
+export function createInitialTallyState(): TallyState {
   const pieces = {} as Record<DimId, number>
   const base = {} as Record<DimId, number>
   const units: Record<string, number> = {}
@@ -52,11 +69,24 @@ export function createInitialTallyState(): import('../types').TallyState {
     base,
     units,
     override,
+    hardwood: createInitialHardwoodState(),
     nextTruckId: 4,
     trucks: [
       { id: 1, name: '4" & 6"', target: 8000, members: ['2x4', '2x6'], memberQty: {} },
       { id: 2, name: '4" – 10"', target: 12000, members: ['2x4', '2x6', '2x8', '2x10'], memberQty: {} },
       { id: 3, name: '8" – 12"', target: 8000, members: ['2x8', '2x10', '2x12'], memberQty: {} },
     ],
+  }
+}
+
+/**
+ * Fill fields added after a state was persisted (memberQty, hardwood).
+ * Single migration point for anything loaded from localStorage.
+ */
+export function normalizeTallyState(loaded: TallyState): TallyState {
+  return {
+    ...loaded,
+    hardwood: loaded.hardwood ?? createInitialHardwoodState(),
+    trucks: loaded.trucks.map((t) => ({ ...t, memberQty: t.memberQty ?? {} })),
   }
 }

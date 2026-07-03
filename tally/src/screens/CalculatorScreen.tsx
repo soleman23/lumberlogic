@@ -1,13 +1,23 @@
 import { useState } from 'react'
 import { useBreakpoints } from '../hooks/useMediaQuery'
-import { cellBF, dimTotals, effectivePrice, truckProgress, dimTotalUnits, dimAllocationTotals } from '../lib/tallyMath'
-import { DIMENSION_DEFS, LENGTHS, cellKey } from '../lib/constants'
+import {
+  cellBF,
+  dimAllocationStatus,
+  dimAllocationTotals,
+  dimTotalUnits,
+  dimTotals,
+  effectivePrice,
+  hardwoodTotals,
+  truckProgress,
+} from '../lib/tallyMath'
+import { DIMENSION_DEFS, HARDWOOD_DEFS, LENGTHS, cellKey } from '../lib/constants'
+import { countSpeciesPriceUpdates, findSpecies, speciesPriceUpdates } from '../lib/applyPrices'
 import { fmt, money, parseNum } from '../lib/formatters'
 import { useTally } from '../context/TallyContext'
 import { useLoads } from '../context/LoadsContext'
 import { useToast } from '../context/ToastContext'
 import { usePrices } from '../context/PricesContext'
-import type { DimId, DimensionDef } from '../types'
+import type { DimId, DimensionDef, HwId } from '../types'
 import { Chip } from '../components/Chip'
 import { Stepper } from '../components/Stepper'
 import { Button } from '../components/Button'
@@ -181,6 +191,132 @@ function DimensionBlock({ dim, showPriceRow }: { dim: DimensionDef; showPriceRow
   )
 }
 
+function HardwoodSection() {
+  const { state, setHardwoodBf, setHardwoodPrice } = useTally()
+  const { isMobile } = useBreakpoints()
+  const totals = hardwoodTotals(state)
+
+  return (
+    <section className="hardwood">
+      <div className="hardwood__head">
+        <div>
+          <h2 className="hardwood__title">Random-width hardwood</h2>
+          <p className="hardwood__desc">
+            Enter board feet directly for 4/4–8/4 stock. Priced at $/MBF like dimensional lumber.
+          </p>
+        </div>
+        {(totals.bf > 0 || totals.cost > 0) && (
+          <div className="hardwood__summary">
+            <span>{fmt(totals.bf, 0)} bf</span>
+            {totals.cost > 0 && <strong>{money(totals.cost)}</strong>}
+          </div>
+        )}
+      </div>
+      <div className="hardwood__list">
+        {HARDWOOD_DEFS.map((h) => {
+          const entry = state.hardwood[h.id]
+          const rowCost = entry.bf > 0 && entry.price > 0 ? (entry.bf / 1000) * entry.price : 0
+          return (
+            <div key={h.id} className="hardwood__row card-surface">
+              <div className="hardwood__row-label">
+                <span className="hardwood__swatch" style={{ background: h.accent }} />
+                <div>
+                  <strong>{h.label}</strong>
+                  <span>{h.inches} · RW</span>
+                </div>
+              </div>
+              {isMobile ? (
+                <>
+                  <label className="hardwood__field">
+                    <span>Board ft</span>
+                    <Stepper value={entry.bf} onChange={(v: number) => setHardwoodBf(h.id, v)} />
+                  </label>
+                  <label className="hardwood__field">
+                    <span>$/MBF</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={entry.price || ''}
+                      placeholder="0"
+                      onChange={(e) => setHardwoodPrice(h.id, parseNum(e.target.value))}
+                    />
+                  </label>
+                </>
+              ) : (
+                <>
+                  <label className="hardwood__field">
+                    <span>Board ft</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={entry.bf || ''}
+                      placeholder="0"
+                      onChange={(e) => setHardwoodBf(h.id, parseNum(e.target.value))}
+                    />
+                  </label>
+                  <label className="hardwood__field">
+                    <span>$/MBF</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={entry.price || ''}
+                      placeholder="0"
+                      onChange={(e) => setHardwoodPrice(h.id, parseNum(e.target.value))}
+                    />
+                  </label>
+                </>
+              )}
+              <span className="hardwood__cost">{rowCost > 0 ? money(rowCost) : '—'}</span>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
+function TruckAllocationSummary() {
+  const { state } = useTally()
+  const rows = DIMENSION_DEFS.map((d) => ({
+    d,
+    status: dimAllocationStatus(state, d.name),
+  })).filter(({ status }) => status.hasAllocation)
+
+  if (rows.length === 0) return null
+
+  const hasOver = rows.some(({ status }) => status.isOver)
+
+  return (
+    <div className={`trucks__allocation${hasOver ? ' trucks__allocation--warn' : ''}`} role="status">
+      <p className="trucks__allocation-title">
+        {hasOver ? 'Units exceed worksheet totals' : 'Worksheet allocation'}
+      </p>
+      <ul className="trucks__allocation-list">
+        {rows.map(({ d, status }) => (
+          <li
+            key={d.name}
+            className={`trucks__allocation-item${status.isOver ? ' trucks__allocation-item--over' : status.remaining === 0 && status.worksheet > 0 ? ' trucks__allocation-item--full' : ''}`}
+          >
+            <span className="trucks__allocation-dim">{d.label}</span>
+            <span className="trucks__allocation-count">
+              {status.allocated} of {status.worksheet} units
+            </span>
+            {status.isOver ? (
+              <span className="trucks__allocation-note">{status.overBy} over</span>
+            ) : status.remaining > 0 ? (
+              <span className="trucks__allocation-note">{status.remaining} unallocated</span>
+            ) : status.worksheet > 0 ? (
+              <span className="trucks__allocation-note">fully allocated</span>
+            ) : (
+              <span className="trucks__allocation-note">none on worksheet</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 function TruckBuilder() {
   const { state, addTruckGroup, removeTruckGroup, patchTruck, toggleMember, setMemberQty } = useTally()
 
@@ -195,6 +331,7 @@ function TruckBuilder() {
           + Add truck
         </Button>
       </div>
+      <TruckAllocationSummary />
       <div className="trucks__grid">
         {state.trucks.map((truck) => {
           const p = truckProgress(truck, state)
@@ -229,8 +366,12 @@ function TruckBuilder() {
                     const worksheetUnits = dimTotalUnits(state, dimId)
                     const qty = truck.memberQty?.[dimId] ?? worksheetUnits
                     const alloc = dimAllocationTotals(d, state, qty)
+                    const dimStatus = dimAllocationStatus(state, dimId)
                     return (
-                      <div key={dimId} className="truck-card__qty-row">
+                      <div
+                        key={dimId}
+                        className={`truck-card__qty-row${dimStatus.isOver ? ' truck-card__qty-row--over' : ''}`}
+                      >
                         <span className="truck-card__qty-label">{d.label}</span>
                         <label className="truck-card__qty-field">
                           <span>Units</span>
@@ -242,8 +383,13 @@ function TruckBuilder() {
                             value={qty === 0 ? '' : qty}
                             placeholder="0"
                             aria-label={`Units of ${d.label} on this truck`}
+                            aria-invalid={dimStatus.isOver || undefined}
                             onChange={(e) => setMemberQty(truck.id, dimId, parseNum(e.target.value))}
                           />
+                          <span className="truck-card__qty-hint">
+                            {dimStatus.allocated} of {dimStatus.worksheet} across trucks
+                            {dimStatus.isOver ? ` · ${dimStatus.overBy} over` : ''}
+                          </span>
                         </label>
                         <span className="truck-card__qty-bf">{fmt(alloc.bf, 0)} bf</span>
                       </div>
@@ -286,26 +432,32 @@ function TruckBuilder() {
 }
 
 export function CalculatorScreen() {
-  const { totals, setBase } = useTally()
-  const { saveCurrentLoad } = useLoads()
+  const { totals, setBase, setHardwoodPrice } = useTally()
+  const { saveCurrentLoad, applySpeciesKey, setApplySpeciesKey } = useLoads()
   const { showToast } = useToast()
-  const { prices } = usePrices()
+  const { prices, catalog } = usePrices()
   const { isMobile, isShort } = useBreakpoints()
   const showPriceRow = !isMobile
 
   const applyPriceBook = () => {
-    const map: Record<string, [string, string]> = {
-      '2x4': ['df', '2×4'],
-      '2x6': ['df', '2×6'],
-      '2x8': ['df', '2×8'],
-      '2x10': ['df', '2×10'],
-      '2x12': ['df', '2×12'],
+    const species = findSpecies(applySpeciesKey)
+    if (!species) {
+      showToast('Select a species from the price book')
+      return
     }
-    Object.entries(map).forEach(([dim, [key, label]]) => {
-      const p = prices[`${key}|${label}`]
-      if (p) setBase(dim as import('../types').DimId, p)
+    const updates = speciesPriceUpdates(species, prices)
+    const count = countSpeciesPriceUpdates(updates)
+    if (count === 0) {
+      showToast(`No ${species.name} prices in your price book`)
+      return
+    }
+    Object.entries(updates.base).forEach(([dim, value]) => {
+      setBase(dim as DimId, value)
     })
-    showToast('Applied price book to base $/MBF')
+    Object.entries(updates.hardwood).forEach(([id, value]) => {
+      setHardwoodPrice(id as HwId, value)
+    })
+    showToast(`Applied ${species.name} · ${count} price${count === 1 ? '' : 's'}`)
   }
 
   const [saveOpen, setSaveOpen] = useState(false)
@@ -347,6 +499,20 @@ export function CalculatorScreen() {
             </div>
           )}
           <div className="calc-actions__buttons">
+            <label className="calc-species">
+              <span className="calc-species__label">Price book</span>
+              <select
+                value={applySpeciesKey}
+                onChange={(e) => setApplySpeciesKey(e.target.value)}
+                aria-label="Species for price book"
+              >
+                {catalog.map((s) => (
+                  <option key={s.key} value={s.key}>
+                    {s.name}
+                  </option>
+                ))}
+              </select>
+            </label>
             <Button variant="secondary" size="sm" onClick={applyPriceBook}>
               Apply prices
             </Button>
@@ -362,6 +528,8 @@ export function CalculatorScreen() {
           <DimensionBlock key={d.name} dim={d} showPriceRow={showPriceRow} />
         ))}
       </div>
+
+      <HardwoodSection />
 
       <TruckBuilder />
 

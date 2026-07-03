@@ -1,5 +1,12 @@
 import type { SavedLoad } from '../types'
 
+export const DEFAULT_FREIGHT = 685
+
+/** Freight for a quote: saved value on the load, otherwise the app default. */
+export function defaultFreightFor(load: SavedLoad): number {
+  return load.freight != null && load.freight >= 0 ? load.freight : DEFAULT_FREIGHT
+}
+
 /** Deterministic quote number derived from the load's date and id. */
 export function quoteNumberFor(load: SavedLoad): string {
   const year = load.date.slice(0, 4) || String(new Date().getFullYear())

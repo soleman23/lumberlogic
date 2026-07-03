@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defaultQuoteMessage, defaultValidUntil, quoteNumberFor } from './quoteDefaults'
+import { defaultFreightFor, defaultQuoteMessage, defaultValidUntil, quoteNumberFor, DEFAULT_FREIGHT } from './quoteDefaults'
 import type { SavedLoad } from '../types'
 
 const load: SavedLoad = {
@@ -41,5 +41,15 @@ describe('defaultQuoteMessage', () => {
     expect(msg).toContain('PO 2231')
     expect(msg).toContain('Doug Fir #1')
     expect(msg).not.toContain('Dana')
+  })
+})
+
+describe('defaultFreightFor', () => {
+  it('returns saved freight when present', () => {
+    expect(defaultFreightFor({ ...load, freight: 950 })).toBe(950)
+  })
+
+  it('falls back to the app default', () => {
+    expect(defaultFreightFor(load)).toBe(DEFAULT_FREIGHT)
   })
 })

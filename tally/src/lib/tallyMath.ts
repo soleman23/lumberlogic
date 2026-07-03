@@ -16,6 +16,54 @@ export function dimTotalUnits(
   return LENGTHS.reduce((sum, L) => sum + (state.units[cellKey(dimId, L)] || 0), 0)
 }
 
+/** Units assigned to one truck for a dimension (defaults to full worksheet total). */
+export function truckMemberQty(
+  truck: TruckGroup,
+  state: Pick<TallyState, 'units'>,
+  dimId: DimId,
+): number {
+  if (!truck.members.includes(dimId)) return 0
+  const worksheetUnits = dimTotalUnits(state, dimId)
+  return truck.memberQty?.[dimId] ?? worksheetUnits
+}
+
+/** Sum of member quantities for a dimension across all trucks that include it. */
+export function dimAllocatedAcrossTrucks(
+  state: Pick<TallyState, 'units' | 'trucks'>,
+  dimId: DimId,
+): number {
+  return state.trucks.reduce((sum, truck) => sum + truckMemberQty(truck, state, dimId), 0)
+}
+
+export type DimAllocationStatus = {
+  worksheet: number
+  allocated: number
+  remaining: number
+  overBy: number
+  isOver: boolean
+  /** At least one truck includes this dimension. */
+  hasAllocation: boolean
+}
+
+export function dimAllocationStatus(
+  state: Pick<TallyState, 'units' | 'trucks'>,
+  dimId: DimId,
+): DimAllocationStatus {
+  const worksheet = dimTotalUnits(state, dimId)
+  const allocated = dimAllocatedAcrossTrucks(state, dimId)
+  const overBy = Math.max(0, allocated - worksheet)
+  const remaining = Math.max(0, worksheet - allocated)
+  const hasAllocation = state.trucks.some((t) => t.members.includes(dimId))
+  return {
+    worksheet,
+    allocated,
+    remaining,
+    overBy,
+    isOver: overBy > 0,
+    hasAllocation,
+  }
+}
+
 export function dimAllocationTotals(
   d: DimensionDef,
   state: Pick<TallyState, 'pieces' | 'base' | 'units' | 'override'>,
@@ -97,8 +145,22 @@ export function dimTotals(
   }
 }
 
-export function grandTotals(state: Pick<TallyState, 'pieces' | 'base' | 'units' | 'override'>): GrandTotals {
-  return DIMENSION_DEFS.reduce(
+/** Random-width hardwood stock: bf entered directly, cost = bf/1000 × $/MBF. */
+export function hardwoodTotals(state: Pick<TallyState, 'hardwood'>): { bf: number; cost: number } {
+  return Object.values(state.hardwood).reduce(
+    (acc, entry) => {
+      acc.bf += entry.bf
+      acc.cost += (entry.bf / 1000) * entry.price
+      return acc
+    },
+    { bf: 0, cost: 0 },
+  )
+}
+
+export function grandTotals(
+  state: Pick<TallyState, 'pieces' | 'base' | 'units' | 'override' | 'hardwood'>,
+): GrandTotals {
+  const totals = DIMENSION_DEFS.reduce(
     (acc, d) => {
       const t = dimTotals(d, state)
       acc.bf += t.bf
@@ -108,6 +170,10 @@ export function grandTotals(state: Pick<TallyState, 'pieces' | 'base' | 'units' 
     },
     { bf: 0, pcs: 0, cost: 0 },
   )
+  const hw = hardwoodTotals(state)
+  totals.bf += hw.bf
+  totals.cost += hw.cost
+  return totals
 }
 
 export function truckProgress(
@@ -121,8 +187,7 @@ export function truckProgress(
   truck.members.forEach((name) => {
     const d = DIMENSION_DEFS.find((x) => x.name === name)
     if (!d) return
-    const totalUnits = dimTotalUnits(state, name)
-    const qty = truck.memberQty?.[name] ?? totalUnits
+    const qty = truckMemberQty(truck, state, name)
     const alloc = dimAllocationTotals(d, state, qty)
     bf += alloc.bf
     lf += alloc.lf
@@ -148,7 +213,11 @@ export function clearTally(state: TallyState): TallyState {
   Object.keys(state.override).forEach((k) => {
     override[k] = null
   })
-  return { ...state, units, override }
+  // Zero hardwood quantities but keep prices, mirroring how base $/MBF survives.
+  const hardwood = Object.fromEntries(
+    Object.entries(state.hardwood).map(([id, entry]) => [id, { ...entry, bf: 0 }]),
+  ) as TallyState['hardwood']
+  return { ...state, units, override, hardwood }
 }
 
 export function addTruck(state: TallyState, name = 'New truck', target = 12000): TallyState {
