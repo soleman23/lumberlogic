@@ -285,26 +285,7 @@
   color: var(--oak-500);
 }
 
-.compose-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 14px;
-}
-
-.compose-field input,
-.compose-field textarea {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 400;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px;
-  background: var(--oak-surface);
-  resize: vertical;
-}
+/* .compose-field styles are global (index.css) — shared with SaveLoadModal. */
 
 .compose-toggle {
   display: flex;
