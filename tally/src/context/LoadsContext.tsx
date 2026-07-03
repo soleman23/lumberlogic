@@ -10,7 +10,7 @@ import {
 import { SEED_LOADS } from '../lib/priceData'
 import { createInitialTallyState } from '../lib/constants'
 import { loadRepository } from '../repositories/localStorage'
-import type { SavedLoad, TallyState } from '../types'
+import type { SavedLoad } from '../types'
 import { useTally } from './TallyContext'
 import { useToast } from './ToastContext'
 
@@ -122,7 +122,7 @@ export function LoadsProvider({ children }: { children: ReactNode }) {
         showToast('No worksheet saved for this load')
         return false
       }
-      replaceState(load.tally as TallyState)
+      replaceState(load.tally)
       return true
     },
     [loads, replaceState, showToast],

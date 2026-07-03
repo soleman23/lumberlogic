@@ -44,7 +44,7 @@ export function PricesScreen() {
       up,
       down,
     }
-  }, [catalog, prices, getMargin, getMarket, getChange])
+  }, [catalog, prices, getMargin, getChange])
 
   const groups = useMemo(() => {
     const q = query.trim().toLowerCase()
