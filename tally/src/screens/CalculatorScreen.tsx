@@ -460,8 +460,8 @@ export function CalculatorScreen() {
     Object.entries(updates.base).forEach(([dim, value]) => {
       setBase(dim as DimId, value)
     })
-    Object.entries(updates.hardwood).forEach(([id, value]) => {
-      setHardwoodPrice(id as HwId, value)
+    Object.entries(updates.hardwood).forEach(([id, entry]) => {
+      setHardwoodPrice(id as HwId, entry.sellingPrice)
     })
     showToast(`Applied ${species.name} · ${count} price${count === 1 ? '' : 's'}`)
   }
@@ -500,7 +500,7 @@ export function CalculatorScreen() {
               </div>
               <div className="grand-tiles__light">
                 <span className="grand-tiles__label">Load value</span>
-                <span className="grand-tiles__value grand-tiles__value--green">{money(totals.cost)}</span>
+                <span className="grand-tiles__value grand-tiles__value--green">{money(totals.sellingValue ?? totals.cost)}</span>
               </div>
             </div>
           )}

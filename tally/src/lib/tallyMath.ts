@@ -6,8 +6,14 @@ import type {
   TallyState,
   TruckGroup,
   TruckProgress,
+  TruckAllocation,
 } from '../types'
 import { DIMENSION_DEFS, LENGTHS, cellKey } from './constants'
+import { tallyToLines } from '../domain/adapters/tallyAdapter'
+import {
+  lineAllocationStatuses,
+  truckAllocatedBf,
+} from '../domain/reconciliation'
 
 export function dimTotalUnits(
   state: Pick<TallyState, 'units'>,
@@ -16,18 +22,16 @@ export function dimTotalUnits(
   return LENGTHS.reduce((sum, L) => sum + (state.units[cellKey(dimId, L)] || 0), 0)
 }
 
-/** Units assigned to one truck for a dimension (defaults to full worksheet total). */
+/** Units assigned to one truck for a dimension (defaults to 0 — explicit allocation required). */
 export function truckMemberQty(
   truck: TruckGroup,
-  state: Pick<TallyState, 'units'>,
+  _state: Pick<TallyState, 'units'>,
   dimId: DimId,
 ): number {
   if (!truck.members.includes(dimId)) return 0
-  const worksheetUnits = dimTotalUnits(state, dimId)
-  return truck.memberQty?.[dimId] ?? worksheetUnits
+  return truck.memberQty?.[dimId] ?? 0
 }
 
-/** Sum of member quantities for a dimension across all trucks that include it. */
 export function dimAllocatedAcrossTrucks(
   state: Pick<TallyState, 'units' | 'trucks'>,
   dimId: DimId,
@@ -41,7 +45,6 @@ export type DimAllocationStatus = {
   remaining: number
   overBy: number
   isOver: boolean
-  /** At least one truck includes this dimension. */
   hasAllocation: boolean
 }
 
@@ -72,24 +75,35 @@ export function dimAllocationTotals(
   const totalUnits = dimTotalUnits(state, d.name)
   const clampedQty = Math.max(0, qty)
 
-  if (totalUnits > 0) {
-    const tot = dimTotals(d, state)
-    const scale = Math.min(clampedQty, totalUnits) / totalUnits
-    return {
-      bf: tot.bf * scale,
-      lf: tot.lf * scale,
-      pcs: tot.pcs * scale,
-    }
+  if (totalUnits > 0 && clampedQty > 0) {
+    let bf = 0
+    let lf = 0
+    let pcs = 0
+    const piecesPerUnit = state.pieces[d.name] || 0
+    let remaining = clampedQty
+
+    LENGTHS.forEach((L) => {
+      const u = state.units[cellKey(d.name, L)] || 0
+      if (u <= 0 || remaining <= 0) return
+      const take = Math.min(remaining, u)
+      const linePcs = take * piecesPerUnit
+      bf += cellBF(d, L, take, piecesPerUnit)
+      lf += linePcs * L
+      pcs += linePcs
+      remaining -= take
+    })
+    return { bf, lf, pcs }
   }
 
   if (clampedQty <= 0) return { bf: 0, lf: 0, pcs: 0 }
 
   const piecesPerUnit = state.pieces[d.name] || 0
   const defaultLength = 12
+  const totalPcs = clampedQty * piecesPerUnit
   return {
     bf: cellBF(d, defaultLength, clampedQty, piecesPerUnit),
-    lf: clampedQty * defaultLength,
-    pcs: clampedQty * piecesPerUnit,
+    lf: totalPcs * defaultLength,
+    pcs: totalPcs,
   }
 }
 
@@ -103,7 +117,8 @@ export function cellBF(
   units: number,
   piecesPerUnit: number,
 ): number {
-  return units * length * piecesPerUnit * bfPerFt(d)
+  const totalPieces = units * piecesPerUnit
+  return (totalPieces * d.t * d.w * length) / 12
 }
 
 export function effectivePrice(
@@ -125,15 +140,19 @@ export function dimTotals(
   let lf = 0
   let pcs = 0
   let cost = 0
+  let sellingValue = 0
   const piecesPerUnit = state.pieces[d.name] || 0
 
   LENGTHS.forEach((L) => {
     const u = state.units[cellKey(d.name, L)] || 0
     const cbf = cellBF(d, L, u, piecesPerUnit)
+    const linePcs = u * piecesPerUnit
     bf += cbf
-    lf += u * L
-    pcs += u * piecesPerUnit
-    cost += (cbf * effectivePrice(state, d.name, L)) / 1000
+    lf += linePcs * L
+    pcs += linePcs
+    const price = effectivePrice(state, d.name, L)
+    sellingValue += (cbf * price) / 1000
+    cost += (cbf * (state.base[d.name] || 0)) / 1000
   })
 
   return {
@@ -141,19 +160,22 @@ export function dimTotals(
     lf,
     pcs,
     cost,
-    avg: bf > 0 ? (cost / bf) * 1000 : 0,
+    sellingValue,
+    avg: bf > 0 ? (sellingValue / bf) * 1000 : 0,
   }
 }
 
-/** Random-width hardwood stock: bf entered directly, cost = bf/1000 × $/MBF. */
-export function hardwoodTotals(state: Pick<TallyState, 'hardwood'>): { bf: number; cost: number } {
+export function hardwoodTotals(state: Pick<TallyState, 'hardwood'>): { bf: number; cost: number; sellingValue: number } {
   return Object.values(state.hardwood).reduce(
     (acc, entry) => {
       acc.bf += entry.bf
-      acc.cost += (entry.bf / 1000) * entry.price
+      const acq = entry.acquisitionCost ?? entry.price ?? 0
+      const selling = entry.sellingPrice ?? entry.price
+      acc.sellingValue += (entry.bf / 1000) * selling
+      acc.cost += (entry.bf / 1000) * acq
       return acc
     },
-    { bf: 0, cost: 0 },
+    { bf: 0, cost: 0, sellingValue: 0 },
   )
 }
 
@@ -166,42 +188,90 @@ export function grandTotals(
       acc.bf += t.bf
       acc.pcs += t.pcs
       acc.cost += t.cost
+      acc.sellingValue += t.sellingValue
       return acc
     },
-    { bf: 0, pcs: 0, cost: 0 },
+    { bf: 0, pcs: 0, cost: 0, sellingValue: 0 },
   )
   const hw = hardwoodTotals(state)
   totals.bf += hw.bf
   totals.cost += hw.cost
+  totals.sellingValue += hw.sellingValue
   return totals
 }
 
 export function truckProgress(
   truck: TruckGroup,
-  state: Pick<TallyState, 'pieces' | 'base' | 'units' | 'override'>,
+  state: Pick<TallyState, 'pieces' | 'base' | 'units' | 'override' | 'hardwood' | 'trucks' | 'nextTruckId'>,
+  species = 'Load',
 ): TruckProgress {
   let bf = 0
   let lf = 0
   let pcs = 0
 
-  truck.members.forEach((name) => {
-    const d = DIMENSION_DEFS.find((x) => x.name === name)
-    if (!d) return
-    const qty = truckMemberQty(truck, state, name)
-    const alloc = dimAllocationTotals(d, state, qty)
-    bf += alloc.bf
-    lf += alloc.lf
-    pcs += alloc.pcs
-  })
+  if (truck.allocations && truck.allocations.length > 0) {
+    const lines = tallyToLines(state, species, '')
+    bf = truckAllocatedBf(
+      { id: truck.id, name: truck.name, targetBf: truck.target, allocations: truck.allocations },
+      lines,
+    )
+    for (const alloc of truck.allocations) {
+      const line = lines.find((l) => l.id === alloc.sourceLineId)
+      if (!line || line.materialType !== 'dimensional') continue
+      const units = alloc.allocatedUnits ?? 0
+      const linePcs = (units / Math.max(line.units, 1)) * (line.units * line.piecesPerUnit)
+      lf += linePcs * line.lengthFt
+      pcs += linePcs
+    }
+  } else {
+    truck.members.forEach((name) => {
+      const d = DIMENSION_DEFS.find((x) => x.name === name)
+      if (!d) return
+      const qty = truckMemberQty(truck, state, name)
+      const alloc = dimAllocationTotals(d, state, qty)
+      bf += alloc.bf
+      lf += alloc.lf
+      pcs += alloc.pcs
+    })
+  }
 
   const target = truck.target || 0
   const pct = target > 0 ? (bf / target) * 100 : 0
   const over = pct > 100
   const barColor = pct >= 92 && pct <= 105 ? '#2F6342' : over ? '#B5482F' : '#BC7A2C'
   const remain = target - bf
-  const remainLabel = over ? `+${Math.round(-remain).toLocaleString('en-US')} over` : `${Math.round(remain).toLocaleString('en-US')} bf left`
+  const remainLabel = over
+    ? `+${Math.round(-remain).toLocaleString('en-US')} over`
+    : `${Math.round(remain).toLocaleString('en-US')} bf left`
 
   return { bf, lf, pcs, pct, over, barColor, remainLabel }
+}
+
+export function lineLevelOverAllocation(
+  state: TallyState,
+  species: string,
+): boolean {
+  const lines = tallyToLines(state, species, '')
+  const load = {
+    schemaVersion: 2 as const,
+    id: 'temp',
+    name: '',
+    sub: '',
+    species,
+    status: 'Draft' as const,
+    freight: 0,
+    lines,
+    trucks: state.trucks.map((t) => ({
+      id: t.id,
+      name: t.name,
+      targetBf: t.target,
+      allocations: t.allocations ?? [],
+    })),
+    nextTruckId: state.nextTruckId,
+    createdAt: '',
+    updatedAt: '',
+  }
+  return lineAllocationStatuses(load).some((s) => s.overallocated > 0)
 }
 
 export function clearTally(state: TallyState): TallyState {
@@ -213,7 +283,6 @@ export function clearTally(state: TallyState): TallyState {
   Object.keys(state.override).forEach((k) => {
     override[k] = null
   })
-  // Zero hardwood quantities but keep prices, mirroring how base $/MBF survives.
   const hardwood = Object.fromEntries(
     Object.entries(state.hardwood).map(([id, entry]) => [id, { ...entry, bf: 0 }]),
   ) as TallyState['hardwood']
@@ -225,7 +294,7 @@ export function addTruck(state: TallyState, name = 'New truck', target = 12000):
   return {
     ...state,
     nextTruckId: id + 1,
-    trucks: [...state.trucks, { id, name, target, members: [], memberQty: {} }],
+    trucks: [...state.trucks, { id, name, target, members: [], memberQty: {}, allocations: [] }],
   }
 }
 
@@ -255,11 +324,10 @@ export function toggleTruckMember(state: TallyState, truckId: number, dimId: Dim
           memberQty,
         }
       }
-      const defaultQty = dimTotalUnits(state, dimId) || 1
       return {
         ...t,
         members: [...t.members, dimId],
-        memberQty: { ...t.memberQty, [dimId]: t.memberQty?.[dimId] ?? defaultQty },
+        memberQty: { ...t.memberQty, [dimId]: t.memberQty?.[dimId] ?? 0 },
       }
     }),
   }
@@ -279,6 +347,29 @@ export function setTruckMemberQty(
         ...t,
         memberQty: { ...t.memberQty, [dimId]: Math.max(0, qty) },
       }
+    }),
+  }
+}
+
+export function setTruckLineAllocation(
+  state: TallyState,
+  truckId: number,
+  sourceLineId: string,
+  qty: number,
+  kind: 'units' | 'bf',
+): TallyState {
+  return {
+    ...state,
+    trucks: state.trucks.map((t) => {
+      if (t.id !== truckId) return t
+      const allocations = [...(t.allocations ?? [])]
+      const idx = allocations.findIndex((a) => a.sourceLineId === sourceLineId)
+      const patch: TruckAllocation = { sourceLineId }
+      if (kind === 'bf') patch.allocatedBf = Math.max(0, qty)
+      else patch.allocatedUnits = Math.max(0, qty)
+      if (idx >= 0) allocations[idx] = patch
+      else allocations.push(patch)
+      return { ...t, allocations: allocations.filter((a) => (a.allocatedBf ?? a.allocatedUnits ?? 0) > 0) }
     }),
   }
 }

@@ -1,0 +1,49 @@
+.settings-alert {
+  background: #fdf3e7;
+  border: 1px solid #e2a615;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.settings-alert ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.settings-form fieldset {
+  border: none;
+  margin: 0 0 1.5rem;
+  padding: 0;
+}
+
+.settings-form legend {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.settings-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.settings-form input,
+.settings-form textarea {
+  padding: 0.5rem;
+  border: 1px solid var(--border, #d4c9b8);
+  border-radius: 6px;
+}
+
+.quote-validation-errors {
+  background: #fdecea;
+  border: 1px solid #b5482f;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.quote-validation-errors p {
+  margin: 0.25rem 0;
+}

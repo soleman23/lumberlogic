@@ -71,7 +71,7 @@ describe('tallyMath', () => {
     const state: TallyState = {
       ...createInitialTallyState(),
       units: Object.fromEntries(LENGTHS.map((L) => [cellKey('2x4', L), 50])),
-      trucks: [{ id: 1, name: 'Test', target: 1000, members: ['2x4'], memberQty: {} }],
+      trucks: [{ id: 1, name: 'Test', target: 1000, members: ['2x4'], memberQty: { '2x4': 50 }, allocations: [] }],
       nextTruckId: 2,
     }
     const p = truckProgress(state.trucks[0], state)
@@ -79,19 +79,18 @@ describe('tallyMath', () => {
     expect(p.barColor).toBe('#B5482F')
   })
 
-  it('truckMemberQty defaults to worksheet units when unset', () => {
+  it('truckMemberQty defaults to 0 when unset', () => {
     const state = createInitialTallyState()
-    const truck = { id: 1, name: 'T', target: 8000, members: ['2x4' as const], memberQty: {} }
-    const worksheet = dimTotalUnits(state, '2x4')
-    expect(truckMemberQty(truck, state, '2x4')).toBe(worksheet)
+    const truck = { id: 1, name: 'T', target: 8000, members: ['2x4' as const], memberQty: {}, allocations: [] }
+    expect(truckMemberQty(truck, state, '2x4')).toBe(0)
     expect(truckMemberQty(truck, state, '2x6')).toBe(0)
   })
 
   it('dimAllocatedAcrossTrucks sums quantities on all trucks', () => {
     const state = createInitialTallyState()
     state.trucks = [
-      { id: 1, name: 'A', target: 8000, members: ['2x4'], memberQty: { '2x4': 5 } },
-      { id: 2, name: 'B', target: 8000, members: ['2x4'], memberQty: { '2x4': 7 } },
+      { id: 1, name: 'A', target: 8000, members: ['2x4'], memberQty: { '2x4': 5 }, allocations: [] },
+      { id: 2, name: 'B', target: 8000, members: ['2x4'], memberQty: { '2x4': 7 }, allocations: [] },
     ]
     expect(dimAllocatedAcrossTrucks(state, '2x4')).toBe(12)
   })
@@ -100,8 +99,8 @@ describe('tallyMath', () => {
     const state = createInitialTallyState()
     const worksheet = dimTotalUnits(state, '2x4')
     state.trucks = [
-      { id: 1, name: 'A', target: 8000, members: ['2x4'], memberQty: { '2x4': worksheet } },
-      { id: 2, name: 'B', target: 8000, members: ['2x4'], memberQty: { '2x4': 3 } },
+      { id: 1, name: 'A', target: 8000, members: ['2x4'], memberQty: { '2x4': worksheet }, allocations: [] },
+      { id: 2, name: 'B', target: 8000, members: ['2x4'], memberQty: { '2x4': 3 }, allocations: [] },
     ]
     const status = dimAllocationStatus(state, '2x4')
     expect(status.worksheet).toBe(worksheet)
@@ -111,12 +110,12 @@ describe('tallyMath', () => {
     expect(status.remaining).toBe(0)
   })
 
-  it('dimAllocationStatus flags duplicate defaults when two trucks share a dim', () => {
+  it('dimAllocationStatus flags duplicate defaults when two trucks share a dim with explicit qty', () => {
     const state = createInitialTallyState()
     const worksheet = dimTotalUnits(state, '2x4')
     state.trucks = [
-      { id: 1, name: 'A', target: 8000, members: ['2x4'], memberQty: {} },
-      { id: 2, name: 'B', target: 8000, members: ['2x4'], memberQty: {} },
+      { id: 1, name: 'A', target: 8000, members: ['2x4'], memberQty: { '2x4': worksheet }, allocations: [] },
+      { id: 2, name: 'B', target: 8000, members: ['2x4'], memberQty: { '2x4': worksheet }, allocations: [] },
     ]
     const status = dimAllocationStatus(state, '2x4')
     expect(status.allocated).toBe(worksheet * 2)
@@ -126,13 +125,14 @@ describe('tallyMath', () => {
 
   it('truck progress scales by member quantity', () => {
     const state = createInitialTallyState()
+    Object.keys(state.units).forEach((k) => { state.units[k] = 0 })
+    state.units[cellKey('2x4', 8)] = 4
     const full = truckProgress(
-      { id: 1, name: 'T', target: 999999, members: ['2x4'], memberQty: {} },
+      { id: 1, name: 'T', target: 999999, members: ['2x4'], memberQty: { '2x4': 4 }, allocations: [] },
       state,
     )
-    const totalUnits = LENGTHS.reduce((s, L) => s + (state.units[cellKey('2x4', L)] || 0), 0)
     const half = truckProgress(
-      { id: 1, name: 'T', target: 999999, members: ['2x4'], memberQty: { '2x4': totalUnits / 2 } },
+      { id: 1, name: 'T', target: 999999, members: ['2x4'], memberQty: { '2x4': 2 }, allocations: [] },
       state,
     )
     expect(half.bf).toBeCloseTo(full.bf / 2, 0)
@@ -178,7 +178,7 @@ describe('tallyMath', () => {
       trucks: modern.trucks.map(({ memberQty: _drop, ...rest }) => rest),
     } as unknown as TallyState
     const normalized = normalizeTallyState(legacy)
-    expect(normalized.hardwood['4/4']).toEqual({ bf: 0, price: 0 })
+    expect(normalized.hardwood['4/4']).toMatchObject({ bf: 0, price: 0 })
     normalized.trucks.forEach((t) => expect(t.memberQty).toEqual({}))
   })
 })

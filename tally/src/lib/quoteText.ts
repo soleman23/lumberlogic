@@ -1,4 +1,6 @@
 import { dateLong, fmt, money2 } from './formatters'
+import type { CompanySettings } from '../domain/types'
+import { formatCompanyFooter } from '../domain/settings'
 
 export type QuoteTextRow = {
   species: string
@@ -24,12 +26,15 @@ export type QuoteTextMeta = {
   validUntil: string
   message: string
   freight: number
+  settings?: CompanySettings
 }
 
 /** Plain-text rendering of a quote for email bodies and clipboard sharing. */
 export function quoteToPlainText(quote: QuoteTextInput, meta: QuoteTextMeta): string {
+  const appName = meta.settings?.displayName || meta.settings?.appName || 'Lumber Logic'
+  const footer = meta.settings ? formatCompanyFooter(meta.settings) : appName
   const lines = [
-    `Lumber Logic — Quote ${meta.quoteNumber}`,
+    `${appName} — Quote ${meta.quoteNumber}`,
     `For: ${meta.customer}`,
     `Valid through ${dateLong(meta.validUntil)}`,
     '',
@@ -49,12 +54,11 @@ export function quoteToPlainText(quote: QuoteTextInput, meta: QuoteTextMeta): st
     '',
     meta.message,
     '',
-    'Lumber Logic LLC · 1842 Timber Lane · Bend, OR 97701 · (541) 555-0142',
+    footer,
   ]
   return lines.join('\n')
 }
 
-/** RFC 6068 mailto: URL with percent-encoded subject and body. */
 export function buildMailtoUrl(email: string, subject: string, body: string): string {
   return `mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
