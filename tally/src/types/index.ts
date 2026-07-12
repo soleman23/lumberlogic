@@ -1,5 +1,21 @@
 export type DimId = '2x4' | '2x6' | '2x8' | '2x10' | '2x12'
 
+/** Hardwood thickness in quarters: 4/4 = 1″ … 8/4 = 2″. */
+export type HwId = '4/4' | '5/4' | '6/4' | '8/4'
+
+/** Random-width hardwood stock is tallied directly in board feet. */
+export type HardwoodEntry = {
+  bf: number
+  /** Selling price $/MBF */
+  price: number
+  marketPrice?: number | null
+  acquisitionCost?: number | null
+  sellingPrice?: number | null
+  lotOrBundle?: string
+  species?: string
+  grade?: string
+}
+
 export type DimensionDef = {
   name: DimId
   label: string
@@ -9,13 +25,22 @@ export type DimensionDef = {
   accent: string
 }
 
+export type TruckAllocation = {
+  sourceLineId: string
+  allocatedUnits?: number
+  allocatedPieces?: number
+  allocatedBf?: number
+  needsCorrection?: boolean
+}
+
 export type TruckGroup = {
   id: number
   name: string
   target: number
   members: DimId[]
-  /** Units allocated to this truck per dimension (defaults to full worksheet units). */
+  /** @deprecated Dimension-level qty — use allocations for exact line refs. */
   memberQty: Partial<Record<DimId, number>>
+  allocations: TruckAllocation[]
 }
 
 export type TallyState = {
@@ -23,6 +48,7 @@ export type TallyState = {
   base: Record<DimId, number>
   units: Record<string, number>
   override: Record<string, number | null>
+  hardwood: Record<HwId, HardwoodEntry>
   trucks: TruckGroup[]
   nextTruckId: number
 }
@@ -32,6 +58,7 @@ export type DimTotals = {
   lf: number
   pcs: number
   cost: number
+  sellingValue: number
   avg: number
 }
 
@@ -39,6 +66,7 @@ export type GrandTotals = {
   bf: number
   pcs: number
   cost: number
+  sellingValue: number
 }
 
 export type TruckProgress = {
@@ -66,7 +94,14 @@ export type SavedLoad = {
   contact?: string
   role?: string
   email?: string
+  freight?: number
   tally?: TallyState
+  isDemo?: boolean
+  schemaVersion?: number
+  createdAt?: string
+  updatedAt?: string
+  lastSavedAt?: string
+  activeLoadId?: string
 }
 
 export type PriceGroup = 'Softwood' | 'Hardwood'
@@ -84,6 +119,14 @@ export type SpeciesDef = {
   factor: number
 }
 
+export type PriceTriple = {
+  marketPrice: number | null
+  acquisitionCost: number | null
+  sellingPrice: number | null
+}
+
+export type PriceBookStore = Record<string, PriceTriple>
+
 export type QuoteLine = {
   species: string
   grade: string
@@ -92,4 +135,7 @@ export type QuoteLine = {
   lenFt: number
   pcs: number
   mbf: number
+  lineId?: string
+  bf?: number
+  dims?: string
 }

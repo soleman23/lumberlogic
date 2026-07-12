@@ -1,8 +1,11 @@
-import type { SavedLoad, TallyState } from '../types'
+import type { SavedLoad, TallyState, PriceBookStore } from '../types'
+import type { CompanySettings, QuoteRevision } from '../domain/types'
 
 const LOADS_KEY = 'lumber-logic-loads'
 const TALLY_KEY = 'lumber-logic-tally'
 const PRICES_KEY = 'lumber-logic-prices'
+const SETTINGS_KEY = 'lumber-logic-settings'
+const QUOTES_KEY = 'lumber-logic-quote-revisions'
 
 export interface LoadRepository {
   list(): SavedLoad[]
@@ -18,8 +21,8 @@ export interface TallyRepository {
 }
 
 export interface PriceRepository {
-  load(): Record<string, number> | null
-  save(prices: Record<string, number>): void
+  load(): PriceBookStore | Record<string, number> | null
+  save(prices: PriceBookStore): void
 }
 
 function readJson<T>(key: string): T | null {
@@ -68,9 +71,37 @@ export const tallyRepository: TallyRepository = {
 
 export const priceRepository: PriceRepository = {
   load() {
-    return readJson<Record<string, number>>(PRICES_KEY)
+    return readJson<PriceBookStore>(PRICES_KEY)
   },
   save(prices) {
     writeJson(PRICES_KEY, prices)
+  },
+}
+
+export const settingsRepository = {
+  load(): CompanySettings | null {
+    return readJson<CompanySettings>(SETTINGS_KEY)
+  },
+  save(settings: CompanySettings): void {
+    writeJson(SETTINGS_KEY, settings)
+  },
+}
+
+export const quoteRevisionRepository = {
+  list(): QuoteRevision[] {
+    return readJson<QuoteRevision[]>(QUOTES_KEY) ?? []
+  },
+  get(id: string): QuoteRevision | undefined {
+    return quoteRevisionRepository.list().find((r) => r.id === id)
+  },
+  save(revision: QuoteRevision): void {
+    const list = quoteRevisionRepository.list()
+    const i = list.findIndex((r) => r.id === revision.id)
+    if (i >= 0) list[i] = revision
+    else list.unshift(revision)
+    writeJson(QUOTES_KEY, list)
+  },
+  getByLoad(loadId: string): QuoteRevision[] {
+    return quoteRevisionRepository.list().filter((r) => r.loadId === loadId)
   },
 }

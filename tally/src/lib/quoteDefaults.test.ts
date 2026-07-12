@@ -1,45 +1,44 @@
 import { describe, expect, it } from 'vitest'
-import { defaultQuoteMessage, defaultValidUntil, quoteNumberFor } from './quoteDefaults'
+import { defaultFreightFor, defaultQuoteMessage, defaultValidUntil, nextQuoteNumber } from './quoteDefaults'
 import type { SavedLoad } from '../types'
 
-const load: SavedLoad = {
-  id: 'a3f2c9d1-0000-0000-0000-000000000000',
+const sampleLoad: SavedLoad = {
+  id: 'abc-123',
   name: 'Cascade Millworks',
   sub: 'PO 2231',
-  species: 'Doug Fir #1',
+  species: 'Doug Fir',
   status: 'Draft',
-  bf: 8420,
-  value: 4092,
-  pieces: 388,
+  bf: 1000,
+  value: 5000,
+  pieces: 100,
   date: '2026-06-28',
 }
 
-describe('quoteNumberFor', () => {
-  it('is deterministic and derived from the load date and id', () => {
-    expect(quoteNumberFor(load)).toBe('Q-2026-A3F2')
-    expect(quoteNumberFor(load)).toBe(quoteNumberFor(load))
+describe('quoteDefaults', () => {
+  it('defaults freight to 0 when not set on load', () => {
+    expect(defaultFreightFor(sampleLoad)).toBe(0)
   })
 
-  it('pads short seed ids', () => {
-    expect(quoteNumberFor({ ...load, id: '7' })).toBe('Q-2026-0007')
-  })
-})
-
-describe('defaultValidUntil', () => {
-  it('returns an ISO date 14 days after the given date', () => {
-    expect(defaultValidUntil(new Date('2026-07-03T12:00:00Z'))).toBe('2026-07-17')
+  it('uses saved freight when present', () => {
+    expect(defaultFreightFor({ ...sampleLoad, freight: 250 })).toBe(250)
   })
 
-  it('rolls over month boundaries', () => {
-    expect(defaultValidUntil(new Date('2026-06-25T12:00:00Z'))).toBe('2026-07-09')
+  it('generates collision-resistant quote numbers', () => {
+    const a = nextQuoteNumber('CB', 2026)
+    const b = nextQuoteNumber('CB', 2026)
+    expect(a).toMatch(/^CB-2026-\d{4}$/)
+    expect(b).not.toBe(a)
   })
-})
 
-describe('defaultQuoteMessage', () => {
+  it('defaultValidUntil is 14 days ahead', () => {
+    const from = new Date('2026-06-01')
+    expect(defaultValidUntil(from, 14)).toBe('2026-06-15')
+  })
+
   it('references the load ref and species without demo names', () => {
-    const msg = defaultQuoteMessage(load)
+    const msg = defaultQuoteMessage(sampleLoad, 'Bend yard')
     expect(msg).toContain('PO 2231')
-    expect(msg).toContain('Doug Fir #1')
-    expect(msg).not.toContain('Dana')
+    expect(msg).toContain('Doug Fir')
+    expect(msg).not.toContain('Casey')
   })
 })

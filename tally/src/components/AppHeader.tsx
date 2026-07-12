@@ -9,6 +9,7 @@ const NAV = [
   { to: '/', label: 'Calculator' },
   { to: '/loads', label: 'Saved loads' },
   { to: '/prices', label: 'Prices' },
+  { to: '/settings', label: 'Settings' },
 ] as const
 
 type Props = {

@@ -1,4 +1,7 @@
 import { useState, type FormEvent } from 'react'
+import { DEFAULT_FREIGHT } from '../lib/quoteDefaults'
+import { SPECIES_CATALOG } from '../lib/priceData'
+import { parseNum } from '../lib/formatters'
 import type { LoadStatus, SavedLoad } from '../types'
 import { Button } from './Button'
 import { SegmentedControl } from './SegmentedControl'
@@ -6,7 +9,7 @@ import './SaveLoadModal.css'
 
 export type SaveLoadMeta = Pick<
   SavedLoad,
-  'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email'
+  'name' | 'sub' | 'species' | 'status' | 'contact' | 'role' | 'email' | 'freight'
 >
 
 type Props = {
@@ -17,23 +20,26 @@ type Props = {
 export function SaveLoadModal({ onClose, onSave }: Props) {
   const [name, setName] = useState('')
   const [sub, setSub] = useState('')
-  const [species, setSpecies] = useState('')
+  const [species, setSpecies] = useState('Doug Fir')
   const [contact, setContact] = useState('')
   const [role, setRole] = useState('')
   const [email, setEmail] = useState('')
+  const [freight, setFreight] = useState('')
   const [status, setStatus] = useState<LoadStatus>('Draft')
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     if (!name.trim()) return
+    const freightNum = freight.trim() ? parseNum(freight) : undefined
     onSave({
       name: name.trim(),
       sub: sub.trim() || 'New load',
-      species: species.trim() || 'Mixed load',
+      species,
       status,
       contact: contact.trim() || undefined,
       role: role.trim() || undefined,
       email: email.trim() || undefined,
+      freight: freightNum != null && freightNum >= 0 ? Math.round(freightNum) : undefined,
     })
   }
 
@@ -75,11 +81,14 @@ export function SaveLoadModal({ onClose, onSave }: Props) {
           </label>
           <label className="compose-field">
             Species
-            <input
-              value={species}
-              onChange={(e) => setSpecies(e.target.value)}
-              placeholder="Doug Fir"
-            />
+            <select value={species} onChange={(e) => setSpecies(e.target.value)}>
+              <option value="Mixed load">Mixed load</option>
+              {SPECIES_CATALOG.map((s) => (
+                <option key={s.key} value={s.name}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
 
@@ -105,6 +114,18 @@ export function SaveLoadModal({ onClose, onSave }: Props) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="purchasing@example.com"
+          />
+        </label>
+
+        <label className="compose-field">
+          Freight ($)
+          <input
+            type="number"
+            min={0}
+            step={1}
+            value={freight}
+            onChange={(e) => setFreight(e.target.value)}
+            placeholder={String(DEFAULT_FREIGHT)}
           />
         </label>
 

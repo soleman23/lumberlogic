@@ -7,18 +7,20 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { createInitialTallyState } from '../lib/constants'
+import { normalizeTallyState } from '../lib/constants'
 import {
   addTruck,
   clearTally,
   grandTotals,
   removeTruck,
   setTruckMemberQty,
+  setTruckLineAllocation,
   toggleTruckMember,
   updateTruck,
 } from '../lib/tallyMath'
+import { migrateTally } from '../domain/migrations/storage'
 import { tallyRepository } from '../repositories/localStorage'
-import type { DimId, TallyState } from '../types'
+import type { DimId, HwId, TallyState } from '../types'
 
 type TallyContextValue = {
   state: TallyState
@@ -27,12 +29,16 @@ type TallyContextValue = {
   setBase: (name: DimId, value: number) => void
   setUnits: (name: DimId, length: number, value: number) => void
   setOverride: (name: DimId, length: number, value: number | null) => void
+  setHardwoodBf: (id: HwId, bf: number) => void
+  setHardwoodPrice: (id: HwId, price: number) => void
+  setHardwoodAcquisition: (id: HwId, cost: number | null) => void
   resetAll: () => void
   addTruckGroup: () => void
   removeTruckGroup: (id: number) => void
   patchTruck: (id: number, patch: Partial<TallyState['trucks'][0]>) => void
   toggleMember: (truckId: number, dimId: DimId) => void
   setMemberQty: (truckId: number, dimId: DimId, qty: number) => void
+  setLineAllocation: (truckId: number, lineId: string, qty: number, kind: 'units' | 'bf') => void
   replaceState: (state: TallyState) => void
 }
 
@@ -41,11 +47,8 @@ const TallyContext = createContext<TallyContextValue | null>(null)
 export function TallyProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<TallyState>(() => {
     const loaded = tallyRepository.load()
-    if (!loaded) return createInitialTallyState()
-    return {
-      ...loaded,
-      trucks: loaded.trucks.map((t) => ({ ...t, memberQty: t.memberQty ?? {} })),
-    }
+    const { data } = migrateTally(loaded)
+    return data
   })
 
   useEffect(() => {
@@ -70,6 +73,30 @@ export function TallyProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, override: { ...s.override, [`${name}|${length}`]: value } }))
   }, [])
 
+  const setHardwoodBf = useCallback((id: HwId, bf: number) => {
+    setState((s) => ({
+      ...s,
+      hardwood: { ...s.hardwood, [id]: { ...s.hardwood[id], bf: Math.max(0, bf) } },
+    }))
+  }, [])
+
+  const setHardwoodPrice = useCallback((id: HwId, price: number) => {
+    setState((s) => ({
+      ...s,
+      hardwood: {
+        ...s.hardwood,
+        [id]: { ...s.hardwood[id], price: Math.max(0, price), sellingPrice: Math.max(0, price) },
+      },
+    }))
+  }, [])
+
+  const setHardwoodAcquisition = useCallback((id: HwId, cost: number | null) => {
+    setState((s) => ({
+      ...s,
+      hardwood: { ...s.hardwood, [id]: { ...s.hardwood[id], acquisitionCost: cost } },
+    }))
+  }, [])
+
   const resetAll = useCallback(() => setState((s) => clearTally(s)), [])
   const addTruckGroup = useCallback(() => setState((s) => addTruck(s)), [])
   const removeTruckGroup = useCallback((id: number) => setState((s) => removeTruck(s, id)), [])
@@ -82,7 +109,10 @@ export function TallyProvider({ children }: { children: ReactNode }) {
   const setMemberQty = useCallback((truckId: number, dimId: DimId, qty: number) => {
     setState((s) => setTruckMemberQty(s, truckId, dimId, qty))
   }, [])
-  const replaceState = useCallback((next: TallyState) => setState(next), [])
+  const setLineAllocation = useCallback((truckId: number, lineId: string, qty: number, kind: 'units' | 'bf') => {
+    setState((s) => setTruckLineAllocation(s, truckId, lineId, qty, kind))
+  }, [])
+  const replaceState = useCallback((next: TallyState) => setState(normalizeTallyState(next)), [])
 
   const value = useMemo(
     () => ({
@@ -92,12 +122,16 @@ export function TallyProvider({ children }: { children: ReactNode }) {
       setBase,
       setUnits,
       setOverride,
+      setHardwoodBf,
+      setHardwoodPrice,
+      setHardwoodAcquisition,
       resetAll,
       addTruckGroup,
       removeTruckGroup,
       patchTruck,
       toggleMember,
       setMemberQty,
+      setLineAllocation,
       replaceState,
     }),
     [
@@ -107,12 +141,16 @@ export function TallyProvider({ children }: { children: ReactNode }) {
       setBase,
       setUnits,
       setOverride,
+      setHardwoodBf,
+      setHardwoodPrice,
+      setHardwoodAcquisition,
       resetAll,
       addTruckGroup,
       removeTruckGroup,
       patchTruck,
       toggleMember,
       setMemberQty,
+      setLineAllocation,
       replaceState,
     ],
   )

@@ -7,20 +7,24 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { buildInitialPrices, getMarketPrice, getWeeklyChange, SPECIES_CATALOG } from '../lib/priceData'
+import { buildEmptyPriceBook, migrateLegacyPrices } from '../lib/applyPrices'
+import { getMarketPrice, getWeeklyChange, SPECIES_CATALOG } from '../lib/priceData'
+import { computeMarkup } from '../domain/pricing'
 import { priceRepository } from '../repositories/localStorage'
-import type { PriceGroup } from '../types'
+import type { PriceBookStore, PriceGroup } from '../types'
 import { useToast } from './ToastContext'
 
 type PricesContextValue = {
-  prices: Record<string, number>
+  prices: PriceBookStore
   query: string
   group: 'all' | PriceGroup
   setQuery: (q: string) => void
   setGroup: (g: 'all' | PriceGroup) => void
-  setYourPrice: (key: string, value: number) => void
+  setMarketPrice: (key: string, value: number | null) => void
+  setAcquisitionCost: (key: string, value: number | null) => void
+  setSellingPrice: (key: string, value: number | null) => void
   syncMarket: () => void
-  getMargin: (speciesKey: string, dim: string) => number
+  getMarkup: (speciesKey: string, dim: string) => ReturnType<typeof computeMarkup>
   getMarket: typeof getMarketPrice
   getChange: typeof getWeeklyChange
   catalog: typeof SPECIES_CATALOG
@@ -28,10 +32,19 @@ type PricesContextValue = {
 
 const PricesContext = createContext<PricesContextValue | null>(null)
 
+function initPrices(): PriceBookStore {
+  const stored = priceRepository.load()
+  if (!stored) return buildEmptyPriceBook()
+  // Detect legacy format (number values)
+  const firstVal = Object.values(stored)[0]
+  if (typeof firstVal === 'number') {
+    return migrateLegacyPrices(stored as unknown as Record<string, number>)
+  }
+  return stored as PriceBookStore
+}
+
 export function PricesProvider({ children }: { children: ReactNode }) {
-  const [prices, setPrices] = useState<Record<string, number>>(
-    () => priceRepository.load() ?? buildInitialPrices(),
-  )
+  const [prices, setPrices] = useState<PriceBookStore>(() => initPrices())
   const [query, setQuery] = useState('')
   const [group, setGroup] = useState<'all' | PriceGroup>('all')
   const { showToast } = useToast()
@@ -40,19 +53,37 @@ export function PricesProvider({ children }: { children: ReactNode }) {
     priceRepository.save(prices)
   }, [prices])
 
-  const setYourPrice = useCallback((key: string, value: number) => {
-    setPrices((p) => ({ ...p, [key]: value }))
+  const patchPrice = useCallback((key: string, field: keyof PriceBookStore[string], value: number | null) => {
+    setPrices((p) => ({
+      ...p,
+      [key]: { ...(p[key] ?? { marketPrice: null, acquisitionCost: null, sellingPrice: null }), [field]: value },
+    }))
   }, [])
 
+  const setMarketPrice = useCallback((key: string, value: number | null) => patchPrice(key, 'marketPrice', value), [patchPrice])
+  const setAcquisitionCost = useCallback((key: string, value: number | null) => patchPrice(key, 'acquisitionCost', value), [patchPrice])
+  const setSellingPrice = useCallback((key: string, value: number | null) => patchPrice(key, 'sellingPrice', value), [patchPrice])
+
   const syncMarket = useCallback(() => {
-    showToast('Market prices synced (demo)')
+    setPrices((p) => {
+      const next = { ...p }
+      SPECIES_CATALOG.forEach((sp) => {
+        sp.dims.forEach((d, i) => {
+          const k = `${sp.key}|${d}`
+          if (!next[k]) next[k] = { marketPrice: null, acquisitionCost: null, sellingPrice: null }
+          next[k] = { ...next[k], marketPrice: sp.market[i] }
+        })
+      })
+      return next
+    })
+    showToast('Market reference prices updated from catalog')
   }, [showToast])
 
-  const getMargin = useCallback(
+  const getMarkup = useCallback(
     (speciesKey: string, dim: string) => {
-      const mk = getMarketPrice(speciesKey, dim)
-      const your = prices[`${speciesKey}|${dim}`] || 0
-      return mk > 0 ? ((your - mk) / mk) * 100 : 0
+      const entry = prices[`${speciesKey}|${dim}`]
+      if (!entry) return null
+      return computeMarkup(entry.acquisitionCost, entry.sellingPrice)
     },
     [prices],
   )
@@ -64,14 +95,16 @@ export function PricesProvider({ children }: { children: ReactNode }) {
       group,
       setQuery,
       setGroup,
-      setYourPrice,
+      setMarketPrice,
+      setAcquisitionCost,
+      setSellingPrice,
       syncMarket,
-      getMargin,
+      getMarkup,
       getMarket: getMarketPrice,
       getChange: getWeeklyChange,
       catalog: SPECIES_CATALOG,
     }),
-    [prices, query, group, setYourPrice, syncMarket, getMargin],
+    [prices, query, group, setMarketPrice, setAcquisitionCost, setSellingPrice, syncMarket, getMarkup],
   )
 
   return <PricesContext.Provider value={value}>{children}</PricesContext.Provider>

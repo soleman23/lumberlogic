@@ -1,9 +1,11 @@
 import { useMemo, useState } from 'react'
+import { isDemoDataEnabled } from '../domain/demoData'
 import { useNavigate } from 'react-router-dom'
 import { useLoads } from '../context/LoadsContext'
 import { useToast } from '../context/ToastContext'
 import type { LoadStatus, SavedLoad } from '../types'
 import { dateLabel, fmt, initials, money } from '../lib/formatters'
+import { IconChevronDown, IconDuplicate, IconExternal, IconPlus, IconSearch, IconSend, IconTrash } from '../components/Icons'
 import { PageHeader } from '../components/PageHeader'
 import { Button } from '../components/Button'
 import { SegmentedControl } from '../components/SegmentedControl'
@@ -13,7 +15,7 @@ type SortKey = 'date' | 'value' | 'bf' | 'pieces' | 'customer'
 type SortDir = 'asc' | 'desc'
 
 export function SavedLoadsScreen() {
-  const { loads, deleteLoad, duplicateLoad, openLoad } = useLoads()
+  const { loads, deleteLoad, duplicateLoad, openLoad, newLoad, loadDemoData } = useLoads()
   const { showToast } = useToast()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
@@ -70,18 +72,22 @@ export function SavedLoadsScreen() {
         title="Your tally book"
         description="Search, filter, and reopen saved loads."
         action={
-          <Button variant="primary" onClick={() => navigate('/')}>
-            + New load
-          </Button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {isDemoDataEnabled() && (
+              <Button variant="secondary" onClick={loadDemoData}>
+                Load demo data
+              </Button>
+            )}
+            <Button variant="primary" icon={<IconPlus color="#fff" />} onClick={() => { newLoad(); navigate('/') }}>
+              New load
+            </Button>
+          </div>
         }
       />
 
       <div className="loads-controls card-surface">
         <label className="loads-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" stroke="#8C7E6B" strokeWidth="1.8" />
-            <path d="M16 16l5 5" stroke="#8C7E6B" strokeWidth="1.8" strokeLinecap="round" />
-          </svg>
+          <IconSearch />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -116,7 +122,7 @@ export function SavedLoadsScreen() {
             onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
             style={{ transform: sortDir === 'asc' ? 'rotate(180deg)' : undefined }}
           >
-            ↓
+            <IconChevronDown />
           </button>
         </div>
       </div>
@@ -135,7 +141,9 @@ export function SavedLoadsScreen() {
                     {load.sub} · {load.species}
                   </p>
                 </div>
-                <span className={`load-card__status load-card__status--${load.status.toLowerCase()}`}>{load.status}</span>
+                <span className={`load-card__status load-card__status--${load.status.toLowerCase()}`}>
+                  {load.status}{load.isDemo ? ' · Demo' : ''}
+                </span>
               </div>
               <div className="load-card__figures">
                 <div>
@@ -153,19 +161,19 @@ export function SavedLoadsScreen() {
                   <strong>{fmt(load.pieces, 0)}</strong>
                 </div>
                 <div>
+                  <span>$/MBF</span>
+                  <strong>{load.bf > 0 ? fmt(Math.round((load.value / load.bf) * 1000), 0) : '—'}</strong>
+                </div>
+                <div>
                   <span>Saved</span>
                   <strong>{dateLabel(load.date)}</strong>
                 </div>
-                <div>
-                  <span>Ref</span>
-                  <strong>{load.sub}</strong>
-                </div>
               </div>
               <div className="load-card__actions">
-                <Button variant="secondary" size="sm" onClick={() => handleOpen(load)}>
+                <Button variant="secondary" size="sm" icon={<IconExternal />} onClick={() => handleOpen(load)}>
                   Open
                 </Button>
-                <Button variant="primary" size="sm" onClick={() => handleSend(load)}>
+                <Button variant="primary" size="sm" icon={<IconSend color="#fff" />} onClick={() => handleSend(load)}>
                   Send
                 </Button>
                 <Button
@@ -177,18 +185,21 @@ export function SavedLoadsScreen() {
                     showToast('Load duplicated as Draft')
                   }}
                 >
-                  ⧉
+                  <IconDuplicate />
                 </Button>
                 <Button
                   variant="icon"
                   size="sm"
+                  className="btn--icon-danger"
                   aria-label="Delete"
                   onClick={() => {
-                    deleteLoad(load.id)
-                    showToast('Load deleted')
+                    if (window.confirm(`Delete load "${load.name}"? This cannot be undone.`)) {
+                      deleteLoad(load.id)
+                      showToast('Load deleted')
+                    }
                   }}
                 >
-                  ✕
+                  <IconTrash />
                 </Button>
               </div>
             </article>
