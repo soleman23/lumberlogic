@@ -21,6 +21,7 @@ import type { DimId, DimensionDef, HwId } from '../types'
 import { Chip } from '../components/Chip'
 import { Stepper } from '../components/Stepper'
 import { Button } from '../components/Button'
+import { IconTrash } from '../components/Icons'
 import { SaveLoadModal, type SaveLoadMeta } from '../components/SaveLoadModal'
 import './CalculatorScreen.css'
 
@@ -344,8 +345,13 @@ function TruckBuilder() {
                   onChange={(e) => patchTruck(truck.id, { name: e.target.value })}
                   aria-label="Truck name"
                 />
-                <button type="button" className="truck-card__delete" aria-label="Remove truck" onClick={() => removeTruckGroup(truck.id)}>
-                  🗑
+                <button
+                  type="button"
+                  className="truck-card__delete"
+                  aria-label="Remove truck"
+                  onClick={() => removeTruckGroup(truck.id)}
+                >
+                  <IconTrash size={15} />
                 </button>
               </div>
               <div className="truck-card__chips">

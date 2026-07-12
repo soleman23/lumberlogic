@@ -69,6 +69,16 @@
   border-color: var(--timber-500);
 }
 
+.btn--icon-danger {
+  color: #9c4a36;
+  background: var(--oak-paper);
+}
+
+.btn--icon-danger.btn--hover {
+  background: #f4e5e0;
+  border-color: #e5c9be;
+}
+
 .btn:disabled {
   color: #b7ab98;
   background: var(--oak-100);

@@ -708,11 +708,22 @@
 }
 
 .truck-card__delete {
-  background: transparent;
-  border: none;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--oak-paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
-  padding: 8px;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+
+.truck-card__delete:hover {
+  background: #efe0db;
 }
 
 .truck-card__chips {

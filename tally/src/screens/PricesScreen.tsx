@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { usePrices } from '../context/PricesContext'
 import { dateLabel, money, parseNum } from '../lib/formatters'
+import { IconRefresh, IconSearch } from '../components/Icons'
 import { PageHeader } from '../components/PageHeader'
 import { Button } from '../components/Button'
 import { SegmentedControl } from '../components/SegmentedControl'
@@ -67,18 +68,15 @@ export function PricesScreen() {
         title="Board price book"
         description="Your $/MBF vs market — margins update live."
         action={
-          <Button variant="secondary" onClick={syncMarket}>
-            ↻ Sync market
+          <Button variant="secondary" icon={<IconRefresh />} onClick={syncMarket}>
+            Sync market
           </Button>
         }
       />
 
       <div className="prices-controls card-surface">
         <label className="loads-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" stroke="#8C7E6B" strokeWidth="1.8" />
-            <path d="M16 16l5 5" stroke="#8C7E6B" strokeWidth="1.8" strokeLinecap="round" />
-          </svg>
+          <IconSearch />
           <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search species or grade" aria-label="Search prices" />
         </label>
         <SegmentedControl

@@ -9,6 +9,7 @@ import { useLoads } from '../context/LoadsContext'
 import { useToast } from '../context/ToastContext'
 import { useBreakpoints } from '../hooks/useMediaQuery'
 import type { QuoteLine } from '../types'
+import { IconChevronLeft, IconDownload, IconSend } from '../components/Icons'
 import { Button } from '../components/Button'
 import { SegmentedControl } from '../components/SegmentedControl'
 import './SendQuoteScreen.css'
@@ -94,7 +95,8 @@ export function SendQuoteScreen() {
   return (
     <div className="send-page">
       <Link to="/loads" className="send-back">
-        ‹ Saved loads
+        <IconChevronLeft />
+        Saved loads
       </Link>
 
       <div className="send-layout">
@@ -317,11 +319,11 @@ function ComposeRail(props: {
       </div>
 
       <div className="compose-actions">
-        <Button variant="primary" onClick={props.onSend} style={{ flex: 1, minHeight: 44 }}>
+        <Button variant="primary" onClick={props.onSend} style={{ flex: 1, minHeight: 44 }} icon={<IconSend color="#fff" />}>
           Send quote
         </Button>
         <Button variant="icon" aria-label="Download PDF" onClick={props.onPrint}>
-          ↓
+          <IconDownload />
         </Button>
       </div>
     </>
